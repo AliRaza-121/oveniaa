@@ -239,33 +239,33 @@ export default function HomeClient({ popularItems, categories, stats }) {
 <section className="py-16 bg-bg-dark">
   <div className="max-w-7xl mx-auto px-4 sm:px-6">
     <div className="flex flex-col lg:flex-row gap-8 items-center">
-      <div className="flex-1 text-center lg:text-left">
+      <div className="w-full lg:flex-1 text-center lg:text-left">
         <h2 className="text-5xl sm:text-6xl font-bold font-display mb-6">📍 Find Us</h2>
-        <div className="space-y-4 text-text-light">
+        <div className="space-y-4 text-text-light max-w-md mx-auto lg:mx-0">
           <div className="flex items-center gap-3 justify-center lg:justify-start">
-            <span className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-xl">🏬</span>
-            <div>
+            <span className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-xl flex-shrink-0">🏬</span>
+            <div className="text-left">
               <p className="font-semibold text-text">Oveniaa</p>
               <p className="text-sm text-text-muted">⭐ 4.6 Rating on Google</p>
             </div>
           </div>
           <div className="flex items-center gap-3 justify-center lg:justify-start">
-            <span className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-xl">📍</span>
-            <div>
+            <span className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-xl flex-shrink-0">📍</span>
+            <div className="text-left">
               <p className="font-semibold text-text">Address</p>
               <p className="text-sm text-text-muted">Chak No 267 R.B Jalandar, Faisalabad</p>
             </div>
           </div>
           <div className="flex items-center gap-3 justify-center lg:justify-start">
-            <span className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-xl">🕐</span>
-            <div>
+            <span className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-xl flex-shrink-0">🕐</span>
+            <div className="text-left">
               <p className="font-semibold text-text">Hours</p>
               <p className="text-sm text-text-muted">12:30 PM – 12:30 AM, Every Day</p>
             </div>
           </div>
         </div>
       </div>
-      <div className="lg:w-80 flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center lg:items-end gap-4 w-full lg:w-auto mt-4 lg:mt-0">
         <a
           href="https://maps.app.goo.gl/gAHcHW55CbKxACxM8"
           target="_blank"

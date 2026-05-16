@@ -16,6 +16,11 @@
   --font-display: 'Amatic SC', cursive;
 }
 
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body {
   background-color: var(--color-bg);
   color: var(--color-text);

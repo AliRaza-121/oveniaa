@@ -2,6 +2,8 @@ import { Inter } from 'next/font/google'
 import { AuthProvider } from '@/context/AuthContext'
 import { CartProvider } from '@/context/CartContext'
 import { ToastProvider } from '@/context/ToastContext'
+import OrderNotifier from '@/components/OrderNotifier'
+import InstallPrompt from '@/components/InstallPrompt'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
@@ -33,6 +35,8 @@ export default function RootLayout({ children }) {
           <CartProvider>
             <ToastProvider>
               {children}
+              <OrderNotifier />
+              <InstallPrompt />
             </ToastProvider>
           </CartProvider>
         </AuthProvider>

@@ -119,7 +119,11 @@ export default function Navbar() {
           <>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setMobileOpen(false)} className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden" />
             <motion.div initial={{ opacity: 0, y: -20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} transition={{ duration: 0.3 }} className="fixed top-20 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-sm bg-card rounded-2xl shadow-2xl lg:hidden overflow-hidden">
-              <div className="flex flex-col py-4">
+  <div className="flex items-center justify-between px-6 pt-4 pb-2">
+    <span className="text-sm font-semibold text-text-muted">Menu</span>
+    <button onClick={() => setMobileOpen(false)} className="w-8 h-8 flex items-center justify-center rounded-full bg-bg text-text-muted hover:text-text text-lg">✕</button>
+  </div>
+  <div className="flex flex-col py-2">
                 {navLinks.map((link) => (
                   <Link key={link.name} href={link.href} onClick={() => setMobileOpen(false)} className={`flex items-center gap-3 px-6 py-3.5 text-lg font-semibold transition-colors ${pathname === link.href ? 'text-primary bg-primary/5' : 'text-text-light hover:text-primary hover:bg-bg'}`}>
                     <span>{link.name === 'Home' ? '🏠' : link.name === 'Menu' ? '🍕' : link.name === 'About' ? 'ℹ️' : '📞'}</span> {link.name}
