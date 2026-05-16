@@ -52,7 +52,7 @@ export default function Navbar() {
           
           <Link href="/" className="flex items-center gap-2 group">
             <motion.span whileHover={{ rotate: [0, -10, 10, 0] }} transition={{ duration: 0.5 }} className="text-2xl">🍕</motion.span>
-            <span className="text-xl sm:text-2xl font-black text-primary font-display tracking-tight">Oveniaa</span>
+            <span className="text-xl sm:text-2xl font-bold text-primary font-display tracking-tight">Oveniaa</span>
           </Link>
 
           <div className="hidden lg:flex items-center gap-1">

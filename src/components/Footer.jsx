@@ -12,7 +12,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
           <div>
-            <h3 className="text-xl font-black font-display text-primary mb-3 flex items-center gap-1.5">
+            <h3 className="text-xl font-bold font-display text-primary mb-3 flex items-center gap-1.5">
               <span className="inline-flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" className="w-7 h-7" fill="none">
                   <path d="M8 22h24M8 18h24M8 26h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>

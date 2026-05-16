@@ -1,4 +1,4 @@
-import { Inter } from 'next/font/google'
+import { Inter, Amatic_SC } from 'next/font/google'
 import { AuthProvider } from '@/context/AuthContext'
 import { CartProvider } from '@/context/CartContext'
 import { ToastProvider } from '@/context/ToastContext'
@@ -7,6 +7,7 @@ import InstallPrompt from '@/components/InstallPrompt'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const amatic = Amatic_SC({ subsets: ['latin'], weight: ['400', '700'], variable: '--font-amatic', display: 'swap' })
 
 export const metadata = {
   title: 'Oveniaa - Fresh Fast Food',
@@ -30,7 +31,7 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} antialiased`}>
+      <body className={`${inter.variable} ${amatic.variable} antialiased`}>
         <AuthProvider>
           <CartProvider>
             <ToastProvider>

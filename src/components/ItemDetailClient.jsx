@@ -107,7 +107,7 @@ export default function ItemDetailClient({ item, reviews: initialReviews }) {
 
           <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }}>
             <span className="text-primary text-sm font-bold uppercase tracking-widest">{item.category}</span>
-            <h1 className="text-3xl sm:text-4xl font-black font-display mt-1">{item.name}</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold font-display mt-1">{item.name}</h1>
             
             <div className="flex items-center gap-2 mt-2">
               <span className="text-yellow-500">{'★'.repeat(Math.round(avgRating))}{'☆'.repeat(5 - Math.round(avgRating))}</span>
@@ -150,7 +150,7 @@ export default function ItemDetailClient({ item, reviews: initialReviews }) {
           <div className="mt-8 flex items-center gap-4 lg:relative">
   {/* Desktop button */}
   <div className="hidden lg:flex items-center gap-4">
-    <span className="text-3xl font-black text-primary font-display">Rs. {totalPrice}</span>
+    <span className="text-3xl font-bold text-primary font-display">Rs. {totalPrice}</span>
     <button onClick={handleAddToCart} disabled={!item.isAvailable} className="bg-primary text-white px-8 py-3 rounded-full font-bold hover:bg-primary-dark transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-primary/30">
       {item.isAvailable ? 'Add to Cart' : 'Sold Out'}
     </button>
@@ -159,7 +159,7 @@ export default function ItemDetailClient({ item, reviews: initialReviews }) {
 
 {/* Mobile sticky button */}
 <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 lg:hidden z-50 flex items-center gap-3">
-  <span className="text-xl font-black text-primary font-display">Rs. {totalPrice}</span>
+  <span className="text-xl font-bold text-primary font-display">Rs. {totalPrice}</span>
   <button onClick={handleAddToCart} disabled={!item.isAvailable} className="flex-1 bg-primary text-white py-3 rounded-full font-bold hover:bg-primary-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed">
     {item.isAvailable ? 'Add to Cart' : 'Sold Out'}
   </button>
@@ -169,7 +169,7 @@ export default function ItemDetailClient({ item, reviews: initialReviews }) {
 
         {/* Reviews */}
         <div className="mt-16 border-t border-border pt-10">
-          <h2 className="text-2xl font-black font-display mb-6">Reviews ({reviews.length})</h2>
+          <h2 className="text-2xl font-bold font-display mb-6">Reviews ({reviews.length})</h2>
 
           <div className="bg-card border border-border rounded-2xl p-6 mb-8">
             <h3 className="font-bold text-text mb-3">Write a Review</h3>

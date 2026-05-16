@@ -47,7 +47,7 @@ export default function HomeClient({ popularItems, categories, stats }) {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 }}
-      className="text-5xl sm:text-7xl lg:text-8xl font-black text-text font-display leading-[0.95] tracking-tight"
+      className="text-5xl sm:text-7xl lg:text-8xl font-bold text-text font-display leading-[0.95] tracking-tight"
     >
       FOOD THAT{' '}
       <span className="relative inline-block">
@@ -106,15 +106,15 @@ export default function HomeClient({ popularItems, categories, stats }) {
       className="flex justify-center gap-8 sm:gap-12 mt-14"
     >
       <div className="text-center">
-        <p className="text-3xl sm:text-4xl font-black font-display">{stats.menuCount}+</p>
+        <p className="text-3xl sm:text-4xl font-bold font-display">{stats.menuCount}+</p>
         <p className="text-xs sm:text-sm text-text-muted mt-1">Menu Items</p>
       </div>
       <div className="text-center">
-        <p className="text-3xl sm:text-4xl font-black font-display">{stats.avgRating} ⭐</p>
+        <p className="text-3xl sm:text-4xl font-bold font-display">{stats.avgRating} ⭐</p>
         <p className="text-xs sm:text-sm text-text-muted mt-1">Rating</p>
       </div>
       <div className="text-center">
-        <p className="text-3xl sm:text-4xl font-black font-display">{stats.deliveryTime}</p>
+        <p className="text-3xl sm:text-4xl font-bold font-display">{stats.deliveryTime}</p>
         <p className="text-xs sm:text-sm text-text-muted mt-1">Delivery</p>
       </div>
     </motion.div>
