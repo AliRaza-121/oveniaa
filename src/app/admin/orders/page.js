@@ -1,146 +1,134 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 
-export default function MenuClient({ items, categories, activeCategory, searchTerm: initialSearch }) {
-  const [category, setCategory] = useState(activeCategory)
-  const [search, setSearch] = useState(initialSearch)
-  const [openCategories, setOpenCategories] = useState([])
-  const [showSuggestions, setShowSuggestions] = useState(false)
-  const router = useRouter()
+const statuses = ['pending', 'confirmed', 'preparing', 'ready', 'delivered']
+const colors = {
+  pending: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
+  confirmed: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+  preparing: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+  ready: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+  delivered: 'bg-green-500/10 text-green-400 border-green-500/20',
+}
+
+export default function AdminOrders() {
+  const [orders, setOrders] = useState([])
+  const [activeTab, setActiveTab] = useState('pending')
+  const [prevOrderCount, setPrevOrderCount] = useState(0)
+  const searchParams = useSearchParams()
+  const searchQuery = searchParams.get('search') || ''
+
+  const playSound = () => {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)()
+      const osc = ctx.createOscillator(); const gain = ctx.createGain()
+      osc.connect(gain); gain.connect(ctx.destination)
+      osc.frequency.value = 800; gain.gain.value = 0.1
+      osc.start(); osc.stop(ctx.currentTime + 0.1)
+      setTimeout(() => {
+        const osc2 = ctx.createOscillator(); const gain2 = ctx.createGain()
+        osc2.connect(gain2); gain2.connect(ctx.destination)
+        osc2.frequency.value = 1000; gain2.gain.value = 0.1
+        osc2.start(); osc2.stop(ctx.currentTime + 0.15)
+      }, 120)
+    } catch {}
+  }
+
+  const fetchOrders = async () => {
+    const res = await fetch('/api/orders'); const data = await res.json()
+    if (data.success) {
+      if (prevOrderCount > 0 && data.orders.length > prevOrderCount) playSound()
+      setPrevOrderCount(data.orders.length)
+      setOrders(data.orders)
+    }
+  }
 
   useEffect(() => {
-    if (items.length > 0) {
-      const cats = [...new Set(items.map(i => i.category))]
-      setOpenCategories(cats)
-    }
-  }, [items])
+    fetchOrders()
+    const interval = setInterval(fetchOrders, 30000)
+    return () => clearInterval(interval)
+  }, [])
 
-  const toggleCategory = (cat) => {
-    setOpenCategories(prev => prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat])
+  const updateStatus = async (id, status) => {
+    setOrders(prev => prev.map(o => o._id === id ? { ...o, status } : o))
+    await fetch(`/api/orders/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) })
   }
 
-  const handleCategoryChange = (cat) => {
-    setCategory(cat)
-    const params = new URLSearchParams()
-    if (cat !== 'All') params.set('category', cat)
-    if (search) params.set('search', search)
-    router.push(`/menu?${params.toString()}`)
-    
-    setTimeout(() => {
-      const el = document.getElementById(`cat-${cat}`)
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }, 100)
-  }
+  const baseOrders = searchQuery
+    ? orders.filter(o => o.customerName?.toLowerCase().includes(searchQuery.toLowerCase()) || o.phone?.includes(searchQuery) || o._id.slice(-6).toUpperCase().includes(searchQuery.toUpperCase()))
+    : orders
 
-  const grouped = {}
-  items.forEach(item => {
-    if (!grouped[item.category]) grouped[item.category] = []
-    grouped[item.category].push(item)
-  })
+  const filtered = activeTab === 'All' ? baseOrders : baseOrders.filter(o => o.status === activeTab)
+
+  const tabs = [
+    { key: 'pending', label: 'Pending', count: baseOrders.filter(o => o.status === 'pending').length },
+    { key: 'confirmed', label: 'Confirmed', count: baseOrders.filter(o => o.status === 'confirmed').length },
+    { key: 'preparing', label: 'Preparing', count: baseOrders.filter(o => o.status === 'preparing').length },
+    { key: 'ready', label: 'Ready', count: baseOrders.filter(o => o.status === 'ready').length },
+    { key: 'delivered', label: 'Delivered', count: baseOrders.filter(o => o.status === 'delivered').length },
+  ]
 
   return (
-    <div className="pt-20 pb-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="text-center mb-8">
-          <h1 className="text-5xl sm:text-7xl font-bold font-display">Our Menu</h1>
-        </div>
+    <div>
+      <h1 className="text-xl sm:text-2xl font-bold font-display mb-4 sm:mb-6">Orders ({baseOrders.length})</h1>
 
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 sticky top-16 bg-bg py-3 z-30">
-          <div className="flex gap-2 flex-wrap justify-center sm:justify-start w-full sm:w-auto">
-            <button onClick={() => handleCategoryChange('All')} className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${category === 'All' ? 'bg-primary text-white' : 'bg-card text-text-light hover:bg-border'}`}>All</button>
-            {categories.map(cat => (
-              <button key={cat._id} onClick={() => handleCategoryChange(cat.name)} className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${category === cat.name ? 'bg-primary text-white' : 'bg-card text-text-light hover:bg-border'}`}>{cat.name}</button>
-            ))}
-          </div>
-          
-          <div className="relative w-full sm:w-56">
-            <input
-              type="text" value={search}
-              onChange={(e) => { setSearch(e.target.value); setShowSuggestions(e.target.value.length > 0); router.push(`/menu?category=${category}&search=${e.target.value}`) }}
-              onFocus={() => setShowSuggestions(search.length > 0)}
-              onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-              placeholder="Search..."
-              className="px-4 py-2 rounded-full border border-border bg-card text-text text-sm focus:outline-none focus:border-primary w-full"
-            />
-            {showSuggestions && search && (
-              <div className="absolute top-full mt-1 left-0 right-0 bg-card border border-border rounded-2xl shadow-xl z-50 overflow-hidden">
-                {items.filter(i => i.name.toLowerCase().includes(search.toLowerCase())).slice(0, 5).map(i => (
-                  <Link key={i._id} href={`/menu/${i._id}`} className="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-bg transition-colors">
-                    <span>{i.category === 'Burgers' ? '🍔' : i.category === 'Pizzas' ? '🍕' : i.category === 'Fries & Sides' ? '🍟' : '🥤'}</span>
-                    {i.name}
-                    <span className="ml-auto text-xs text-text-muted">Rs. {i.price}</span>
-                  </Link>
-                ))}
+      {searchQuery && (
+        <p className="text-xs sm:text-sm text-text-muted mb-4">Search: <span className="text-primary font-semibold">"{searchQuery}"</span> — {baseOrders.length} found</p>
+      )}
+
+      <div className="flex gap-1 mb-4 sm:mb-6 overflow-x-auto pb-2 scrollbar-hide">
+        {tabs.map(tab => (
+          <button key={tab.key} onClick={() => setActiveTab(tab.key)}
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 sm:gap-2
+              ${activeTab === tab.key ? 'bg-primary text-white' : 'bg-card text-text-light border border-border hover:border-primary'}`}>
+            {tab.label}
+            <span className={`w-4 sm:w-5 h-4 sm:h-5 rounded-full text-[9px] sm:text-[10px] flex items-center justify-center ${activeTab === tab.key ? 'bg-white/20' : 'bg-border/50'}`}>{tab.count}</span>
+          </button>
+        ))}
+      </div>
+
+      <div className="space-y-3 sm:space-y-4">
+        {filtered.map(order => (
+          <div key={order._id} className="bg-card border border-border rounded-2xl p-4 sm:p-5">
+            <div className="flex justify-between items-start mb-3">
+              <div className="min-w-0 flex-1 mr-3">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <p className="text-[10px] sm:text-xs text-text-muted font-mono">#{order._id.slice(-6).toUpperCase()}</p>
+                  <span className={`text-[9px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full capitalize ${colors[order.status]}`}>{order.status}</span>
+                </div>
+                <p className="text-xs sm:text-sm font-semibold truncate">{order.customerName}</p>
+                <p className="text-[10px] sm:text-xs text-text-muted truncate">{order.phone}{order.address ? ` • ${order.address}` : ''}</p>
+                {order.email && <p className="text-[10px] sm:text-xs text-text-muted truncate">{order.email}</p>}
+                <p className="text-[10px] sm:text-xs text-text-muted mt-1">🕐 {new Date(order.createdAt).toLocaleTimeString('en-PK', { hour: '2-digit', minute: '2-digit' })} • {Math.round((Date.now() - new Date(order.createdAt).getTime()) / 60000)} min</p>
               </div>
-            )}
-          </div>
-        </div>
-
-        <p className="text-sm text-text-muted mb-6">{items.length} items found</p>
-
-        <div className="space-y-6">
-          {Object.entries(grouped).map(([cat, catItems]) => (
-            <div key={cat} id={`cat-${cat}`}>
-              <button onClick={() => toggleCategory(cat)} className="w-full flex items-center gap-3 text-left mb-4">
-                <span className="text-xl">{cat === 'Burgers' ? '🍔' : cat === 'Pizzas' ? '🍕' : cat === 'Fries & Sides' ? '🍟' : '🥤'}</span>
-                <h2 className="text-xl font-bold font-display">{cat}</h2>
-                <span className="text-sm text-text-muted">({catItems.length})</span>
-                <motion.svg animate={{ rotate: openCategories.includes(cat) ? 180 : 0 }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 ml-auto text-text-muted">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                </motion.svg>
-              </button>
-
-              <AnimatePresence>
-                {openCategories.includes(cat) && (
-                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
-                      {catItems.map((item, i) => (
-                        <motion.div key={item._id} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: Math.min(i * 0.02, 0.1) }}>
-                          <Link href={`/menu/${item._id}`} className="bg-card border border-border rounded-2xl p-4 flex flex-col hover:shadow-md hover:border-primary/30 transition-all group h-full">
-                            <div className="w-full h-40 sm:h-48 bg-primary/10 rounded-xl flex items-center justify-center text-4xl sm:text-5xl mb-4 group-hover:scale-105 transition-transform overflow-hidden">
-                              {item.image ? (
-                                <img src={item.image.replace('/upload/', '/upload/w_400,f_auto,q_auto/')} alt={item.name} className="w-full h-full object-cover rounded-xl" loading="lazy" />
-                              ) : (
-                                <span>{cat === 'Burgers' ? '🍔' : cat === 'Pizzas' ? '🍕' : cat === 'Fries & Sides' ? '🍟' : '🥤'}</span>
-                              )}
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex items-start justify-between gap-2">
-                                <h3 className="font-bold text-sm sm:text-base">{item.name}</h3>
-                                {!item.isAvailable && <span className="text-[10px] text-red-500 font-medium bg-red-500/10 px-1.5 py-0.5 rounded-full flex-shrink-0">Sold Out</span>}
-                              </div>
-                              <p className="text-xs text-text-muted mt-1.5 line-clamp-2">{item.description}</p>
-                            </div>
-                            <div className="flex items-center justify-between mt-4 pt-3 border-t border-border">
-                              <span className="text-primary font-bold sm:text-lg">
-                                {item.sizes?.length > 0 && item.sizePrices && Object.keys(item.sizePrices).length > 0
-                                  ? `Rs. ${Math.min(...Object.values(item.sizePrices))} - Rs. ${Math.max(...Object.values(item.sizePrices))}`
-                                  : `Rs. ${item.price}`}
-                              </span>
-                              <span className="text-xs text-text-muted group-hover:text-primary transition-colors">View →</span>
-                            </div>
-                          </Link>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              <div className="text-right flex-shrink-0">
+                <p className="text-base sm:text-lg font-bold text-primary">Rs. {order.total}</p>
+                <p className="text-[10px] sm:text-xs text-text-muted capitalize">{order.orderType}</p>
+              </div>
             </div>
-          ))}
-        </div>
 
-        {items.length === 0 && (
-          <div className="text-center py-20">
-            <span className="text-5xl">🍽️</span>
-            <p className="text-text-muted mt-4">No items found</p>
-            <button onClick={() => { setCategory('All'); setSearch(''); router.push('/menu') }} className="text-primary font-medium mt-2 hover:underline">Clear filters</button>
+            <div className="text-[10px] sm:text-sm text-text-muted mb-3 bg-bg rounded-xl p-2 sm:p-3 break-words">
+              {order.items.map((item, i) => (
+                <div key={i} className="flex justify-between py-0.5">
+                  <span className="truncate mr-2">{item.quantity}x {item.name} {item.size ? `(${item.size})` : ''}</span>
+                  <span className="flex-shrink-0">Rs. {item.price * item.quantity}</span>
+                </div>
+              ))}
+            </div>
+
+            {order.notes && <p className="text-[10px] sm:text-xs text-text-muted mb-3">📝 {order.notes}</p>}
+
+            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+              <select value={order.status} onChange={e => updateStatus(order._id, e.target.value)} className="bg-bg text-text border border-border rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs">
+                {statuses.map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
+              <button onClick={() => updateStatus(order._id, activeTab === 'pending' ? 'confirmed' : activeTab === 'confirmed' ? 'preparing' : activeTab === 'preparing' ? 'ready' : 'delivered')} className="text-[10px] sm:text-xs bg-primary text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full font-medium hover:bg-primary-dark transition-colors">Next →</button>
+              <button onClick={() => { const w = window.open('', '', 'width=400,height=600'); w.document.write(`<html><head><title>Order #${order._id.slice(-6).toUpperCase()}</title><style>body{font-family:sans-serif;padding:20px;font-size:14px}h2{font-size:18px}.item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #ddd}.total{font-weight:bold;font-size:16px;margin-top:12px}</style></head><body><h2>🍕 Oveniaa - Order #${order._id.slice(-6).toUpperCase()}</h2><p><strong>${order.customerName}</strong> | ${order.phone}</p><p>Type: ${order.orderType} | Status: ${order.status}</p>${order.address ? `<p>📍 ${order.address}</p>` : ''}<hr/>${order.items.map(i => `<div class="item"><span>${i.quantity}x ${i.name} ${i.size ? '('+i.size+')' : ''}</span><span>Rs. ${i.price * i.quantity}</span></div>`).join('')}<div class="total">Total: Rs. ${order.total}</div>${order.notes ? `<p>📝 ${order.notes}</p>` : ''}</body></html>`); w.document.close(); w.print() }} className="text-[10px] sm:text-xs bg-card border border-border px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-text-muted hover:text-text transition-colors">🖨️</button>
+            </div>
           </div>
-        )}
+        ))}
+        {filtered.length === 0 && <p className="text-center text-text-muted py-10 text-sm">No {activeTab} orders</p>}
       </div>
     </div>
   )

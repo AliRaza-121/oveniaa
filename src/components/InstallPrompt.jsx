@@ -7,23 +7,43 @@ export default function InstallPrompt() {
   const [showPrompt, setShowPrompt] = useState(false)
 
   useEffect(() => {
+    // Never show if already dismissed or installed
+    const dismissed = localStorage.getItem('oveniaa-install-dismissed')
+    if (dismissed) return
+
     const handler = (e) => {
       e.preventDefault()
       setDeferredPrompt(e)
-      setShowPrompt(true)
+      // Only show if not already showing
+      if (!localStorage.getItem('oveniaa-install-dismissed')) {
+        setShowPrompt(true)
+      }
     }
     window.addEventListener('beforeinstallprompt', handler)
-    return () => window.removeEventListener('beforeinstallprompt', handler)
+    
+    // Check if already installed
+    window.addEventListener('appinstalled', () => {
+      localStorage.setItem('oveniaa-install-dismissed', 'true')
+      setShowPrompt(false)
+    })
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler)
+    }
   }, [])
 
   const handleInstall = async () => {
     if (!deferredPrompt) return
     deferredPrompt.prompt()
     const result = await deferredPrompt.userChoice
-    if (result.outcome === 'accepted') {
-      setShowPrompt(false)
-    }
     setDeferredPrompt(null)
+    setShowPrompt(false)
+    localStorage.setItem('oveniaa-install-dismissed', 'true')
+  }
+
+  const handleDismiss = () => {
+    setShowPrompt(false)
+    localStorage.setItem('oveniaa-install-dismissed', 'true')
   }
 
   if (!showPrompt) return null
@@ -40,7 +60,7 @@ export default function InstallPrompt() {
           Install
         </button>
       </div>
-      <button onClick={() => setShowPrompt(false)} className="absolute -top-2 -right-2 w-6 h-6 bg-card border border-border rounded-full flex items-center justify-center text-xs text-text-muted hover:text-text">✕</button>
+      <button onClick={handleDismiss} className="absolute -top-2 -right-2 w-6 h-6 bg-card border border-border rounded-full flex items-center justify-center text-xs text-text-muted hover:text-text">✕</button>
     </div>
   )
 }

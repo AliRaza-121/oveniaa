@@ -2,11 +2,13 @@ import connectDB from '@/lib/db'
 import MenuItem from '@/models/MenuItem'
 import Category from '@/models/Category'
 import Review from '@/models/Review'
+import Deal from '@/models/Deal'
 import HomeClient from '@/components/HomeClient'
 
 export default async function Home() {
   let popularItems = []
   let categories = []
+  let deals = []
   let stats = { menuCount: 0, avgRating: '4.8', deliveryTime: '30 min' }
 
   try {
@@ -29,7 +31,12 @@ export default async function Home() {
 
     popularItems = JSON.parse(JSON.stringify(items))
     categories = JSON.parse(JSON.stringify(categories))
-  } catch {}
+    
+    const dealsData = await Deal.find({ isActive: true }).populate('items').sort({ createdAt: -1 }).lean()
+    deals = JSON.parse(JSON.stringify(dealsData))
+  } catch (e) {
+    console.error('Homepage error:', e)
+  }
 
-  return <HomeClient popularItems={popularItems} categories={categories} stats={stats} />
+  return <HomeClient popularItems={popularItems} categories={categories} deals={deals} stats={stats} />
 }

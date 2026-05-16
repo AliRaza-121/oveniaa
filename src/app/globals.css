@@ -23,7 +23,8 @@
 
 html, body {
   overflow-x: hidden;
-  max-width: 100%;
+  width: 100%;
+  max-width: 100vw;
 }
 
 body {
@@ -32,7 +33,17 @@ body {
   font-family: var(--font-sans);
 }
 
-.font-display {
-  font-weight: 700 !important;
-  letter-spacing: 0.02em;
+@media (max-width: 640px) {
+  *, *::before, *::after {
+    max-width: 100vw;
+  }
+  .grid {
+    width: 100% !important;
+  }
+}
+
+.admin-container {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
