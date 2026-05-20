@@ -7,7 +7,7 @@ export default function AboutClient() {
     <div className="pt-24 pb-16">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
-          <h1 className="text-5xl sm:text-7xl font-bold font-display">About <span className="text-primary">Oveniaa</span></h1>
+          <h1 className="text-5xl sm:text-7xl font-bold">About <span className="text-primary">Oveniaa</span></h1>
           <p className="text-text-muted mt-4 max-w-2xl mx-auto leading-relaxed">Born from a love for great food and fast service. We serve fresh, hot, and flavorful meals that bring people together.</p>
         </motion.div>
 
@@ -25,7 +25,7 @@ export default function AboutClient() {
         </div>
 
         <div className="bg-primary/10 rounded-3xl p-8 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold font-display mb-4">Meet the Founder</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4">Meet the Founder</h2>
           <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold text-primary">AR</div>
           <p className="text-xl font-bold">Ali Raza</p>
           <p className="text-text-muted text-sm">Founder & Full Stack Developer</p>

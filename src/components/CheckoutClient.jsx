@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -15,13 +15,19 @@ export default function CheckoutClient() {
   const router = useRouter()
 
   const [form, setForm] = useState({
-    customerName: user?.name || '',
-    email: user?.email || '',
+    customerName: '',
+    email: '',
     phone: '',
     address: '',
     orderType: 'delivery',
     notes: '',
   })
+  
+  useEffect(() => {
+    if (user) {
+      setForm(f => ({ ...f, customerName: user.name || f.customerName, email: user.email || f.email }))
+    }
+  }, [user])
   const [submitting, setSubmitting] = useState(false)
 
   const handleSubmit = async (e) => {
@@ -55,7 +61,7 @@ export default function CheckoutClient() {
       <div className="min-h-screen flex items-center justify-center pt-20">
         <div className="text-center">
           <span className="text-5xl">🛒</span>
-          <h1 className="text-2xl font-bold font-display mt-4">Cart is empty</h1>
+          <h1 className="text-2xl font-bold mt-4">Cart is empty</h1>
           <Link href="/menu" className="inline-block mt-4 bg-primary text-white px-6 py-3 rounded-full font-semibold">Browse Menu</Link>
         </div>
       </div>
@@ -65,7 +71,7 @@ export default function CheckoutClient() {
   return (
     <div className="pt-24 pb-16">
       <div className="max-w-2xl mx-auto px-4 sm:px-6">
-        <h1 className="text-3xl font-bold font-display mb-8">Checkout</h1>
+        <h1 className="text-3xl font-bold mb-8">Checkout</h1>
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-sm font-semibold mb-2">Order Type</label>

@@ -1,9 +1,11 @@
 import connectDB from '@/lib/db'
 import Order from '@/models/Order'
 import { sendOrderStatusEmail } from '@/lib/email'
+import { requireAdmin } from '@/lib/auth'
 
 export async function PUT(request, { params }) {
   try {
+    await requireAdmin()
     await connectDB()
     const { id } = await params
     const { status } = await request.json()

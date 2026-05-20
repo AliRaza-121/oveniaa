@@ -71,7 +71,7 @@ export default function AdminOrders() {
 
   return (
     <div>
-      <h1 className="text-xl sm:text-2xl font-bold font-display mb-4 sm:mb-6">Orders ({baseOrders.length})</h1>
+      <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Orders ({baseOrders.length})</h1>
 
       {searchQuery && (
         <p className="text-xs sm:text-sm text-text-muted mb-4">Search: <span className="text-primary font-semibold">"{searchQuery}"</span> — {baseOrders.length} found</p>

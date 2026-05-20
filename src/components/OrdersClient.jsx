@@ -22,7 +22,7 @@ export default function OrdersClient({ orders }) {
     <div className="min-h-screen flex items-center justify-center pt-20">
       <div className="text-center">
         <span className="text-5xl">🔒</span>
-        <h1 className="text-2xl font-bold font-display mt-4">Please login</h1>
+        <h1 className="text-2xl font-bold mt-4">Please login</h1>
         <Link href="/login" className="inline-block mt-4 bg-primary text-white px-6 py-3 rounded-full font-semibold">Login</Link>
       </div>
     </div>
@@ -31,7 +31,7 @@ export default function OrdersClient({ orders }) {
   return (
     <div className="pt-24 pb-16">
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
-        <h1 className="text-3xl font-bold font-display mb-2">My Orders</h1>
+        <h1 className="text-3xl font-bold mb-2">My Orders</h1>
         <p className="text-text-muted text-sm mb-8">{orders.length} order{orders.length !== 1 ? 's' : ''}</p>
         {orders.length === 0 ? (
           <div className="text-center py-16">

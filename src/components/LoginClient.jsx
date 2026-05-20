@@ -25,10 +25,10 @@ export default function LoginClient() {
     <div className="min-h-screen flex items-center justify-center px-4 pt-16">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link href="/" className="text-3xl font-bold font-display text-primary">🍕 Oveniaa</Link>
+          <Link href="/" className="text-3xl font-bold text-primary">🍕 Oveniaa</Link>
         </div>
         <div className="bg-card border border-border rounded-3xl p-8">
-          <h1 className="text-2xl font-bold font-display text-center mb-2">Welcome Back</h1>
+          <h1 className="text-2xl font-bold text-center mb-2">Welcome Back</h1>
           <p className="text-text-muted text-sm text-center mb-6">Sign in to your account</p>
 
           {error && <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl px-4 py-3 mb-4">{error}</div>}

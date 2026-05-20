@@ -5,6 +5,11 @@ import Review from '@/models/Review'
 import Deal from '@/models/Deal'
 import HomeClient from '@/components/HomeClient'
 
+export const metadata = {
+  title: 'Oveniaa - Hot & Fresh Food Delivery in Faisalabad',
+  description: 'Order the best pizzas, burgers, fries, and deals in Faisalabad. Fast delivery in 30 minutes. Hot, fresh, and delicious!',
+}
+
 export default async function Home() {
   let popularItems = []
   let categories = []
@@ -18,15 +23,19 @@ export default async function Home() {
     const allItems = await MenuItem.find({ isAvailable: true }).lean()
     stats.menuCount = allItems.length
 
-    const reviews = await Review.find({}).lean()
-    if (reviews.length > 0) {
-      stats.avgRating = (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
-    }
+    const reviewStats = await Review.aggregate([
+      { $group: { _id: null, avgRating: { $avg: '$rating' } } }
+    ])
+    if (reviewStats.length > 0) stats.avgRating = reviewStats[0].avgRating.toFixed(1)
+
+    const itemRatings = await Review.aggregate([
+      { $group: { _id: '$menuItem', avgRating: { $avg: '$rating' } } }
+    ])
 
     const items = allItems.filter(i => i.isPopular)
     for (const item of items) {
-      const itemReviews = reviews.filter(r => r.menuItem.toString() === item._id.toString())
-      item.avgRating = itemReviews.length > 0 ? Math.round(itemReviews.reduce((s, r) => s + r.rating, 0) / itemReviews.length) : 0
+      const ratingObj = itemRatings.find(r => r._id && r._id.toString() === item._id.toString())
+      item.avgRating = ratingObj ? Math.round(ratingObj.avgRating) : 0
     }
 
     popularItems = JSON.parse(JSON.stringify(items))

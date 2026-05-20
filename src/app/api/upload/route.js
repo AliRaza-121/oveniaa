@@ -1,4 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary'
+import { requireAdmin } from '@/lib/auth'
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -8,9 +9,16 @@ cloudinary.config({
 
 export async function POST(request) {
   try {
+    await requireAdmin()
     const formData = await request.formData()
     const file = formData.get('image')
     if (!file) return Response.json({ success: false, error: 'No image' }, { status: 400 })
+
+    const MAX_SIZE = 5 * 1024 * 1024 // 5MB
+    if (file.size > MAX_SIZE) return Response.json({ success: false, error: 'File too large' }, { status: 400 })
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      return Response.json({ success: false, error: 'Invalid file type' }, { status: 400 })
+    }
 
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)

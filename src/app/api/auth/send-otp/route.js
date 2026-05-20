@@ -2,8 +2,14 @@ import connectDB from '@/lib/db'
 import User from '@/models/User'
 import OTP from '@/models/OTP'
 import { sendOTP } from '@/lib/email'
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 
 export async function POST(request) {
+  const ip = getClientIp(request)
+  if (!checkRateLimit(ip, 3, 60000 * 5)) {
+    return Response.json({ success: false, error: 'Too many requests' }, { status: 429 })
+  }
+
   try {
     await connectDB()
     const { email } = await request.json()

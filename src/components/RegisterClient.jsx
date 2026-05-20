@@ -48,10 +48,10 @@ export default function RegisterClient() {
     <div className="min-h-screen flex items-center justify-center px-4 py-10">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link href="/" className="text-3xl font-bold font-display text-primary">🍕 Oveniaa</Link>
+          <Link href="/" className="text-3xl font-bold text-primary">🍕 Oveniaa</Link>
         </div>
         <div className="bg-card border border-border rounded-3xl p-8">
-          <h1 className="text-2xl font-bold font-display text-center mb-2">
+          <h1 className="text-2xl font-bold text-center mb-2">
             {step === 'form' ? 'Create Account' : 'Check Your Email'}
           </h1>
           <p className="text-text-muted text-sm text-center mb-6">

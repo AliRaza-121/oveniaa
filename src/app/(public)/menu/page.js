@@ -3,6 +3,11 @@ import MenuItem from '@/models/MenuItem'
 import Category from '@/models/Category'
 import MenuClient from '@/components/MenuClient'
 
+export const metadata = {
+  title: 'Our Menu - Oveniaa | Pizzas, Burgers & More',
+  description: 'Explore Oveniaa\'s menu featuring hot pizzas, juicy burgers, crispy fries, and refreshing drinks. Order online for quick delivery in Faisalabad.',
+}
+
 export default async function Menu({ searchParams }) {
   const params = await searchParams
   const category = params?.category || 'All'

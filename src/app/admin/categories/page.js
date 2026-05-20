@@ -32,7 +32,7 @@ export default function AdminCategories() {
   return (
     <div>
       <div className="flex justify-between mb-6">
-        <h1 className="text-2xl font-bold font-display">Categories ({categories.length})</h1>
+        <h1 className="text-2xl font-bold">Categories ({categories.length})</h1>
         <button onClick={openAdd} className="bg-primary text-white px-5 py-2 rounded-full text-sm font-semibold">+ Add</button>
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -47,7 +47,7 @@ export default function AdminCategories() {
 
       {showModal && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setShowModal(false)}>
-          <div className="bg-card rounded-2xl w-full max-w-sm p-6" onClick={e => e.stopPropagation()}>
+          <div className="bg-card rounded-2xl w-full max-w-sm p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <h2 className="font-bold mb-4">{editingId ? 'Edit' : 'Add'} Category</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <input value={form.name} onChange={e => setForm({...form, name: e.target.value})} required className="w-full bg-bg border border-border rounded-xl px-3 py-2 text-sm text-text focus:outline-none focus:border-primary" placeholder="Category name" />

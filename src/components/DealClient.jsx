@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useCart } from '@/context/CartContext'
 import { useToast } from '@/context/ToastContext'
 
@@ -44,7 +45,7 @@ export default function DealClient({ deal }) {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className={`bg-gradient-to-br ${deal.backgroundColor || 'from-primary/20 to-secondary/10'} border border-border rounded-3xl p-8 sm:p-10 mb-8`}>
           <div className="text-center mb-8">
             <span className="inline-block bg-white/20 text-white text-sm font-bold px-4 py-1.5 rounded-full mb-4">⚡ LIMITED TIME DEAL</span>
-            <h1 className="text-3xl sm:text-4xl font-bold font-display">{deal.title}</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold">{deal.title}</h1>
             {deal.description && <p className="text-text-muted mt-3">{deal.description}</p>}
           </div>
           <div className="flex items-center justify-center gap-4 mb-8">
@@ -61,12 +62,12 @@ export default function DealClient({ deal }) {
 
         {deal.items?.length > 0 && (
           <div>
-            <h2 className="text-xl font-bold font-display mb-4">What is Included</h2>
+            <h2 className="text-xl font-bold mb-4">What is Included</h2>
             <div className="space-y-3">
               {deal.items.map((item) => (
                 <div key={item._id} className="bg-card border border-border rounded-2xl p-4 flex items-center gap-4">
-                  <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
-                    {item.image ? <img src={item.image} alt="" className="w-full h-full object-cover rounded-xl" /> : <span>{item.category === 'Burgers' ? '🍔' : item.category === 'Pizzas' ? '🍕' : item.category === 'Fries & Sides' ? '🍟' : '🥤'}</span>}
+                  <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center text-2xl flex-shrink-0 relative overflow-hidden">
+                    {item.image ? <Image src={item.image.replace('/upload/', '/upload/w_150,h_150,c_fill,g_auto,f_auto,q_auto/')} alt={item.name} fill className="object-cover" /> : <span>{item.category === 'Burgers' ? '🍔' : item.category === 'Pizzas' ? '🍕' : item.category === 'Fries & Sides' ? '🍟' : '🥤'}</span>}
                   </div>
                   <div className="flex-1"><h3 className="font-semibold text-text">{item.name}</h3><p className="text-sm text-text-muted">{item.description?.slice(0, 60)}...</p></div>
                   <div className="text-right"><p className="font-bold text-primary">Rs. {item.price}</p></div>

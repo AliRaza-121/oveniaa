@@ -67,7 +67,7 @@ export default function AdminDeals() {
   return (
     <div>
       <div className="flex justify-between mb-6">
-        <div><h1 className="text-2xl font-bold font-display">Deals</h1><p className="text-text-muted text-sm">{deals.length} deals</p></div>
+        <div><h1 className="text-2xl font-bold">Deals</h1><p className="text-text-muted text-sm">{deals.length} deals</p></div>
         <button onClick={openAdd} className="bg-primary text-white px-5 py-2 rounded-full text-sm font-semibold">+ Add Deal</button>
       </div>
 

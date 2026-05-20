@@ -28,13 +28,13 @@ export default function OrderNotifier() {
 
     const checkOrders = async () => {
       try {
-        const res = await fetch('/api/orders')
+        const res = await fetch('/api/admin/stats')
         const data = await res.json()
         if (data.success) {
-          if (prevCount.current > 0 && data.orders.length > prevCount.current) {
+          if (prevCount.current > 0 && data.stats.orders > prevCount.current) {
             playSound()
           }
-          prevCount.current = data.orders.length
+          prevCount.current = data.stats.orders
         }
       } catch {}
     }

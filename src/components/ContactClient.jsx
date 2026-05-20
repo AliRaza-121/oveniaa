@@ -22,7 +22,7 @@ export default function ContactClient() {
     <div className="pt-24 pb-16">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
-          <h1 className="text-5xl sm:text-7xl font-bold font-display">Contact <span className="text-primary">Us</span></h1>
+          <h1 className="text-5xl sm:text-7xl font-bold">Contact <span className="text-primary">Us</span></h1>
           <p className="text-text-muted mt-4">Have a question or feedback? We'd love to hear from you.</p>
         </motion.div>
 

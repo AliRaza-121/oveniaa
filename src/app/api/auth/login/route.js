@@ -2,10 +2,16 @@ import connectDB from '@/lib/db'
 import User from '@/models/User'
 import jwt from 'jsonwebtoken'
 import { cookies } from 'next/headers'
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 
 const JWT_SECRET = process.env.JWT_SECRET
 
 export async function POST(request) {
+  const ip = getClientIp(request)
+  if (!checkRateLimit(ip, 5, 60000 * 15)) {
+    return Response.json({ success: false, error: 'Too many attempts. Please try again later.' }, { status: 429 })
+  }
+
   try {
     await connectDB()
     const { email, password } = await request.json()

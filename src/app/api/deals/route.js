@@ -1,5 +1,6 @@
 import connectDB from '@/lib/db'
 import Deal from '@/models/Deal'
+import { requireAdmin } from '@/lib/auth'
 
 export async function GET() {
   try {
@@ -13,6 +14,7 @@ export async function GET() {
 
 export async function POST(request) {
   try {
+    await requireAdmin()
     await connectDB()
     const body = await request.json()
     const deal = await Deal.create(body)

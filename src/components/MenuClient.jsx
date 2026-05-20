@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
 export default function MenuClient({ items, categories, activeCategory, searchTerm: initialSearch }) {
@@ -42,7 +43,7 @@ export default function MenuClient({ items, categories, activeCategory, searchTe
     <div className="pt-20 pb-16 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 overflow-hidden">
         <div className="text-center mb-8">
-          <h1 className="text-5xl sm:text-7xl font-bold font-display">Our Menu</h1>
+          <h1 className="text-5xl sm:text-7xl font-bold">Our Menu</h1>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 sticky top-16 bg-bg py-3 z-30">
@@ -62,7 +63,7 @@ export default function MenuClient({ items, categories, activeCategory, searchTe
             <div key={cat} className="w-full max-w-full">
               <button onClick={() => toggleCategory(cat)} className="w-full flex items-center gap-3 text-left mb-4">
                 <span className="text-xl">{cat === 'Burgers' ? '🍔' : cat === 'Pizzas' ? '🍕' : cat === 'Fries & Sides' ? '🍟' : '🥤'}</span>
-                <h2 className="text-xl font-bold font-display">{cat}</h2>
+                <h2 className="text-xl font-bold">{cat}</h2>
                 <span className="text-sm text-text-muted">({catItems.length})</span>
                 <motion.svg animate={{ rotate: openCategories.includes(cat) ? 180 : 0 }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 ml-auto text-text-muted">
                   <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
@@ -76,9 +77,9 @@ export default function MenuClient({ items, categories, activeCategory, searchTe
                       {catItems.map((item, i) => (
                         <motion.div key={item._id} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: Math.min(i * 0.02, 0.1) }} className="w-full max-w-full">
                           <Link href={`/menu/${item._id}`} className="bg-card border border-border rounded-2xl p-4 flex flex-col hover:shadow-md hover:border-primary/30 transition-all group h-full w-full max-w-full overflow-hidden">
-                            <div className="w-full h-40 sm:h-48 bg-primary/10 rounded-xl flex items-center justify-center text-4xl sm:text-5xl mb-4 group-hover:scale-105 transition-transform overflow-hidden">
+                            <div className="w-full aspect-square bg-primary/10 rounded-xl flex items-center justify-center text-4xl sm:text-5xl mb-4 overflow-hidden relative group-hover:scale-[1.02] transition-transform">
                               {item.image ? (
-                                <img src={item.image.replace('/upload/', '/upload/w_400,f_auto,q_auto/')} alt={item.name} className="w-full h-full object-cover rounded-xl" loading="lazy" />
+                                <Image src={item.image.replace('/upload/', '/upload/w_600,h_600,c_fill,g_auto,f_auto,q_auto/')} alt={item.name} fill className="object-cover" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" priority={i < 4} />
                               ) : (
                                 <span>{cat === 'Burgers' ? '🍔' : cat === 'Pizzas' ? '🍕' : cat === 'Fries & Sides' ? '🍟' : '🥤'}</span>
                               )}

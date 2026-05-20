@@ -12,6 +12,7 @@ const sidebarLinks = [
   { name: 'Categories', href: '/admin/categories', icon: '📂' },
   { name: 'Orders', href: '/admin/orders', icon: '🛒' },
   { name: 'Deals', href: '/admin/deals', icon: '⚡' },
+  { name: 'Users', href: '/admin/users', icon: '👥' },
 ]
 
 export default function AdminLayout({ children }) {

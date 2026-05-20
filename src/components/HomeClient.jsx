@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function HomeClient({ popularItems, categories, deals, stats }) {
   return (
@@ -27,7 +28,7 @@ export default function HomeClient({ popularItems, categories, deals, stats }) {
             HOT & FRESH • DELIVERING NOW 🛵
           </motion.div>
 
-          <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-5xl sm:text-7xl lg:text-8xl font-bold text-text font-display leading-[0.95] tracking-tight">
+          <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-5xl sm:text-7xl lg:text-8xl font-bold text-text leading-[0.95] tracking-tight">
             FOOD THAT{' '}
             <span className="relative inline-block">
               <motion.span animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }} transition={{ repeat: Infinity, duration: 3 }} className="bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_auto] bg-clip-text text-transparent">SPEAKS</motion.span>
@@ -48,9 +49,9 @@ export default function HomeClient({ popularItems, categories, deals, stats }) {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="flex justify-center gap-8 sm:gap-12 mt-14">
-            <div className="text-center"><p className="text-3xl sm:text-4xl font-bold font-display">{stats.menuCount}+</p><p className="text-xs sm:text-sm text-text-muted mt-1">Menu Items</p></div>
-            <div className="text-center"><p className="text-3xl sm:text-4xl font-bold font-display">{stats.avgRating} ⭐</p><p className="text-xs sm:text-sm text-text-muted mt-1">Rating</p></div>
-            <div className="text-center"><p className="text-3xl sm:text-4xl font-bold font-display">{stats.deliveryTime}</p><p className="text-xs sm:text-sm text-text-muted mt-1">Delivery</p></div>
+            <div className="text-center"><p className="text-3xl sm:text-4xl font-bold">{stats.menuCount}+</p><p className="text-xs sm:text-sm text-text-muted mt-1">Menu Items</p></div>
+            <div className="text-center"><p className="text-3xl sm:text-4xl font-bold">{stats.avgRating} ⭐</p><p className="text-xs sm:text-sm text-text-muted mt-1">Rating</p></div>
+            <div className="text-center"><p className="text-3xl sm:text-4xl font-bold">{stats.deliveryTime}</p><p className="text-xs sm:text-sm text-text-muted mt-1">Delivery</p></div>
           </motion.div>
         </div>
 
@@ -70,7 +71,7 @@ export default function HomeClient({ popularItems, categories, deals, stats }) {
                 <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-secondary" /></span>
                 LIMITED TIME OFFERS
               </motion.div>
-              <h2 className="text-3xl sm:text-5xl font-bold font-display">Today's <span className="text-primary relative">Hottest<svg className="absolute -bottom-2 left-0 w-full h-3 text-secondary" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 25 0, 50 5 T 100 5" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" /></svg></span> Deals</h2>
+              <h2 className="text-3xl sm:text-5xl font-bold">Today's <span className="text-primary relative">Hottest<svg className="absolute -bottom-2 left-0 w-full h-3 text-secondary" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 25 0, 50 5 T 100 5" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" /></svg></span> Deals</h2>
             </motion.div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -127,19 +128,19 @@ export default function HomeClient({ popularItems, categories, deals, stats }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           {popularItems.length > 0 ? (
             <>
-              <motion.h2 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-5xl sm:text-7xl font-bold font-display mb-8">
+              <motion.h2 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-5xl sm:text-7xl font-bold mb-8">
                 Popular{' '}
                 <span className="text-primary relative">Picks<svg className="absolute -bottom-2 left-0 w-full h-3 text-secondary" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 25 0, 50 5 T 100 5" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" /></svg></span>
               </motion.h2>
               {popularItems[0] && (
                 <Link href={`/menu/${popularItems[0]._id}`} className="block bg-primary/10 rounded-3xl p-6 sm:p-8 mb-6 hover:bg-primary/20 transition-colors">
                   <div className="flex flex-col sm:flex-row items-center gap-6">
-                    <div className="w-24 h-24 sm:w-32 sm:h-32 bg-card rounded-2xl flex items-center justify-center text-5xl flex-shrink-0">
-                      {popularItems[0].image ? <img src={popularItems[0].image.replace('/upload/', '/upload/w_400,f_auto,q_auto/')} alt="" className="w-full h-full object-cover rounded-2xl" loading="lazy" /> : <span>🍔</span>}
+                    <div className="w-24 h-24 sm:w-32 sm:h-32 bg-card rounded-2xl flex items-center justify-center text-5xl flex-shrink-0 relative overflow-hidden">
+                      {popularItems[0].image ? <Image src={popularItems[0].image.replace('/upload/', '/upload/w_400,h_400,c_fill,g_auto,f_auto,q_auto/')} alt={popularItems[0].name} fill className="object-cover" priority={true} /> : <span>🍔</span>}
                     </div>
                     <div className="text-center sm:text-left flex-1">
                       <span className="text-primary text-xs font-bold uppercase tracking-widest">Most Popular</span>
-                      <h3 className="text-3xl sm:text-4xl font-bold mt-1 font-display">{popularItems[0].name}</h3>
+                      <h3 className="text-3xl sm:text-4xl font-bold mt-1">{popularItems[0].name}</h3>
                       <p className="text-text-muted text-sm mt-2">{popularItems[0].description}</p>
                       <p className="text-primary font-bold text-2xl mt-3">Rs. {popularItems[0].price}</p>
                     </div>
@@ -148,11 +149,11 @@ export default function HomeClient({ popularItems, categories, deals, stats }) {
               )}
               <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory sm:grid sm:grid-cols-4 sm:overflow-visible sm:snap-none sm:pb-0">
                 {popularItems.slice(1).map(item => (
-                  <Link key={item._id} href={`/menu/${item._id}`} className="min-w-[200px] sm:min-w-0 bg-card border border-border rounded-2xl p-3 sm:p-4 snap-start hover:shadow-md hover:border-primary/30 transition-all flex-shrink-0">
-                    <div className="w-full h-32 bg-primary/10 rounded-xl flex items-center justify-center text-4xl mb-3">
-                      {item.image ? <img src={item.image.replace('/upload/', '/upload/w_400,f_auto,q_auto/')} alt="" className="w-full h-full object-cover rounded-xl" loading="lazy" /> : <span>{item.category === 'Burgers' ? '🍔' : item.category === 'Pizzas' ? '🍕' : item.category === 'Fries & Sides' ? '🍟' : '🥤'}</span>}
+                  <Link key={item._id} href={`/menu/${item._id}`} className="min-w-[200px] sm:min-w-0 bg-card border border-border rounded-2xl p-3 sm:p-4 snap-start hover:shadow-md hover:border-primary/30 transition-all flex-shrink-0 flex flex-col h-full">
+                    <div className="w-full aspect-square bg-primary/10 rounded-xl flex items-center justify-center text-4xl mb-3 overflow-hidden relative">
+                      {item.image ? <Image src={item.image.replace('/upload/', '/upload/w_500,h_500,c_fill,g_auto,f_auto,q_auto/')} alt={item.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" /> : <span>{item.category === 'Burgers' ? '🍔' : item.category === 'Pizzas' ? '🍕' : item.category === 'Fries & Sides' ? '🍟' : '🥤'}</span>}
                     </div>
-                    <h3 className="font-bold text-lg font-display">{item.name}</h3>
+                    <h3 className="font-bold text-lg">{item.name}</h3>
                     <div className="flex items-center gap-1 mt-1"><span className="text-yellow-500 text-xs">{'★'.repeat(item.avgRating || 0)}{'☆'.repeat(5 - (item.avgRating || 0))}</span></div>
                     <p className="text-primary font-bold mt-2 text-lg">Rs. {item.price}</p>
                   </Link>
@@ -176,7 +177,7 @@ export default function HomeClient({ popularItems, categories, deals, stats }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex flex-col lg:flex-row gap-8 items-center">
             <div className="w-full lg:flex-1 text-center lg:text-left">
-              <h2 className="text-5xl sm:text-6xl font-bold font-display mb-6">📍 Find Us</h2>
+              <h2 className="text-5xl sm:text-6xl font-bold mb-6">📍 Find Us</h2>
               <div className="space-y-4 text-text-light max-w-md mx-auto lg:mx-0">
                 <div className="flex items-center gap-3 justify-center lg:justify-start"><span className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-xl flex-shrink-0">🏬</span><div className="text-left"><p className="font-semibold text-text">Oveniaa</p><p className="text-sm text-text-muted">⭐ 4.6 Rating on Google</p></div></div>
                 <div className="flex items-center gap-3 justify-center lg:justify-start"><span className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-xl flex-shrink-0">📍</span><div className="text-left"><p className="font-semibold text-text">Address</p><p className="text-sm text-text-muted">Chak No 267 R.B Jalandar, Faisalabad</p></div></div>

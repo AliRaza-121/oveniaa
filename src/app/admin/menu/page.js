@@ -110,7 +110,7 @@ export default function AdminMenu() {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold font-display">Menu Items</h1>
+          <h1 className="text-xl sm:text-2xl font-bold">Menu Items</h1>
           <p className="text-xs sm:text-sm text-text-muted">{items.length} items</p>
         </div>
         <div className="flex items-center gap-2 sm:gap-3">
@@ -142,10 +142,10 @@ export default function AdminMenu() {
       ) : viewMode === 'grid' ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {filteredItems.map((item, i) => (
-            <motion.div key={item._id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }} className="bg-card border border-border rounded-2xl overflow-hidden group hover:border-primary/30 hover:shadow-lg transition-all">
-              <div className="relative h-36 sm:h-40 bg-primary/5 flex items-center justify-center text-4xl sm:text-5xl overflow-hidden">
-                {item.image ? <img src={item.image.replace('/upload/', '/upload/w_400,f_auto,q_auto/')} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" /> : <span>{categoryEmojis[item.category] || '🍔'}</span>}
-                <div className="absolute top-2 sm:top-3 left-2 sm:left-3 flex gap-1 sm:gap-1.5">
+            <motion.div key={item._id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }} className="bg-card border border-border rounded-2xl overflow-hidden group hover:border-primary/30 hover:shadow-lg transition-all flex flex-col">
+              <div className="relative w-full aspect-square bg-primary/5 flex items-center justify-center text-4xl sm:text-5xl overflow-hidden">
+                {item.image ? <img src={item.image.replace('/upload/', '/upload/w_500,h_500,c_fill,g_auto,f_auto,q_auto/')} alt={item.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" /> : <span>{categoryEmojis[item.category] || '🍔'}</span>}
+                <div className="absolute top-2 sm:top-3 left-2 sm:left-3 flex gap-1 sm:gap-1.5 z-10">
                   {item.isPopular && <span className="bg-secondary text-bg-dark text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full">⭐ Popular</span>}
                 </div>
                 <div className="absolute top-2 sm:top-3 right-2 sm:right-3">
@@ -181,7 +181,7 @@ export default function AdminMenu() {
             <tbody>
               {filteredItems.map(item => (
                 <tr key={item._id} className="border-b border-border/50 hover:bg-bg/50">
-                  <td className="py-2 sm:py-3 px-3 sm:px-4"><div className="flex items-center gap-2"><div className="w-7 h-7 sm:w-8 sm:h-8 bg-primary/10 rounded-lg flex items-center justify-center text-xs sm:text-sm">{item.image ? <img src={item.image.replace('/upload/', '/upload/w_100,f_auto,q_auto/')} alt="" className="w-full h-full object-cover rounded-lg" /> : <span>{categoryEmojis[item.category] || '🍔'}</span>}</div><span className="text-xs sm:text-sm font-medium truncate max-w-[100px] sm:max-w-[150px]">{item.name}</span></div></td>
+                  <td className="py-2 sm:py-3 px-3 sm:px-4"><div className="flex items-center gap-2"><div className="w-7 h-7 sm:w-8 sm:h-8 bg-primary/10 rounded-lg flex items-center justify-center text-xs sm:text-sm">{item.image ? <img src={item.image.replace('/upload/', '/upload/w_100,h_100,c_fill,g_auto,f_auto,q_auto/')} alt="" className="w-full h-full object-cover rounded-lg" /> : <span>{categoryEmojis[item.category] || '🍔'}</span>}</div><span className="text-xs sm:text-sm font-medium truncate max-w-[100px] sm:max-w-[150px]">{item.name}</span></div></td>
                   <td className="py-2 sm:py-3 px-3 sm:px-4 hidden sm:table-cell text-xs sm:text-sm text-text-muted">{item.category}</td>
                   <td className="py-2 sm:py-3 px-3 sm:px-4 text-xs sm:text-sm font-bold text-primary">{item.sizes?.length > 0 ? `Rs. ${Math.min(...Object.values(item.sizePrices || {}))} - Rs. ${Math.max(...Object.values(item.sizePrices || {}))}` : `Rs. ${item.price}`}</td>
                   <td className="py-2 sm:py-3 px-3 sm:px-4 hidden lg:table-cell"><button onClick={() => toggleAvailable(item)} className={`text-[10px] sm:text-xs font-semibold px-2 py-1 rounded-full ${item.isAvailable ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>{item.isAvailable ? 'Yes' : 'No'}</button></td>
@@ -218,7 +218,7 @@ export default function AdminMenu() {
               )}
               <textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} placeholder="Description" rows={2} className="w-full bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text resize-none" />
               <input value={form.addOns} onChange={e => setForm({...form, addOns: e.target.value})} placeholder="Add-ons: Cheese:50, Bacon:80" className="w-full bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text" />
-              <div><label className="block text-[10px] sm:text-xs text-text-muted mb-1">Image {!editingId && '*'}</label><input type="file" accept="image/*" onChange={handleImageUpload} className="w-full text-xs sm:text-sm" />{uploading && <p className="text-[10px] sm:text-xs text-primary mt-1">Uploading...</p>}{form.image && <img src={form.image} alt="" className="h-12 sm:h-16 mt-2 rounded-lg" />}</div>
+              <div><label className="block text-[10px] sm:text-xs text-text-muted mb-1">Image {!editingId && '*'}</label><input type="file" accept="image/*" onChange={handleImageUpload} className="w-full text-xs sm:text-sm" />{uploading && <p className="text-[10px] sm:text-xs text-primary mt-1">Uploading...</p>}{form.image && <img src={form.image.replace('/upload/', '/upload/w_150,h_150,c_fill,g_auto,f_auto,q_auto/')} alt="" className="h-12 sm:h-16 aspect-square object-cover mt-2 rounded-lg" />}</div>
               <div className="flex gap-4"><label className="flex items-center gap-2"><input type="checkbox" checked={form.isPopular} onChange={e => setForm({...form, isPopular: e.target.checked})} /><span className="text-xs sm:text-sm">Popular</span></label><label className="flex items-center gap-2"><input type="checkbox" checked={form.isAvailable} onChange={e => setForm({...form, isAvailable: e.target.checked})} /><span className="text-xs sm:text-sm">Available</span></label></div>
               <button type="submit" className="w-full bg-primary text-white py-2 sm:py-2.5 rounded-full font-semibold text-xs sm:text-sm">{editingId ? 'Update' : 'Create'}</button>
             </form>

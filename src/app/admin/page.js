@@ -10,45 +10,21 @@ export default function AdminDashboard() {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
   const [popularItem, setPopularItem] = useState(null)
   const [unavailableItems, setUnavailableItems] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/api/orders').then(r => r.json()).then(d => {
-      if (d.success) {
-        const today = new Date().toDateString()
-        const todayOrders = d.orders.filter(o => new Date(o.createdAt).toDateString() === today)
-        setStats(s => ({
-          ...s, orders: d.orders.length,
-          revenue: d.orders.reduce((a, o) => a + o.total, 0),
-          todayOrders: todayOrders.length,
-          todayRevenue: todayOrders.reduce((a, o) => a + o.total, 0),
-          pending: d.orders.filter(o => o.status === 'pending').length,
-        }))
-
-        const monthly = {}
-        d.orders.forEach(order => {
-          const date = new Date(order.createdAt)
-          const key = `${date.getFullYear()}-${date.getMonth()}`
-          if (!monthly[key]) monthly[key] = { orders: 0, revenue: 0, month: date.getMonth(), year: date.getFullYear() }
-          monthly[key].orders++
-          monthly[key].revenue += order.total
-        })
-        setMonthlyData(Object.values(monthly).sort((a, b) => a.month - b.month || a.year - b.year))
-
-        const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-        const weekOrders = d.orders.filter(o => new Date(o.createdAt) >= weekAgo)
-        const itemCount = {}
-        weekOrders.forEach(o => { o.items.forEach(i => { itemCount[i.name] = (itemCount[i.name] || 0) + i.quantity }) })
-        const topItem = Object.entries(itemCount).sort((a, b) => b[1] - a[1])[0]
-        if (topItem) setPopularItem({ name: topItem[0], count: topItem[1] })
-      }
-    })
-    fetch('/api/menu').then(r => r.json()).then(d => {
-      if (d.success) {
-        setStats(s => ({ ...s, menu: d.items.length }))
-        setUnavailableItems(d.items.filter(i => !i.isAvailable))
-      }
-    })
-    fetch('/api/categories').then(r => r.json()).then(d => { if (d.success) setStats(s => ({ ...s, categories: d.categories.length })) })
+    fetch('/api/admin/stats')
+      .then(r => r.json())
+      .then(d => {
+        if (d.success) {
+          setStats(d.stats)
+          setMonthlyData(d.monthlyData)
+          setPopularItem(d.popularItem)
+          setUnavailableItems(d.unavailableItems)
+        }
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
   }, [])
 
   const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -56,9 +32,13 @@ export default function AdminDashboard() {
   const currentMonthData = filteredMonthly[0] || { orders: 0, revenue: 0 }
   const maxRevenue = Math.max(...monthlyData.map(d => d.revenue), 1)
 
+  if (loading) {
+    return <div className="flex items-center justify-center min-h-[50vh]"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>
+  }
+
   return (
     <div>
-      <h1 className="text-2xl font-bold font-display mb-6">Dashboard</h1>
+      <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
 
       {unavailableItems.length > 0 && (
         <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-5 mb-6">
@@ -82,7 +62,7 @@ export default function AdminDashboard() {
           ].map(s => (
             <div key={s.label} className="text-center">
               <span className="text-2xl">{s.icon}</span>
-              <p className={`text-xl font-bold font-display mt-1 ${s.color}`}>{s.value}</p>
+              <p className={`text-xl font-bold mt-1 ${s.color}`}>{s.value}</p>
               <p className="text-xs text-text-muted">{s.label}</p>
             </div>
           ))}
@@ -98,7 +78,7 @@ export default function AdminDashboard() {
         ].map(s => (
           <div key={s.label} className="bg-card border border-border rounded-2xl p-5">
             <span className="text-2xl">{s.icon}</span>
-            <p className={`text-2xl font-bold font-display mt-2 ${s.color}`}>{s.value}</p>
+            <p className={`text-2xl font-bold mt-2 ${s.color}`}>{s.value}</p>
             <p className="text-xs text-text-muted mt-1">{s.label}</p>
           </div>
         ))}
@@ -113,7 +93,7 @@ export default function AdminDashboard() {
 
       <div className="bg-card border border-border rounded-2xl p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-bold font-display">Revenue by Month</h2>
+          <h2 className="text-lg font-bold">Revenue by Month</h2>
           <div className="flex gap-2">
             <select value={selectedMonth} onChange={e => setSelectedMonth(Number(e.target.value))} className="bg-bg text-text border border-border rounded-lg px-3 py-1.5 text-xs">
               {monthNames.map((m, i) => <option key={m} value={i}>{m}</option>)}
