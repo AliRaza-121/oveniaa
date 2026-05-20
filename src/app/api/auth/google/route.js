@@ -12,16 +12,30 @@ export async function POST(request) {
       return Response.json({ success: false, error: 'ID token required' }, { status: 400 })
     }
 
-    // Verify Google ID token via Google's tokeninfo endpoint
-    const googleRes = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`)
+    // Verify Firebase ID token via Identity Toolkit
+    const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY
+    const googleRes = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idToken })
+    })
+    
     if (!googleRes.ok) {
       return Response.json({ success: false, error: 'Invalid Google token' }, { status: 401 })
     }
 
-    const googleUser = await googleRes.json()
-    const { sub: googleId, email, name, email_verified } = googleUser
+    const data = await googleRes.json()
+    if (!data.users || data.users.length === 0) {
+      return Response.json({ success: false, error: 'Invalid Google token payload' }, { status: 401 })
+    }
 
-    if (!email_verified || email_verified === 'false') {
+    const googleUser = data.users[0]
+    const googleId = googleUser.localId
+    const email = googleUser.email
+    const name = googleUser.displayName || email.split('@')[0]
+    const email_verified = googleUser.emailVerified
+
+    if (!email_verified) {
       return Response.json({ success: false, error: 'Email not verified with Google' }, { status: 400 })
     }
 
