@@ -43,7 +43,7 @@ export default function LoginClient() {
     } catch (err) {
       if (err.code !== 'auth/popup-closed-by-user') {
         console.error('Google Sign-in Error:', err)
-        setError(err.message === 'Firebase is not configured. Missing API keys.' ? err.message : 'Google sign-in failed. Please try again.')
+        setError(err.message || 'Google sign-in failed. Please try again.')
       }
     } finally {
       setGoogleLoading(false)
