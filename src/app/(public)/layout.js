@@ -2,8 +2,10 @@
 
 import { usePathname } from 'next/navigation'
 import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
-import BackToTop from '@/components/BackToTop'
+import dynamic from 'next/dynamic'
+
+const Footer = dynamic(() => import('@/components/Footer'), { ssr: true })
+const BackToTop = dynamic(() => import('@/components/BackToTop'), { ssr: false })
 
 export default function PublicLayout({ children }) {
   const pathname = usePathname()
