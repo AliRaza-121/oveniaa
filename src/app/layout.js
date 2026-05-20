@@ -2,9 +2,8 @@ import { Inter, Playfair_Display } from 'next/font/google'
 import { AuthProvider } from '@/context/AuthContext'
 import { CartProvider } from '@/context/CartContext'
 import { ToastProvider } from '@/context/ToastContext'
-import dynamic from 'next/dynamic'
-const OrderNotifier = dynamic(() => import('@/components/OrderNotifier'), { ssr: false })
-const InstallPrompt = dynamic(() => import('@/components/InstallPrompt'), { ssr: false })
+import OrderNotifier from '@/components/OrderNotifier'
+import InstallPrompt from '@/components/InstallPrompt'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
