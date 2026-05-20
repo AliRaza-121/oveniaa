@@ -51,6 +51,8 @@ export default function RegisterClient() {
     setError('')
     setGoogleLoading(true)
     try {
+      if (!auth) throw new Error('Firebase is not configured. Missing API keys.')
+
       const result = await signInWithPopup(auth, googleProvider)
       const idToken = await result.user.getIdToken()
       const res = await fetch('/api/auth/google', {
@@ -63,7 +65,8 @@ export default function RegisterClient() {
       else setError(data.error || 'Google sign-in failed')
     } catch (err) {
       if (err.code !== 'auth/popup-closed-by-user') {
-        setError('Google sign-in failed. Please try again.')
+        console.error('Google Sign-in Error:', err)
+        setError(err.message === 'Firebase is not configured. Missing API keys.' ? err.message : 'Google sign-in failed. Please try again.')
       }
     } finally {
       setGoogleLoading(false)
