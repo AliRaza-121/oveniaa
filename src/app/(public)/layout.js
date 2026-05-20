@@ -7,7 +7,7 @@ import BackToTop from '@/components/BackToTop'
 
 export default function PublicLayout({ children }) {
   const pathname = usePathname()
-  const hideLayout = pathname === '/login' || pathname === '/register'
+  const hideLayout = pathname === '/login' || pathname === '/register' || pathname === '/forgot-password'
 
   return (
     <>

@@ -20,6 +20,22 @@ export async function sendOTP(email, otp) {
     </div>`,
   })
 }
+
+export async function sendPasswordResetOTP(email, otp) {
+  await transporter.sendMail({
+    from: `"Oveniaa" <${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: 'Reset Your Oveniaa Password',
+    html: `<div style="max-width:500px;margin:auto;font-family:sans-serif;background:#1A1A1A;color:#F5F5F5;padding:40px;border-radius:16px;text-align:center">
+      <h2 style="color:#FF6B35">🍕 Oveniaa</h2>
+      <p style="font-size:16px;margin:24px 0">Your password reset code:</p>
+      <div style="font-size:36px;letter-spacing:8px;color:#FF6B35;font-weight:bold">${otp}</div>
+      <p style="font-size:13px;color:#9CA3AF;margin-top:24px">If you didn't request this, ignore this email.</p>
+      <p style="font-size:12px;color:#9CA3AF">Expires in 5 minutes.</p>
+    </div>`,
+  })
+}
+
 export async function sendOrderStatusEmail(email, orderId, customerName, status) {
   const statusMessages = {
     confirmed: { emoji: '✅', title: 'Order Confirmed', desc: 'We\'ve received your order and are getting started!' },
