@@ -80,3 +80,75 @@ h3 {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
+
+/* Custom Animations for Hero Section (LCP Optimization) */
+@keyframes blob1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(80px, -40px) scale(1.15); }
+}
+.animate-blob1 { animation: blob1 18s linear infinite; }
+
+@keyframes blob2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-60px, 50px) scale(1.2); }
+}
+.animate-blob2 { animation: blob2 22s linear infinite; }
+
+@keyframes emoji1 {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-25px) rotate(10deg); }
+}
+.animate-emoji1 { animation: emoji1 5s ease-in-out infinite; }
+
+@keyframes emoji2 {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(20px) rotate(-8deg); }
+}
+.animate-emoji2 { animation: emoji2 4.5s ease-in-out infinite; }
+
+@keyframes emoji3 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(15px, -15px); }
+}
+.animate-emoji3 { animation: emoji3 6s ease-in-out infinite; }
+
+@keyframes emoji4 {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(25px) rotate(-5deg); }
+}
+.animate-emoji4 { animation: emoji4 5.5s ease-in-out infinite; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+  opacity: 0; /* Keep hidden until animation starts */
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+.delay-0 { animation-delay: 0s; }
+.delay-100 { animation-delay: 0.1s; }
+.delay-250 { animation-delay: 0.25s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-550 { animation-delay: 0.55s; }
+
+@keyframes gradientText {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.animate-gradient-text {
+  animation: gradientText 3s linear infinite;
+  background-size: 200% auto;
+}
+
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+.animate-scroll-bounce { animation: scrollBounce 2s ease-in-out infinite; }
+
+@keyframes pulseOpacity {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.animate-pulse-opacity { animation: pulseOpacity 2s ease-in-out infinite; }
