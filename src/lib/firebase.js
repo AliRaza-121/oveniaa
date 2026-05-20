@@ -10,8 +10,16 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 }
 
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
-const auth = getAuth(app)
-const googleProvider = new GoogleAuthProvider()
+let app
+let auth
+let googleProvider
+
+try {
+  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
+  auth = getAuth(app)
+  googleProvider = new GoogleAuthProvider()
+} catch (error) {
+  console.warn('Firebase initialization skipped: Invalid or missing API key during build.')
+}
 
 export { auth, googleProvider }
