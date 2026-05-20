@@ -87,7 +87,7 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-3">
-            <button onClick={() => setCartOpen(true)} className="relative text-text-light hover:text-primary transition-colors p-2">
+            <button onClick={() => setCartOpen(true)} aria-label="Open cart" className="relative text-text-light hover:text-primary transition-colors p-2">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
               </svg>
@@ -104,7 +104,7 @@ export default function Navbar() {
               <Link href="/login" className="hidden lg:block bg-primary text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-primary-dark transition-all hover:scale-105 shadow-md shadow-primary/20">Login</Link>
             )}
 
-            <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-1.5">
+            <button onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle mobile menu" className="lg:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-1.5">
               <motion.span animate={mobileOpen ? { rotate: 45, y: 5 } : { rotate: 0, y: 0 }} className="w-5 h-0.5 bg-text block rounded-full" />
               <motion.span animate={mobileOpen ? { opacity: 0 } : { opacity: 1 }} className="w-5 h-0.5 bg-text block rounded-full" />
               <motion.span animate={mobileOpen ? { rotate: -45, y: -5 } : { rotate: 0, y: 0 }} className="w-5 h-0.5 bg-text block rounded-full" />
@@ -121,7 +121,7 @@ export default function Navbar() {
             <motion.div initial={{ opacity: 0, y: -20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} transition={{ duration: 0.3 }} className="fixed top-20 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-sm bg-card rounded-2xl shadow-2xl lg:hidden overflow-hidden">
   <div className="flex items-center justify-between px-6 pt-4 pb-2">
     <span className="text-sm font-semibold text-text-muted">Menu</span>
-    <button onClick={() => setMobileOpen(false)} className="w-8 h-8 flex items-center justify-center rounded-full bg-bg text-text-muted hover:text-text text-lg">✕</button>
+    <button onClick={() => setMobileOpen(false)} aria-label="Close mobile menu" className="w-8 h-8 flex items-center justify-center rounded-full bg-bg text-text-muted hover:text-text text-lg">✕</button>
   </div>
   <div className="flex flex-col py-2">
                 {navLinks.map((link) => (

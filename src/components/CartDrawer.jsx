@@ -16,7 +16,7 @@ export default function CartDrawer({ isOpen, setIsOpen }) {
           <motion.div initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} transition={{ duration: 0.3 }} className="fixed right-0 top-0 bottom-0 z-[101] w-full sm:w-[420px] bg-card flex flex-col shadow-2xl">
             <div className="flex items-center justify-between px-5 py-4 border-b border-border">
               <h2 className="text-lg font-bold">Cart ({cartCount})</h2>
-              <button onClick={() => setIsOpen(false)} className="text-text-muted hover:text-text">✕</button>
+              <button onClick={() => setIsOpen(false)} aria-label="Close Cart" className="text-text-muted hover:text-text">✕</button>
             </div>
 
             {cart.length === 0 ? (
@@ -48,14 +48,14 @@ export default function CartDrawer({ isOpen, setIsOpen }) {
                         {item.addOns?.length > 0 && <p className="text-xs text-text-muted">+ {item.addOns.map(a => a.name).join(', ')}</p>}
                         <div className="flex items-center justify-between mt-2">
                           <div className="flex items-center border border-border rounded-full">
-                            <button onClick={() => updateQuantity(item.key, item.quantity - 1)} className="w-7 h-7 flex items-center justify-center text-xs hover:text-primary">−</button>
+                            <button onClick={() => updateQuantity(item.key, item.quantity - 1)} aria-label="Decrease quantity" className="w-7 h-7 flex items-center justify-center text-xs hover:text-primary">−</button>
                             <span className="w-7 text-center text-xs font-medium">{item.quantity}</span>
-                            <button onClick={() => updateQuantity(item.key, item.quantity + 1)} className="w-7 h-7 flex items-center justify-center text-xs hover:text-primary">+</button>
+                            <button onClick={() => updateQuantity(item.key, item.quantity + 1)} aria-label="Increase quantity" className="w-7 h-7 flex items-center justify-center text-xs hover:text-primary">+</button>
                           </div>
                           <p className="text-sm font-bold text-primary">Rs. {item.price * item.quantity}</p>
                         </div>
                       </div>
-                      <button onClick={() => removeFromCart(item.key)} className="text-text-muted hover:text-red-500 flex-shrink-0">✕</button>
+                      <button onClick={() => removeFromCart(item.key)} aria-label="Remove item" className="text-text-muted hover:text-red-500 flex-shrink-0">✕</button>
                     </div>
                   ))}
                 </div>
