@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useToast } from '@/context/ToastContext'
+import { storeConfig } from '@/lib/config'
 
 export default function ContactClient() {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
@@ -29,10 +30,10 @@ export default function ContactClient() {
         <div className="grid md:grid-cols-2 gap-10">
           <div className="space-y-6">
             {[
-              { icon: '📧', title: 'Email', value: 'aliraaza701@gmail.com' },
-              { icon: '📞', title: 'Phone', value: '+92 324 1302639' },
-              { icon: '📍', title: 'Address', value: 'Faisalabad, Pakistan' },
-              { icon: '🕐', title: 'Hours', value: '12 PM – 12 AM, Every Day' },
+              { icon: '📧', title: 'Email', value: storeConfig.contact.email },
+              { icon: '📞', title: 'Phone', value: storeConfig.contact.phone },
+              { icon: '📍', title: 'Address', value: storeConfig.contact.address.line2 },
+              { icon: '🕐', title: 'Hours', value: storeConfig.hours.time },
             ].map(item => (
               <div key={item.title} className="flex items-start gap-3"><span className="text-2xl">{item.icon}</span><div><p className="text-sm font-semibold">{item.title}</p><p className="text-text-muted text-sm">{item.value}</p></div></div>
             ))}

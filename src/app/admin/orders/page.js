@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
+import ScrollableRow from '@/components/ScrollableRow'
 
 const KDS_COLUMNS = ['pending', 'confirmed', 'preparing', 'ready', 'delivered']
 
@@ -68,86 +69,88 @@ export default function AdminOrders() {
         {searchQuery && <p className="text-xs sm:text-sm text-text-muted">Search: <span className="text-primary font-semibold">"{searchQuery}"</span></p>}
       </div>
 
-      <div className="flex-1 overflow-x-auto flex gap-3 pb-4 items-start snap-x snap-mandatory hide-scrollbar">
-        {KDS_COLUMNS.map(col => {
-          const colOrders = baseOrders.filter(o => o.status === col)
-          return (
-            <div key={col} className="min-w-[85vw] max-w-[85vw] sm:min-w-[280px] sm:max-w-[280px] w-full bg-bg border border-border rounded-2xl flex flex-col h-full max-h-full snap-center shadow-lg">
-              <div className={`p-4 border-b border-border bg-card rounded-t-2xl flex items-center justify-between sticky top-0 z-10 border-t-4 ${colors[col].split(' ')[2]}`}>
-                <h3 className="font-bold capitalize flex items-center gap-2">
-                  {col === 'pending' && '🔴'}
-                  {col === 'confirmed' && '🔵'}
-                  {col === 'preparing' && '🟣'}
-                  {col === 'ready' && '🟢'}
-                  {col === 'delivered' && '✅'}
-                  {col}
-                </h3>
-                <span className="bg-bg border border-border text-text text-xs font-bold px-2.5 py-1 rounded-full">{colOrders.length}</span>
-              </div>
-              
-              <div className="p-3 flex-1 overflow-y-auto space-y-3 custom-scrollbar relative">
-                {colOrders.length === 0 && (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-text-muted opacity-50">
-                    <span className="text-3xl mb-2">🍽️</span>
-                    <p className="text-xs">No {col} orders</p>
-                  </div>
-                )}
+      <div className="flex-1 overflow-hidden relative w-full h-full">
+        <ScrollableRow className="h-full items-start" innerClassName="flex gap-3 pb-4 items-start snap-x snap-mandatory h-full">
+          {KDS_COLUMNS.map(col => {
+            const colOrders = baseOrders.filter(o => o.status === col)
+            return (
+              <div key={col} className="min-w-[85vw] max-w-[85vw] sm:min-w-[280px] sm:max-w-[280px] w-full bg-bg border border-border rounded-2xl flex flex-col h-full max-h-full snap-center shadow-lg">
+                <div className={`p-4 border-b border-border bg-card rounded-t-2xl flex items-center justify-between sticky top-0 z-10 border-t-4 ${colors[col].split(' ')[2]}`}>
+                  <h3 className="font-bold capitalize flex items-center gap-2">
+                    {col === 'pending' && '🔴'}
+                    {col === 'confirmed' && '🔵'}
+                    {col === 'preparing' && '🟣'}
+                    {col === 'ready' && '🟢'}
+                    {col === 'delivered' && '✅'}
+                    {col}
+                  </h3>
+                  <span className="bg-bg border border-border text-text text-xs font-bold px-2.5 py-1 rounded-full">{colOrders.length}</span>
+                </div>
                 
-                <AnimatePresence>
-                  {colOrders.map(order => (
-                    <motion.div 
-                      key={order._id}
-                      layout
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      className={`bg-card border border-border rounded-xl p-3 shadow-sm hover:border-primary/50 transition-colors ${order.status === 'pending' ? 'animate-pulse-subtle ring-1 ring-yellow-500/30' : ''}`}
-                    >
-                      <div className="flex justify-between items-start mb-1.5">
-                        <div>
-                          <p className="text-[10px] text-text-muted font-mono">#{order._id.slice(-6).toUpperCase()}</p>
-                          <h4 className="font-bold text-sm truncate max-w-[150px]">{order.customerName}</h4>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-sm font-black text-primary">Rs. {order.total}</p>
-                          <p className="text-[9px] text-text-muted uppercase font-bold tracking-wider">{order.orderType}</p>
-                        </div>
-                      </div>
-
-                      <div className="text-[11px] text-text-light mb-2 bg-bg rounded-lg p-1.5 space-y-0.5 border border-border/50">
-                        {order.items.map((item, i) => (
-                          <div key={i} className="flex justify-between">
-                            <span className="font-medium">{item.quantity}x {item.name} {item.size ? `(${item.size})` : ''}</span>
+                <div className="p-3 flex-1 overflow-y-auto space-y-3 custom-scrollbar relative">
+                  {colOrders.length === 0 && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-text-muted opacity-50">
+                      <span className="text-3xl mb-2">🍽️</span>
+                      <p className="text-xs">No {col} orders</p>
+                    </div>
+                  )}
+                  
+                  <AnimatePresence>
+                    {colOrders.map(order => (
+                      <motion.div 
+                        key={order._id}
+                        layout
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        className={`bg-card border border-border rounded-xl p-3 shadow-sm hover:border-primary/50 transition-colors ${order.status === 'pending' ? 'animate-pulse-subtle ring-1 ring-yellow-500/30' : ''}`}
+                      >
+                        <div className="flex justify-between items-start mb-1.5">
+                          <div>
+                            <p className="text-[10px] text-text-muted font-mono">#{order._id.slice(-6).toUpperCase()}</p>
+                            <h4 className="font-bold text-sm truncate max-w-[150px]">{order.customerName}</h4>
                           </div>
-                        ))}
-                      </div>
-
-                      {order.notes && <p className="text-[10px] text-yellow-400 mb-2 bg-yellow-400/10 p-1.5 rounded-lg border border-yellow-400/20">📝 {order.notes}</p>}
-
-                      <div className="flex items-center justify-between mt-2 pt-2 border-t border-border">
-                        <div className="text-[10px] text-text-muted">
-                          {Math.round((Date.now() - new Date(order.createdAt).getTime()) / 60000)} min ago
+                          <div className="text-right">
+                            <p className="text-sm font-black text-primary">Rs. {order.total}</p>
+                            <p className="text-[9px] text-text-muted uppercase font-bold tracking-wider">{order.orderType}</p>
+                          </div>
                         </div>
-                        <div className="flex gap-2">
-                          <button onClick={() => printOrder(order)} className="w-7 h-7 bg-bg border border-border rounded-full flex items-center justify-center text-text-muted hover:text-primary transition-colors">🖨️</button>
-                          
-                          {nextStatus[order.status] && (
-                            <button 
-                              onClick={() => updateStatus(order._id, nextStatus[order.status])} 
-                              className="text-[10px] bg-primary text-white px-3 py-1.5 rounded-full font-bold hover:bg-primary-dark transition-all hover:scale-105 shadow-md shadow-primary/20 flex items-center gap-1"
-                            >
-                              Move to {nextStatus[order.status]} ➔
-                            </button>
-                          )}
+
+                        <div className="text-[11px] text-text-light mb-2 bg-bg rounded-lg p-1.5 space-y-0.5 border border-border/50">
+                          {order.items.map((item, i) => (
+                            <div key={i} className="flex justify-between">
+                              <span className="font-medium">{item.quantity}x {item.name} {item.size ? `(${item.size})` : ''}</span>
+                            </div>
+                          ))}
                         </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
+
+                        {order.notes && <p className="text-[10px] text-yellow-400 mb-2 bg-yellow-400/10 p-1.5 rounded-lg border border-yellow-400/20">📝 {order.notes}</p>}
+
+                        <div className="flex items-center justify-between mt-2 pt-2 border-t border-border">
+                          <div className="text-[10px] text-text-muted">
+                            {Math.round((Date.now() - new Date(order.createdAt).getTime()) / 60000)} min ago
+                          </div>
+                          <div className="flex gap-2">
+                            <button onClick={() => printOrder(order)} className="w-7 h-7 bg-bg border border-border rounded-full flex items-center justify-center text-text-muted hover:text-primary transition-colors">🖨️</button>
+                            
+                            {nextStatus[order.status] && (
+                              <button 
+                                onClick={() => updateStatus(order._id, nextStatus[order.status])} 
+                                className="text-[10px] bg-primary text-white px-3 py-1.5 rounded-full font-bold hover:bg-primary-dark transition-all hover:scale-105 shadow-md shadow-primary/20 flex items-center gap-1"
+                              >
+                                Move to {nextStatus[order.status]} ➔
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </div>
               </div>
-            </div>
-          )
-        })}
+            )
+          })}
+        </ScrollableRow>
       </div>
       
       <style jsx global>{`

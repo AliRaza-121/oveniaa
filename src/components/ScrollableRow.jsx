@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from 'react'
 
-export default function ScrollableRow({ children, className = '' }) {
+export default function ScrollableRow({ children, className = '', innerClassName = 'flex gap-2 pb-2 pt-1 px-1' }) {
   const scrollRef = useRef(null)
   const [showLeft, setShowLeft] = useState(false)
   const [showRight, setShowRight] = useState(false)
@@ -37,7 +37,7 @@ export default function ScrollableRow({ children, className = '' }) {
   }
 
   return (
-    <div className={`relative flex items-center group w-full ${className}`}>
+    <div className={`relative flex items-center group w-full h-full ${className}`}>
       {showLeft && (
         <div className="absolute left-0 z-10 h-full w-12 bg-gradient-to-r from-bg to-transparent flex items-center justify-start -ml-2 pointer-events-none">
           <button 
@@ -52,7 +52,7 @@ export default function ScrollableRow({ children, className = '' }) {
       <div 
         ref={scrollRef} 
         onScroll={handleScroll} 
-        className="flex gap-2 overflow-x-auto pb-2 pt-1 px-1 w-full hide-scrollbar"
+        className={`${innerClassName} overflow-x-auto w-full hide-scrollbar`}
         style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
       >
         {children}

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { getCategoryEmoji } from '@/lib/utils'
 import ScrollableRow from '@/components/ScrollableRow'
+import { storeConfig } from '@/lib/config'
 
 /* Lightweight Intersection Observer hook to replace framer-motion whileInView */
 function useReveal(ref) {
@@ -37,44 +38,56 @@ function Reveal({ children, className = '', delay = 0 }) {
 export default function HomeLowerSections({ popularItems, categories, deals }) {
   return (
     <>
-      {/* Daily Deals */}
+      {/* Daily Deals - Premium Glassmorphism */}
       {deals && deals.length > 0 && (
-        <section className="py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <Reveal className="text-center mb-12">
-              <div className="animate-pulse-scale inline-flex items-center gap-2 bg-secondary/20 text-secondary text-xs font-bold px-4 py-1.5 rounded-full mb-4">
-                <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-secondary" /></span>
-                LIMITED TIME OFFERS
+        <section className="py-16 relative overflow-hidden">
+          <div className="absolute inset-0 bg-primary/5 pointer-events-none" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+            <Reveal className="text-center mb-16">
+              <div className="animate-pulse-scale inline-flex items-center gap-2 bg-gradient-to-r from-secondary/20 to-primary/20 text-text font-bold px-5 py-2 rounded-full mb-4 border border-secondary/30 backdrop-blur-sm">
+                <span className="text-lg">🔥</span> LIMITED TIME OFFERS
               </div>
-              <h2 className="text-3xl sm:text-5xl font-bold">Today's <span className="text-primary relative">Hottest<svg className="absolute -bottom-2 left-0 w-full h-3 text-secondary" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 25 0, 50 5 T 100 5" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" /></svg></span> Deals</h2>
+              <h2 className="text-4xl sm:text-6xl font-black font-display tracking-tight">Today's <span className="text-primary relative inline-block">Hottest<svg className="absolute -bottom-2 left-0 w-full h-3 text-secondary" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 25 0, 50 5 T 100 5" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" /></svg></span> Deals</h2>
             </Reveal>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {deals.map((deal, i) => (
                 <Reveal key={deal._id} delay={i * 0.1}>
-                  <Link href={`/deals/${deal._id}`} className={`block bg-gradient-to-br ${deal.backgroundColor || 'from-primary/20 to-secondary/10'} border border-border rounded-3xl p-6 hover:shadow-2xl hover:-translate-y-1.5 transition-all group relative overflow-hidden h-full`}>
-                    <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl" />
-                    <div className="absolute top-5 right-5 z-10">
-                      <div className="relative">
-                        <div className="animate-wiggle bg-primary text-white text-xs font-black px-4 py-2 rounded-full shadow-lg">{deal.discount || 'DEAL'}</div>
-                        <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-3 h-3 bg-primary rotate-45" />
-                      </div>
-                    </div>
-                    <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center text-2xl mb-4">⚡</div>
-                    <h3 className="text-xl font-bold text-text mb-2 group-hover:text-primary transition-colors">{deal.title}</h3>
-                    {deal.description && <p className="text-text-muted text-sm mb-4 line-clamp-2">{deal.description}</p>}
-                    {deal.items?.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mb-4">
-                        {deal.items.slice(0, 3).map((item, j) => (
-                          <span key={j} className="text-xs bg-white/20 backdrop-blur-sm text-text px-2 py-1 rounded-full font-medium">{item.name || 'Item'}</span>
-                        ))}
-                        {deal.items.length > 3 && <span className="text-xs bg-white/20 backdrop-blur-sm text-text px-2 py-1 rounded-full font-medium">+{deal.items.length - 3} more</span>}
-                      </div>
-                    )}
-                    <div className="flex items-end justify-between mt-auto pt-4 border-t border-white/10">
+                  <Link href={`/deals/${deal._id}`} className={`block relative group h-full rounded-3xl p-1 bg-gradient-to-b ${deal.backgroundColor ? `from-[${deal.backgroundColor}]/30 to-bg` : 'from-primary/30 to-bg'} hover:from-primary hover:to-secondary transition-all duration-500 overflow-hidden`}>
+                    <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    
+                    <div className="relative h-full bg-card/90 backdrop-blur-xl rounded-[1.4rem] p-6 flex flex-col justify-between border border-border group-hover:border-transparent transition-all duration-500 z-10">
                       <div>
-                        {deal.price > 0 && <span className="text-2xl font-black text-primary">Rs. {deal.price}</span>}
-                        {deal.originalPrice > 0 && <span className="text-sm text-text-muted line-through ml-2">Rs. {deal.originalPrice}</span>}
+                        <div className="flex justify-between items-start mb-6">
+                          <div className="w-16 h-16 bg-gradient-to-br from-white/10 to-transparent border border-white/10 shadow-lg rounded-2xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform duration-500">
+                            ✨
+                          </div>
+                          <div className="bg-primary text-white text-xs font-black px-4 py-1.5 rounded-full shadow-lg shadow-primary/30 animate-pulse-scale">
+                            {deal.discount || 'HOT DEAL'}
+                          </div>
+                        </div>
+                        
+                        <h3 className="text-2xl font-bold text-text mb-3 group-hover:text-primary transition-colors">{deal.title}</h3>
+                        {deal.description && <p className="text-text-muted text-sm mb-6 line-clamp-2 leading-relaxed">{deal.description}</p>}
+                        
+                        {deal.items?.length > 0 && (
+                          <div className="flex flex-wrap gap-2 mb-6">
+                            {deal.items.slice(0, 3).map((item, j) => (
+                              <span key={j} className="text-xs bg-bg border border-border text-text px-3 py-1.5 rounded-full font-semibold shadow-sm">{item.name || 'Item'}</span>
+                            ))}
+                            {deal.items.length > 3 && <span className="text-xs bg-primary/10 text-primary px-3 py-1.5 rounded-full font-bold">+{deal.items.length - 3} more</span>}
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="flex items-center justify-between pt-6 border-t border-border/50">
+                        <div>
+                          {deal.price > 0 && <span className="text-3xl font-black text-primary drop-shadow-md">Rs. {deal.price}</span>}
+                          {deal.originalPrice > 0 && <span className="text-sm text-text-muted line-through ml-2 font-semibold">Rs. {deal.originalPrice}</span>}
+                        </div>
+                        <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center group-hover:translate-x-2 transition-transform shadow-lg shadow-primary/30">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
+                        </div>
                       </div>
                     </div>
                   </Link>
@@ -86,85 +99,164 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
       )}
 
       {/* Category Row */}
-      <section className="py-10">
+      <section className="py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <ScrollableRow className="sm:justify-center">
             {categories.map(cat => (
-              <Link key={cat._id} href={`/menu?category=${encodeURIComponent(cat.name)}`} className="flex items-center gap-1.5 bg-card border border-border rounded-full px-3.5 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold text-text-light hover:text-primary hover:border-primary whitespace-nowrap transition-all flex-shrink-0">
-                <span className="text-sm sm:text-lg">{getCategoryEmoji(cat.name)}</span>{cat.name}
+              <Link key={cat._id} href={`/menu?category=${encodeURIComponent(cat.name)}`} className="flex items-center gap-2 bg-card border border-border shadow-sm rounded-full px-4 py-2.5 sm:px-6 sm:py-3 text-xs sm:text-sm font-bold text-text hover:text-primary hover:border-primary hover:shadow-primary/20 whitespace-nowrap transition-all flex-shrink-0 group">
+                <span className="text-base sm:text-xl group-hover:scale-125 transition-transform">{getCategoryEmoji(cat.name)}</span>{cat.name}
               </Link>
             ))}
           </ScrollableRow>
         </div>
       </section>
 
-      {/* Featured + Popular Scroll */}
-      <section className="py-16">
+      {/* Featured + Popular Scroll - Premium Layout */}
+      <section className="py-20 relative">
+        <div className="absolute top-1/2 left-0 w-full h-1/2 bg-gradient-to-t from-bg-dark to-transparent pointer-events-none -z-10" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           {popularItems.length > 0 ? (
             <>
-              <Reveal>
-                <h2 className="text-5xl sm:text-7xl font-bold mb-8">
+              <Reveal className="mb-12">
+                <h2 className="text-5xl sm:text-7xl font-black font-display tracking-tight text-center sm:text-left">
                   Popular{' '}
-                  <span className="text-primary relative">Picks<svg className="absolute -bottom-2 left-0 w-full h-3 text-secondary" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 25 0, 50 5 T 100 5" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" /></svg></span>
+                  <span className="text-primary relative inline-block">Picks<svg className="absolute -bottom-2 left-0 w-full h-3 text-secondary" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 25 0, 50 5 T 100 5" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" /></svg></span>
                 </h2>
               </Reveal>
+              
+              {/* Massive Hero Item */}
               {popularItems[0] && (
-                <Link href={`/menu/${popularItems[0]._id}`} className="block bg-primary/10 rounded-3xl p-6 sm:p-8 mb-6 hover:bg-primary/20 transition-colors">
-                  <div className="flex flex-col sm:flex-row items-center gap-6">
-                    <div className="w-24 h-24 sm:w-32 sm:h-32 bg-card rounded-2xl flex items-center justify-center text-5xl flex-shrink-0 relative overflow-hidden">
-                      {popularItems[0].image ? <Image src={popularItems[0].image.replace('/upload/', '/upload/w_400,h_400,c_fill,g_auto,f_auto,q_auto/')} alt={popularItems[0].name} fill sizes="(max-width: 640px) 100vw, 33vw" className="object-cover" priority={false} loading="lazy" /> : <span>{getCategoryEmoji(popularItems[0].category)}</span>}
+                <Link href={`/menu/${popularItems[0]._id}`} className="block relative bg-gradient-to-br from-primary/10 via-bg to-secondary/10 border border-primary/20 rounded-[2.5rem] p-8 sm:p-12 mb-12 hover:shadow-2xl hover:border-primary/50 transition-all duration-500 overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
+                  
+                  <div className="flex flex-col md:flex-row items-center gap-10 relative z-10">
+                    <div className="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 relative flex-shrink-0 group-hover:scale-105 group-hover:-rotate-3 transition-transform duration-700">
+                      {popularItems[0].image ? (
+                        <Image src={popularItems[0].image.replace('/upload/', '/upload/w_600,h_600,c_fill,g_auto,f_auto,q_auto/')} alt={popularItems[0].name} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover rounded-full shadow-2xl border-4 border-white/10" priority={false} loading="lazy" />
+                      ) : (
+                        <div className="w-full h-full bg-card rounded-full flex items-center justify-center text-7xl shadow-2xl border-4 border-white/10">{getCategoryEmoji(popularItems[0].category)}</div>
+                      )}
+                      
+                      <div className="absolute -top-4 -right-4 bg-yellow-500 text-white font-black text-sm uppercase tracking-widest px-4 py-2 rounded-full shadow-xl shadow-yellow-500/40 rotate-12 animate-pulse-scale">
+                        #1 Best Seller
+                      </div>
                     </div>
-                    <div className="text-center sm:text-left flex-1">
-                      <span className="text-primary text-xs font-bold uppercase tracking-widest">Most Popular</span>
-                      <h3 className="text-3xl sm:text-4xl font-bold mt-1">{popularItems[0].name}</h3>
-                      <p className="text-text-muted text-sm mt-2">{popularItems[0].description}</p>
-                      <p className="text-primary font-bold text-2xl mt-3">Rs. {popularItems[0].price}</p>
+                    
+                    <div className="text-center md:text-left flex-1">
+                      <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-xs font-black tracking-widest uppercase mb-4">Chef's Special</span>
+                      <h3 className="text-4xl sm:text-6xl font-black font-display mb-4 leading-tight group-hover:text-primary transition-colors">{popularItems[0].name}</h3>
+                      <p className="text-text-muted text-base sm:text-lg mb-8 max-w-xl leading-relaxed mx-auto md:mx-0">{popularItems[0].description}</p>
+                      
+                      <div className="flex flex-col sm:flex-row items-center gap-6 justify-center md:justify-start">
+                        <p className="text-primary font-black text-4xl">Rs. {popularItems[0].price}</p>
+                        <div className="w-full sm:w-auto bg-text text-bg px-8 py-4 rounded-full font-bold text-center group-hover:bg-primary group-hover:text-white transition-colors shadow-lg">Order Now ➔</div>
+                      </div>
                     </div>
                   </div>
                 </Link>
               )}
-              <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory hide-scrollbar sm:grid sm:grid-cols-4 sm:overflow-visible sm:snap-none sm:pb-0">
-                {popularItems.slice(1).map(item => (
-                  <Link key={item._id} href={`/menu/${item._id}`} className="min-w-[200px] sm:min-w-0 bg-card border border-border rounded-2xl p-3 sm:p-4 snap-start hover:shadow-md hover:border-primary/30 transition-all flex-shrink-0 flex flex-col h-full">
-                    <div className="w-full aspect-square bg-primary/10 rounded-xl flex items-center justify-center text-4xl mb-3 overflow-hidden relative">
-                      {item.image ? <Image src={item.image.replace('/upload/', '/upload/w_500,h_500,c_fill,g_auto,f_auto,q_auto/')} alt={item.name} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 25vw, 20vw" className="object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" /> : <span>{getCategoryEmoji(item.category)}</span>}
+              
+              {/* Secondary Popular Items (Floating Aesthetics) */}
+              <div className="flex gap-6 overflow-x-auto pb-8 pt-4 px-2 snap-x snap-mandatory hide-scrollbar sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible sm:snap-none sm:pb-0">
+                {popularItems.slice(1).map((item, index) => (
+                  <Link key={item._id} href={`/menu/${item._id}`} className="min-w-[240px] sm:min-w-0 bg-card border border-border rounded-3xl p-6 snap-start hover:shadow-xl hover:-translate-y-2 hover:border-primary/40 transition-all duration-500 flex-shrink-0 flex flex-col h-full group relative mt-8 sm:mt-12">
+                    
+                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-32 h-32 sm:w-40 sm:h-40 relative group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500 shadow-2xl rounded-full">
+                      {item.image ? (
+                        <Image src={item.image.replace('/upload/', '/upload/w_400,h_400,c_fill,g_auto,f_auto,q_auto/')} alt={item.name} fill sizes="(max-width: 640px) 100vw, 25vw" className="object-cover rounded-full border-4 border-card" loading="lazy" />
+                      ) : (
+                        <div className="w-full h-full bg-bg rounded-full flex items-center justify-center text-5xl border-4 border-card">{getCategoryEmoji(item.category)}</div>
+                      )}
+                      
+                      <div className="absolute top-0 right-0 bg-secondary text-white text-[10px] font-black px-2 py-1 rounded-full shadow-lg rotate-12">
+                        #{index + 2}
+                      </div>
                     </div>
-                    <h3 className="font-bold text-lg">{item.name}</h3>
-                    <div className="flex items-center gap-1 mt-1"><span className="text-yellow-500 text-xs">{'★'.repeat(item.avgRating || 0)}{'☆'.repeat(5 - (item.avgRating || 0))}</span></div>
-                    <p className="text-primary font-bold mt-2 text-lg">Rs. {item.price}</p>
+                    
+                    <div className="pt-24 sm:pt-32 flex-1 flex flex-col text-center">
+                      <h3 className="font-black text-xl mb-2">{item.name}</h3>
+                      <div className="flex items-center justify-center gap-1 mb-4">
+                        <span className="text-yellow-500 text-sm">{'★'.repeat(item.avgRating || 0)}{'☆'.repeat(5 - (item.avgRating || 0))}</span>
+                      </div>
+                      <div className="mt-auto pt-4 border-t border-border/50 flex justify-between items-center">
+                        <p className="text-primary font-black text-2xl">Rs. {item.price}</p>
+                        <div className="w-8 h-8 rounded-full bg-bg border border-border flex items-center justify-center group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all text-xl pb-1">+</div>
+                      </div>
+                    </div>
                   </Link>
                 ))}
               </div>
             </>
           ) : (
             <>
-              <div className="h-8 bg-card rounded-full w-48 mb-8 animate-pulse" />
-              <div className="h-40 bg-card rounded-3xl mb-6 animate-pulse" />
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {[1,2,3,4].map(i => (<div key={i} className="animate-pulse"><div className="h-32 bg-card rounded-xl mb-3" /><div className="h-4 bg-card rounded w-3/4 mb-2" /><div className="h-4 bg-card rounded w-1/2" /></div>))}
+              <div className="h-12 bg-card rounded-full w-64 mb-12 animate-pulse" />
+              <div className="h-80 bg-card rounded-3xl mb-12 animate-pulse" />
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+                {[1,2,3,4].map(i => (<div key={i} className="animate-pulse"><div className="h-40 bg-card rounded-3xl mb-4" /><div className="h-6 bg-card rounded w-3/4 mx-auto mb-2" /><div className="h-6 bg-card rounded w-1/2 mx-auto" /></div>))}
               </div>
             </>
           )}
         </div>
       </section>
 
-      {/* Find Us */}
-      <section className="py-16 bg-bg-dark">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex flex-col lg:flex-row gap-8 items-center">
+      {/* Find Us - Modern Contact Card Layout */}
+      <section className="py-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-primary/5 -skew-y-3 transform origin-bottom-left" />
+        
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
+          <div className="bg-card border border-border rounded-[2.5rem] p-8 sm:p-12 lg:p-16 shadow-2xl flex flex-col lg:flex-row gap-12 items-center">
+            
             <div className="w-full lg:flex-1 text-center lg:text-left">
-              <h2 className="text-5xl sm:text-6xl font-bold mb-6">📍 Find Us</h2>
-              <div className="space-y-4 text-text-light max-w-md mx-auto lg:mx-0">
-                <div className="flex items-center gap-3 justify-center lg:justify-start"><span className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-xl flex-shrink-0">🏬</span><div className="text-left"><p className="font-semibold text-text">Oveniaa</p><p className="text-sm text-text-muted">⭐ 4.6 Rating on Google</p></div></div>
-                <div className="flex items-center gap-3 justify-center lg:justify-start"><span className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-xl flex-shrink-0">📍</span><div className="text-left"><p className="font-semibold text-text">Address</p><p className="text-sm text-text-muted">Chak No 267 R.B Jalandar, Faisalabad</p></div></div>
-                <div className="flex items-center gap-3 justify-center lg:justify-start"><span className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-xl flex-shrink-0">🕐</span><div className="text-left"><p className="font-semibold text-text">Hours</p><p className="text-sm text-text-muted">12:30 PM – 12:30 AM, Every Day</p></div></div>
+              <span className="inline-block bg-primary/10 text-primary font-black px-4 py-1.5 rounded-full text-xs tracking-widest uppercase mb-4">Visit Us</span>
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black font-display mb-8">We're Ready For You.</h2>
+              
+              <div className="space-y-6 text-left max-w-md mx-auto lg:mx-0">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-bg border border-border rounded-2xl flex items-center justify-center text-xl shadow-sm shrink-0">📍</div>
+                  <div>
+                    <p className="font-black text-text text-lg mb-1">Location</p>
+                    <p className="text-text-muted">{storeConfig.contact.address.line1}<br/>{storeConfig.contact.address.line2}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-bg border border-border rounded-2xl flex items-center justify-center text-xl shadow-sm shrink-0">🕐</div>
+                  <div>
+                    <p className="font-black text-text text-lg mb-1">Hours</p>
+                    <p className="text-text-muted">{storeConfig.hours.days}<br/>{storeConfig.hours.time}</p>
+                    <p className="text-xs text-primary font-bold mt-1">{storeConfig.hours.note}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-bg border border-border rounded-2xl flex items-center justify-center text-xl shadow-sm shrink-0">📞</div>
+                  <div>
+                    <p className="font-black text-text text-lg mb-1">Contact</p>
+                    <a href={`tel:${storeConfig.contact.phone.replace(/\s+/g, '')}`} className="block text-text-muted hover:text-primary transition-colors">{storeConfig.contact.phone}</a>
+                    <a href={`mailto:${storeConfig.contact.email}`} className="block text-text-muted hover:text-primary transition-colors">{storeConfig.contact.email}</a>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="flex flex-col items-center lg:items-end gap-4 w-full lg:w-auto mt-4 lg:mt-0">
-              <a href="https://maps.app.goo.gl/gAHcHW55CbKxACxM8" target="_blank" rel="noopener noreferrer" aria-label="Get Directions on Google Maps" className="bg-primary text-white px-8 py-4 rounded-full font-bold text-base hover:bg-primary-dark transition-all hover:scale-105 shadow-xl shadow-primary/30 inline-flex items-center gap-2">🗺️ Get Directions<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg></a>
-              <a href="tel:+923248034267" className="text-text-muted hover:text-primary transition-colors text-sm font-medium">📞 +92 324 8034267</a>
+            
+            <div className="flex flex-col gap-4 w-full lg:w-72 shrink-0">
+              <div className="bg-bg border border-border rounded-3xl p-6 text-center shadow-sm">
+                <div className="text-4xl mb-3">⭐</div>
+                <p className="font-black text-xl">4.8 / 5.0</p>
+                <p className="text-xs text-text-muted mt-1">Based on Customer Reviews</p>
+              </div>
+              
+              <a href="https://maps.app.goo.gl/gAHcHW55CbKxACxM8" target="_blank" rel="noopener noreferrer" className="bg-primary text-white w-full py-4 rounded-2xl font-black text-center hover:bg-primary-dark transition-all hover:-translate-y-1 shadow-lg shadow-primary/30 flex justify-center items-center gap-2 group">
+                🗺️ Get Directions 
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-4 h-4 group-hover:translate-x-1 transition-transform"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
+              </a>
+              
+              <a href={storeConfig.socials.whatsappLink} target="_blank" rel="noopener noreferrer" className="bg-[#25D366] text-white w-full py-4 rounded-2xl font-black text-center hover:bg-[#1ebd5a] transition-all hover:-translate-y-1 shadow-lg shadow-[#25D366]/30 flex justify-center items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+                WhatsApp Us
+              </a>
             </div>
+            
           </div>
         </div>
       </section>

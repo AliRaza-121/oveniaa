@@ -17,10 +17,11 @@ export async function GET() {
       todayOrdersAgg,
       pendingCount,
       monthlyAgg,
-      popularItemAgg,
+      popularItemsAgg,
       menuCount,
       unavailableItems,
-      categoriesCount
+      categoriesCount,
+      recentOrders
     ] = await Promise.all([
       Order.aggregate([
         { $group: { _id: null, count: { $sum: 1 }, revenue: { $sum: '$total' } } }
@@ -55,18 +56,19 @@ export async function GET() {
       Order.aggregate([
         { $match: { createdAt: { $gte: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000) } } },
         { $unwind: "$items" },
-        { $group: { _id: "$items.name", count: { $sum: "$items.quantity" } } },
+        { $group: { _id: "$items.name", count: { $sum: "$items.quantity" }, revenue: { $sum: { $multiply: ["$items.quantity", { $ifNull: ["$items.price", 0] }] } } } },
         { $sort: { count: -1 } },
-        { $limit: 1 }
+        { $limit: 5 }
       ]),
       MenuItem.countDocuments(),
       MenuItem.find({ isAvailable: false }, 'name'),
-      Category.countDocuments()
+      Category.countDocuments(),
+      Order.find().sort({ createdAt: -1 }).limit(5)
     ])
 
     const totalOrders = totalOrdersAgg[0] || { count: 0, revenue: 0 }
     const todayOrders = todayOrdersAgg[0] || { count: 0, revenue: 0 }
-    const popularItem = popularItemAgg[0] ? { name: popularItemAgg[0]._id, count: popularItemAgg[0].count } : null
+    const popularItems = popularItemsAgg.map(item => ({ name: item._id, count: item.count, revenue: item.revenue }))
 
     return Response.json({
       success: true,
@@ -80,8 +82,9 @@ export async function GET() {
         categories: categoriesCount,
       },
       monthlyData: monthlyAgg,
-      popularItem,
-      unavailableItems
+      popularItems,
+      unavailableItems,
+      recentOrders
     }, { status: 200 })
   } catch (error) {
     return Response.json({ success: false, error: error.message }, { status: 500 })
