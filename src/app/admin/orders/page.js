@@ -15,38 +15,19 @@ const colors = {
 export default function AdminOrders() {
   const [orders, setOrders] = useState([])
   const [activeTab, setActiveTab] = useState('pending')
-  const [prevOrderCount, setPrevOrderCount] = useState(0)
   const searchParams = useSearchParams()
   const searchQuery = searchParams.get('search') || ''
-
-  const playSound = () => {
-    try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)()
-      const osc = ctx.createOscillator(); const gain = ctx.createGain()
-      osc.connect(gain); gain.connect(ctx.destination)
-      osc.frequency.value = 800; gain.gain.value = 0.1
-      osc.start(); osc.stop(ctx.currentTime + 0.1)
-      setTimeout(() => {
-        const osc2 = ctx.createOscillator(); const gain2 = ctx.createGain()
-        osc2.connect(gain2); gain2.connect(ctx.destination)
-        osc2.frequency.value = 1000; gain2.gain.value = 0.1
-        osc2.start(); osc2.stop(ctx.currentTime + 0.15)
-      }, 120)
-    } catch {}
-  }
 
   const fetchOrders = async () => {
     const res = await fetch('/api/orders'); const data = await res.json()
     if (data.success) {
-      if (prevOrderCount > 0 && data.orders.length > prevOrderCount) playSound()
-      setPrevOrderCount(data.orders.length)
       setOrders(data.orders)
     }
   }
 
   useEffect(() => {
     fetchOrders()
-    const interval = setInterval(fetchOrders, 30000)
+    const interval = setInterval(fetchOrders, 15000)
     return () => clearInterval(interval)
   }, [])
 
