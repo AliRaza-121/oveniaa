@@ -82,7 +82,7 @@ export default function MenuClient({ items, categories, activeCategory, searchTe
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-4 w-full max-w-full">
                       {catItems.map((item, i) => (
                         <motion.div key={item._id} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: Math.min(i * 0.02, 0.1) }} className="w-full max-w-full">
-                          <Link href={`/menu/${item._id}`} className="bg-card border border-border rounded-2xl p-4 flex flex-col hover:shadow-md hover:-translate-y-1 hover:border-primary/30 transition-all duration-500 ease-in-out group h-full w-full max-w-full overflow-hidden">
+                          <Link href={`/menu/${item._id}`} className="bg-card border border-border rounded-2xl p-4 flex flex-col hover:shadow-lg hover:border-primary/30 transition-all duration-500 ease-in-out group h-full w-full max-w-full overflow-hidden">
                             <div className="w-full aspect-square bg-primary/10 rounded-xl flex items-center justify-center text-4xl sm:text-5xl mb-4 overflow-hidden relative group-hover:opacity-90 transition-all duration-500 ease-in-out">
                               {item.image ? (
                                 <Image src={item.image.replace('/upload/', '/upload/w_600,h_600,c_fill,g_auto,f_auto,q_auto/')} alt={item.name} fill className="object-cover" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" priority={i < 4} />

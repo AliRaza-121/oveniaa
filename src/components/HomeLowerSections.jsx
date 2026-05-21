@@ -52,7 +52,7 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {deals.map((deal, i) => (
                 <Reveal key={deal._id} delay={i * 0.1}>
-                  <Link href={`/deals/${deal._id}`} className="block relative h-full bg-card rounded-[2rem] border border-border/50 p-[2px] group hover:-translate-y-1 transition-transform duration-500 ease-in-out shadow-2xl shadow-black/40">
+                  <Link href={`/deals/${deal._id}`} className="block relative h-full bg-card rounded-[2rem] border border-border/50 p-[2px] group transition-all duration-500 ease-in-out hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
                     
                     {/* Animated Sweeping Shine */}
                     <div className="absolute inset-0 rounded-[2rem] overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-0">
@@ -172,10 +172,10 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
               {/* Secondary Popular Items (Floating Aesthetics) */}
               <div className="flex gap-6 overflow-x-auto pb-8 pt-4 px-2 snap-x snap-mandatory hide-scrollbar sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible sm:snap-none sm:pb-0">
                 {popularItems.slice(1).map((item, index) => (
-                  <Link key={item._id} href={`/menu/${item._id}`} className="min-w-[240px] sm:min-w-0 bg-card border border-border rounded-3xl p-6 snap-start hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1 hover:border-primary/30 transition-all duration-500 ease-in-out flex-shrink-0 flex flex-col h-full group relative overflow-hidden">
+                  <Link key={item._id} href={`/menu/${item._id}`} className="min-w-[240px] sm:min-w-0 bg-card border border-border rounded-3xl p-6 snap-start hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30 transition-all duration-500 ease-in-out flex-shrink-0 flex flex-col h-full group relative overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
                     
-                    <div className="w-32 h-32 sm:w-36 sm:h-36 mx-auto relative group-hover:-translate-y-1 transition-transform duration-500 ease-in-out shadow-xl rounded-full z-10 mb-6">
+                    <div className="w-32 h-32 sm:w-36 sm:h-36 mx-auto relative transition-transform duration-500 ease-in-out shadow-xl rounded-full z-10 mb-6 group-hover:scale-[1.02]">
                       {item.image ? (
                         <Image src={item.image.replace('/upload/', '/upload/w_400,h_400,c_fill,g_auto,f_auto,q_auto/')} alt={item.name} fill sizes="(max-width: 640px) 100vw, 25vw" className="object-cover rounded-full border-4 border-bg" loading="lazy" />
                       ) : (
