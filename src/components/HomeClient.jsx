@@ -24,7 +24,7 @@ export default function HomeClient({ popularItems, categories, deals, stats }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full relative z-10 flex flex-col lg:flex-row items-center pt-28 pb-12 lg:py-0">
           
           {/* Left Content */}
-          <div className="w-full lg:w-1/2 text-center lg:text-left pt-10 lg:pt-0 relative z-20">
+          <div className="w-full lg:flex-1 text-center lg:text-left pt-10 lg:pt-0 relative z-20 min-w-0">
             <div className="animate-fade-in-up delay-0 inline-flex items-center gap-3 bg-card border border-border text-text text-xs font-bold px-5 py-2.5 rounded-full mb-8 shadow-xl">
               <span className="relative flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
@@ -33,9 +33,9 @@ export default function HomeClient({ popularItems, categories, deals, stats }) {
               HOT & FRESH • DELIVERING NOW 🛵
             </div>
 
-            <h1 className="animate-fade-in-up delay-100 text-6xl sm:text-7xl lg:text-[7.5rem] font-black font-display text-text leading-[0.85] tracking-tight uppercase flex flex-col items-center lg:items-start">
-              <span className="block mb-3">Food That</span>
-              <span className="block text-stroke-primary drop-shadow-[0_0_15px_rgba(255,107,53,0.4)] mb-3">Speaks</span>
+            <h1 className="animate-fade-in-up delay-100 text-5xl sm:text-7xl lg:text-8xl font-black font-display text-text leading-[0.9] tracking-tight uppercase flex flex-col items-center lg:items-start whitespace-nowrap">
+              <span className="block mb-2">Food That</span>
+              <span className="block text-stroke-primary drop-shadow-[0_0_15px_rgba(255,107,53,0.4)] mb-2">Speaks</span>
               <span className="block text-primary">For Itself</span>
             </h1>
 
@@ -60,16 +60,16 @@ export default function HomeClient({ popularItems, categories, deals, stats }) {
           </div>
 
           {/* Right Content - Hero Image */}
-          <div className="w-full lg:w-1/2 relative h-[450px] sm:h-[550px] lg:h-[750px] flex items-center justify-center lg:justify-end mt-10 lg:mt-0 z-10 pointer-events-none">
+          <div className="w-full lg:w-[45%] relative h-[350px] sm:h-[450px] lg:h-[650px] flex items-center justify-center lg:justify-end mt-10 lg:mt-0 z-10 pointer-events-none flex-shrink-0">
             {/* Floating Ingredients */}
-            <div className="absolute top-[15%] left-[10%] text-4xl animate-emoji1 opacity-70 rotate-12 blur-[1px]">🍅</div>
-            <div className="absolute bottom-[25%] right-[10%] text-5xl animate-emoji2 opacity-90 -rotate-12">🧀</div>
-            <div className="absolute top-[25%] right-[20%] text-3xl animate-emoji3 opacity-60 rotate-45 blur-[2px]">🌿</div>
-            <div className="absolute bottom-[15%] left-[25%] text-4xl animate-emoji4 opacity-80 -rotate-45">🥓</div>
+            <div className="absolute top-[10%] left-[5%] text-4xl animate-emoji1 opacity-70 rotate-12 blur-[1px]">🍅</div>
+            <div className="absolute bottom-[20%] right-[5%] text-5xl animate-emoji2 opacity-90 -rotate-12">🧀</div>
+            <div className="absolute top-[20%] right-[15%] text-3xl animate-emoji3 opacity-60 rotate-45 blur-[2px]">🌿</div>
+            <div className="absolute bottom-[10%] left-[20%] text-4xl animate-emoji4 opacity-80 -rotate-45">🥓</div>
             
             {/* Main Image */}
-            <div className="relative w-[130%] h-[130%] sm:w-full sm:h-full flex items-center justify-center animate-blob1 drop-shadow-[0_40px_40px_rgba(0,0,0,0.6)]">
-              <Image src="/hero_pizza.png" alt="Oveniaa Fresh Food" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-contain lg:scale-110 lg:translate-x-10" priority />
+            <div className="relative w-[110%] h-[110%] sm:w-full sm:h-full flex items-center justify-center animate-blob1 drop-shadow-[0_30px_30px_rgba(0,0,0,0.6)]">
+              <Image src="/hero_pizza.png" alt="Oveniaa Fresh Food" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-contain" priority />
             </div>
           </div>
         </div>

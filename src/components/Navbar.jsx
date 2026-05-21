@@ -67,7 +67,7 @@ export default function Navbar() {
                       <span className="absolute inset-0 bg-white/10 rounded-full scale-50 opacity-0 group-hover/link:scale-100 group-hover/link:opacity-100 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] z-0" />
                     )}
                   </Link>
-                  <div className={`nav-dropdown ${menuOpen ? 'nav-dropdown-open' : ''} absolute top-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2 bg-card/95 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl shadow-black/50 py-5 px-5 w-[600px] max-w-[90vw] z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] origin-top`}>
+                  <div className={`absolute top-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2 bg-card/95 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl shadow-black/50 py-5 px-5 w-[600px] max-w-[90vw] z-[100] transition-all duration-300 origin-top ${menuOpen ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto' : 'opacity-0 scale-95 translate-y-2 pointer-events-none'}`}>
                     <div className="flex justify-between items-center mb-4 px-2 border-b border-border/50 pb-3">
                       <span className="font-bold text-text-muted text-xs uppercase tracking-widest">Explore Categories</span>
                       <Link href="/menu" className="text-xs font-bold text-primary hover:text-primary-dark transition-colors flex items-center gap-1 group/btn">
@@ -77,7 +77,7 @@ export default function Navbar() {
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                       {categoriesList.map(cat => (
                         <Link key={cat._id} href={`/menu?category=${encodeURIComponent(cat.name)}`} className="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-semibold text-text-light hover:text-white hover:bg-white/5 transition-all duration-300 group/cat">
-                          <span className="text-xl bg-bg w-10 h-10 rounded-xl flex items-center justify-center shadow-inner group-hover/cat:scale-110 group-hover/cat:rotate-6 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">{getCategoryEmoji(cat.name)}</span> 
+                          <span className="text-xl bg-bg w-10 h-10 rounded-xl flex items-center justify-center shadow-inner group-hover/cat:scale-110 group-hover/cat:rotate-6 transition-all duration-300">{getCategoryEmoji(cat.name)}</span> 
                           <span className="truncate group-hover/cat:translate-x-1 transition-transform duration-300">{cat.name}</span>
                         </Link>
                       ))}
