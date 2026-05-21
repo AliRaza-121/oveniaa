@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { getCategoryEmoji } from '@/lib/utils'
+import ScrollableRow from '@/components/ScrollableRow'
 
 export default function MenuClient({ items, categories, activeCategory, searchTerm: initialSearch }) {
   const [category, setCategory] = useState(activeCategory)
@@ -48,13 +49,17 @@ export default function MenuClient({ items, categories, activeCategory, searchTe
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 sticky top-16 bg-bg py-3 z-30">
-          <div className="flex gap-2 flex-wrap justify-center sm:justify-start w-full sm:w-auto max-w-full">
-            <button onClick={() => handleCategoryChange('All')} className={`px-4 py-2 rounded-full text-sm font-semibold transition-all whitespace-nowrap ${category === 'All' ? 'bg-primary text-white' : 'bg-card text-text-light hover:bg-border'}`}>All</button>
-            {categories.map(cat => (
-              <button key={cat._id} onClick={() => handleCategoryChange(cat.name)} className={`px-4 py-2 rounded-full text-sm font-semibold transition-all whitespace-nowrap ${category === cat.name ? 'bg-primary text-white' : 'bg-card text-text-light hover:bg-border'}`}>{cat.name}</button>
-            ))}
+          <div className="w-full sm:w-auto flex-1 min-w-0">
+            <ScrollableRow>
+              <button onClick={() => handleCategoryChange('All')} className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-semibold transition-all whitespace-nowrap ${category === 'All' ? 'bg-primary text-white' : 'bg-card text-text-light hover:bg-border'}`}>All</button>
+              {categories.map(cat => (
+                <button key={cat._id} onClick={() => handleCategoryChange(cat.name)} className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-semibold transition-all whitespace-nowrap flex items-center gap-1.5 ${category === cat.name ? 'bg-primary text-white' : 'bg-card text-text-light hover:bg-border'}`}>
+                  <span>{getCategoryEmoji(cat.name)}</span> {cat.name}
+                </button>
+              ))}
+            </ScrollableRow>
           </div>
-          <input type="text" value={search} onChange={e => { setSearch(e.target.value); router.push(`/menu?category=${category}&search=${e.target.value}`) }} placeholder="Search..." className="px-4 py-2 rounded-full border border-border bg-card text-text text-sm focus:outline-none focus:border-primary w-full sm:w-48" />
+          <input type="text" value={search} onChange={e => { setSearch(e.target.value); router.push(`/menu?category=${category}&search=${e.target.value}`) }} placeholder="Search..." className="px-4 py-2 rounded-full border border-border bg-card text-text text-sm focus:outline-none focus:border-primary w-full sm:w-48 flex-shrink-0" />
         </div>
 
         <p className="text-sm text-text-muted mb-6">{items.length} items found</p>

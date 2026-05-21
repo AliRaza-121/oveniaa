@@ -60,14 +60,19 @@ export default function Navbar() {
                     <span className="relative z-10">Menu ▾</span>
                     {pathname === '/menu' && <span className="absolute inset-0 bg-primary rounded-full" />}
                   </Link>
-                  <div className={`nav-dropdown ${menuOpen ? 'nav-dropdown-open' : ''} absolute top-full mt-2 left-0 bg-card border border-border rounded-2xl shadow-2xl py-2 min-w-[180px] z-50`}>
-                    <Link href="/menu" className="block px-5 py-2.5 text-sm font-medium text-text-light hover:text-primary hover:bg-bg transition-colors">View All</Link>
-                    <div className="h-px bg-border mx-4 my-1" />
-                    {categoriesList.map(cat => (
-                      <Link key={cat._id} href={`/menu?category=${encodeURIComponent(cat.name)}`} className="flex items-center gap-2 px-5 py-2.5 text-sm text-text-light hover:text-primary hover:bg-bg transition-colors">
-                        {getCategoryEmoji(cat.name)} {cat.name}
-                      </Link>
-                    ))}
+                  <div className={`nav-dropdown ${menuOpen ? 'nav-dropdown-open' : ''} absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-card border border-border rounded-2xl shadow-2xl py-4 px-4 w-[600px] max-w-[90vw] z-50`}>
+                    <div className="flex justify-between items-center mb-3 px-2 border-b border-border pb-2">
+                      <span className="font-bold text-text text-sm uppercase tracking-wider">Categories</span>
+                      <Link href="/menu" className="text-xs font-semibold text-primary hover:underline bg-primary/10 px-3 py-1 rounded-full">View All Menu →</Link>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      {categoriesList.map(cat => (
+                        <Link key={cat._id} href={`/menu?category=${encodeURIComponent(cat.name)}`} className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium text-text-light hover:text-primary hover:bg-bg transition-colors">
+                          <span className="text-lg bg-bg w-8 h-8 rounded-full flex items-center justify-center shadow-sm">{getCategoryEmoji(cat.name)}</span> 
+                          <span className="truncate">{cat.name}</span>
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ) : (
