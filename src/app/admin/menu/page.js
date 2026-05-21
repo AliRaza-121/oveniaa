@@ -150,10 +150,10 @@ export default function AdminMenu() {
       </div>
 
       <div className="flex gap-1.5 sm:gap-2 mb-4 sm:mb-6 overflow-x-auto pb-2 scrollbar-hide">
-        <button onClick={() => setSelectedCat('All')} className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-xs font-semibold whitespace-nowrap transition-all ${selectedCat === 'All' ? 'bg-primary text-white' : 'bg-card text-text-light border border-border hover:border-primary'}`}>All ({items.length})</button>
+        <button onClick={() => setSelectedCat('All')} className={`flex-shrink-0 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${selectedCat === 'All' ? 'bg-primary text-white' : 'bg-card text-text-light border border-border hover:text-primary hover:border-primary'}`}>All ({items.length})</button>
         {categories.map(cat => (
-          <button key={cat._id} onClick={() => setSelectedCat(cat.name)} className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1 sm:gap-1.5 ${selectedCat === cat.name ? 'bg-primary text-white' : 'bg-card text-text-light border border-border hover:border-primary'}`}>
-            <span>{getCategoryEmoji(cat.name)}</span> {cat.name} <span className="text-[9px] sm:text-[10px] opacity-70">({items.filter(i => i.category === cat.name).length})</span>
+          <button key={cat._id} onClick={() => setSelectedCat(cat.name)} className={`flex-shrink-0 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${selectedCat === cat.name ? 'bg-primary text-white' : 'bg-card text-text-light border border-border hover:text-primary hover:border-primary'}`}>
+            <span className="text-sm sm:text-lg">{getCategoryEmoji(cat.name)}</span> {cat.name} <span className="text-[10px] opacity-70">({items.filter(i => i.category === cat.name).length})</span>
           </button>
         ))}
       </div>
