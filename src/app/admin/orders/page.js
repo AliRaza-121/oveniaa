@@ -68,11 +68,11 @@ export default function AdminOrders() {
         {searchQuery && <p className="text-xs sm:text-sm text-text-muted">Search: <span className="text-primary font-semibold">"{searchQuery}"</span></p>}
       </div>
 
-      <div className="flex-1 overflow-x-auto flex gap-4 pb-4 items-start snap-x snap-mandatory hide-scrollbar">
+      <div className="flex-1 overflow-x-auto flex gap-3 pb-4 items-start snap-x snap-mandatory hide-scrollbar">
         {KDS_COLUMNS.map(col => {
           const colOrders = baseOrders.filter(o => o.status === col)
           return (
-            <div key={col} className="min-w-[320px] w-[320px] bg-bg border border-border rounded-2xl flex flex-col h-full max-h-full snap-center shadow-lg">
+            <div key={col} className="min-w-[280px] w-[280px] bg-bg border border-border rounded-2xl flex flex-col h-full max-h-full snap-center shadow-lg">
               <div className={`p-4 border-b border-border bg-card rounded-t-2xl flex items-center justify-between sticky top-0 z-10 border-t-4 ${colors[col].split(' ')[2]}`}>
                 <h3 className="font-bold capitalize flex items-center gap-2">
                   {col === 'pending' && '🔴'}
@@ -101,20 +101,20 @@ export default function AdminOrders() {
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
-                      className={`bg-card border border-border rounded-xl p-4 shadow-sm hover:border-primary/50 transition-colors ${order.status === 'pending' ? 'animate-pulse-subtle ring-1 ring-yellow-500/30' : ''}`}
+                      className={`bg-card border border-border rounded-xl p-3 shadow-sm hover:border-primary/50 transition-colors ${order.status === 'pending' ? 'animate-pulse-subtle ring-1 ring-yellow-500/30' : ''}`}
                     >
-                      <div className="flex justify-between items-start mb-2">
+                      <div className="flex justify-between items-start mb-1.5">
                         <div>
                           <p className="text-[10px] text-text-muted font-mono">#{order._id.slice(-6).toUpperCase()}</p>
                           <h4 className="font-bold text-sm truncate max-w-[150px]">{order.customerName}</h4>
                         </div>
                         <div className="text-right">
                           <p className="text-sm font-black text-primary">Rs. {order.total}</p>
-                          <p className="text-[10px] text-text-muted uppercase font-bold tracking-wider">{order.orderType}</p>
+                          <p className="text-[9px] text-text-muted uppercase font-bold tracking-wider">{order.orderType}</p>
                         </div>
                       </div>
 
-                      <div className="text-xs text-text-light mb-3 bg-bg rounded-lg p-2 space-y-1">
+                      <div className="text-[11px] text-text-light mb-2 bg-bg rounded-lg p-1.5 space-y-0.5 border border-border/50">
                         {order.items.map((item, i) => (
                           <div key={i} className="flex justify-between">
                             <span className="font-medium">{item.quantity}x {item.name} {item.size ? `(${item.size})` : ''}</span>
@@ -122,9 +122,9 @@ export default function AdminOrders() {
                         ))}
                       </div>
 
-                      {order.notes && <p className="text-[10px] text-yellow-400 mb-3 bg-yellow-400/10 p-2 rounded-lg">📝 {order.notes}</p>}
+                      {order.notes && <p className="text-[10px] text-yellow-400 mb-2 bg-yellow-400/10 p-1.5 rounded-lg border border-yellow-400/20">📝 {order.notes}</p>}
 
-                      <div className="flex items-center justify-between mt-4 pt-3 border-t border-border">
+                      <div className="flex items-center justify-between mt-2 pt-2 border-t border-border">
                         <div className="text-[10px] text-text-muted">
                           {Math.round((Date.now() - new Date(order.createdAt).getTime()) / 60000)} min ago
                         </div>

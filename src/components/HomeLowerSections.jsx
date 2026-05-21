@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getCategoryEmoji } from '@/lib/utils'
+import ScrollableRow from '@/components/ScrollableRow'
 
 /* Lightweight Intersection Observer hook to replace framer-motion whileInView */
 function useReveal(ref) {
@@ -87,13 +88,13 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
       {/* Category Row */}
       <section className="py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide sm:justify-center sm:gap-3">
+          <ScrollableRow className="sm:justify-center">
             {categories.map(cat => (
               <Link key={cat._id} href={`/menu?category=${encodeURIComponent(cat.name)}`} className="flex items-center gap-1.5 bg-card border border-border rounded-full px-3.5 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold text-text-light hover:text-primary hover:border-primary whitespace-nowrap transition-all flex-shrink-0">
                 <span className="text-sm sm:text-lg">{getCategoryEmoji(cat.name)}</span>{cat.name}
               </Link>
             ))}
-          </div>
+          </ScrollableRow>
         </div>
       </section>
 
