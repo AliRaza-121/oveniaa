@@ -99,7 +99,7 @@ export default function Navbar() {
                 <button onClick={logout} className="text-sm font-semibold text-text-light hover:text-primary px-3 py-1.5">Logout</button>
               </div>
             ) : (
-              <Link href="/login" className="hidden lg:block bg-primary text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-primary-dark transition-all hover:scale-105 shadow-md shadow-primary/20">Login</Link>
+              <Link href="/login" className="hidden lg:block bg-primary text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-primary-dark transition-colors shadow-md shadow-primary/20">Login</Link>
             )}
 
             <button onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle mobile menu" className="lg:hidden relative w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors">

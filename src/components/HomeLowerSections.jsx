@@ -38,57 +38,45 @@ function Reveal({ children, className = '', delay = 0 }) {
 export default function HomeLowerSections({ popularItems, categories, deals }) {
   return (
     <>
-      {/* Daily Deals - Premium Glassmorphism */}
+      {/* Daily Deals - Clean Premium Layout */}
       {deals && deals.length > 0 && (
-        <section className="py-16 relative overflow-hidden">
-          <div className="absolute inset-0 bg-primary/5 pointer-events-none" />
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-            <Reveal className="text-center mb-16">
-              <div className="animate-pulse-scale inline-flex items-center gap-2 bg-gradient-to-r from-secondary/20 to-primary/20 text-text font-bold px-5 py-2 rounded-full mb-4 border border-secondary/30 backdrop-blur-sm">
-                <span className="text-lg">🔥</span> LIMITED TIME OFFERS
+        <section className="py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <Reveal className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 bg-primary/10 text-primary font-bold px-4 py-1.5 rounded-full mb-4 text-xs tracking-widest uppercase">
+                Limited Time Offers
               </div>
-              <h2 className="text-4xl sm:text-6xl font-black font-display tracking-tight">Today's <span className="text-primary relative inline-block">Hottest<svg className="absolute -bottom-2 left-0 w-full h-3 text-secondary" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 25 0, 50 5 T 100 5" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" /></svg></span> Deals</h2>
+              <h2 className="text-4xl sm:text-5xl font-black font-display tracking-tight">Today's <span className="text-primary">Deals</span></h2>
             </Reveal>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {deals.map((deal, i) => (
                 <Reveal key={deal._id} delay={i * 0.1}>
-                  <Link href={`/deals/${deal._id}`} className={`block relative group h-full rounded-3xl p-1 bg-gradient-to-b ${deal.backgroundColor ? `from-[${deal.backgroundColor}]/30 to-bg` : 'from-primary/30 to-bg'} hover:from-primary hover:to-secondary transition-all duration-500 overflow-hidden`}>
-                    <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <Link href={`/deals/${deal._id}`} className="block h-full bg-card border border-border rounded-3xl p-6 hover:shadow-xl hover:border-primary/30 transition-all duration-300 group">
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="bg-primary/10 text-primary text-xs font-bold px-3 py-1.5 rounded-full">
+                        {deal.discount || 'Special Deal'}
+                      </div>
+                      <div className="w-10 h-10 rounded-full bg-bg flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
+                      </div>
+                    </div>
                     
-                    <div className="relative h-full bg-card/90 backdrop-blur-xl rounded-[1.4rem] p-6 flex flex-col justify-between border border-border group-hover:border-transparent transition-all duration-500 z-10">
-                      <div>
-                        <div className="flex justify-between items-start mb-6">
-                          <div className="w-16 h-16 bg-gradient-to-br from-white/10 to-transparent border border-white/10 shadow-lg rounded-2xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform duration-500">
-                            ✨
-                          </div>
-                          <div className="bg-primary text-white text-xs font-black px-4 py-1.5 rounded-full shadow-lg shadow-primary/30 animate-pulse-scale">
-                            {deal.discount || 'HOT DEAL'}
-                          </div>
-                        </div>
-                        
-                        <h3 className="text-2xl font-bold text-text mb-3 group-hover:text-primary transition-colors">{deal.title}</h3>
-                        {deal.description && <p className="text-text-muted text-sm mb-6 line-clamp-2 leading-relaxed">{deal.description}</p>}
-                        
-                        {deal.items?.length > 0 && (
-                          <div className="flex flex-wrap gap-2 mb-6">
-                            {deal.items.slice(0, 3).map((item, j) => (
-                              <span key={j} className="text-xs bg-bg border border-border text-text px-3 py-1.5 rounded-full font-semibold shadow-sm">{item.name || 'Item'}</span>
-                            ))}
-                            {deal.items.length > 3 && <span className="text-xs bg-primary/10 text-primary px-3 py-1.5 rounded-full font-bold">+{deal.items.length - 3} more</span>}
-                          </div>
-                        )}
+                    <h3 className="text-2xl font-bold text-text mb-2 group-hover:text-primary transition-colors duration-300">{deal.title}</h3>
+                    {deal.description && <p className="text-text-muted text-sm mb-5 line-clamp-2">{deal.description}</p>}
+                    
+                    {deal.items?.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mb-5">
+                        {deal.items.slice(0, 3).map((item, j) => (
+                          <span key={j} className="text-[10px] bg-bg border border-border text-text px-2.5 py-1 rounded-full font-semibold">{item.name || 'Item'}</span>
+                        ))}
+                        {deal.items.length > 3 && <span className="text-[10px] bg-bg border border-border text-text px-2.5 py-1 rounded-full font-semibold">+{deal.items.length - 3}</span>}
                       </div>
-                      
-                      <div className="flex items-center justify-between pt-6 border-t border-border/50">
-                        <div>
-                          {deal.price > 0 && <span className="text-3xl font-black text-primary drop-shadow-md">Rs. {deal.price}</span>}
-                          {deal.originalPrice > 0 && <span className="text-sm text-text-muted line-through ml-2 font-semibold">Rs. {deal.originalPrice}</span>}
-                        </div>
-                        <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center group-hover:translate-x-2 transition-transform shadow-lg shadow-primary/30">
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
-                        </div>
-                      </div>
+                    )}
+                    
+                    <div className="mt-auto pt-4 border-t border-border/50">
+                      {deal.price > 0 && <span className="text-2xl font-black text-primary">Rs. {deal.price}</span>}
+                      {deal.originalPrice > 0 && <span className="text-sm text-text-muted line-through ml-2">Rs. {deal.originalPrice}</span>}
                     </div>
                   </Link>
                 </Reveal>
@@ -103,8 +91,8 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <ScrollableRow className="sm:justify-center">
             {categories.map(cat => (
-              <Link key={cat._id} href={`/menu?category=${encodeURIComponent(cat.name)}`} className="flex items-center gap-2 bg-card border border-border shadow-sm rounded-full px-4 py-2.5 sm:px-6 sm:py-3 text-xs sm:text-sm font-bold text-text hover:text-primary hover:border-primary hover:shadow-primary/20 whitespace-nowrap transition-all flex-shrink-0 group">
-                <span className="text-base sm:text-xl group-hover:scale-125 transition-transform">{getCategoryEmoji(cat.name)}</span>{cat.name}
+              <Link key={cat._id} href={`/menu?category=${encodeURIComponent(cat.name)}`} className="flex items-center gap-2 bg-card border border-border shadow-sm rounded-full px-4 py-2.5 sm:px-6 sm:py-3 text-xs sm:text-sm font-bold text-text hover:text-primary hover:border-primary hover:shadow-md whitespace-nowrap transition-all duration-300 flex-shrink-0 group">
+                <span className="text-base sm:text-xl transition-transform duration-300">{getCategoryEmoji(cat.name)}</span>{cat.name}
               </Link>
             ))}
           </ScrollableRow>
@@ -159,28 +147,28 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
               {/* Secondary Popular Items (Floating Aesthetics) */}
               <div className="flex gap-6 overflow-x-auto pb-8 pt-4 px-2 snap-x snap-mandatory hide-scrollbar sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible sm:snap-none sm:pb-0">
                 {popularItems.slice(1).map((item, index) => (
-                  <Link key={item._id} href={`/menu/${item._id}`} className="min-w-[240px] sm:min-w-0 bg-card border border-border rounded-3xl p-6 snap-start hover:shadow-xl hover:-translate-y-2 hover:border-primary/40 transition-all duration-500 flex-shrink-0 flex flex-col h-full group relative mt-8 sm:mt-12">
+                  <Link key={item._id} href={`/menu/${item._id}`} className="min-w-[240px] sm:min-w-0 bg-card border border-border rounded-3xl p-6 snap-start hover:shadow-lg hover:-translate-y-1 hover:border-primary/30 transition-all duration-300 flex-shrink-0 flex flex-col h-full group relative mt-8 sm:mt-12">
                     
-                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-32 h-32 sm:w-40 sm:h-40 relative group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500 shadow-2xl rounded-full">
+                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-32 h-32 sm:w-40 sm:h-40 relative transition-transform duration-500 shadow-xl rounded-full">
                       {item.image ? (
                         <Image src={item.image.replace('/upload/', '/upload/w_400,h_400,c_fill,g_auto,f_auto,q_auto/')} alt={item.name} fill sizes="(max-width: 640px) 100vw, 25vw" className="object-cover rounded-full border-4 border-card" loading="lazy" />
                       ) : (
                         <div className="w-full h-full bg-bg rounded-full flex items-center justify-center text-5xl border-4 border-card">{getCategoryEmoji(item.category)}</div>
                       )}
                       
-                      <div className="absolute top-0 right-0 bg-secondary text-white text-[10px] font-black px-2 py-1 rounded-full shadow-lg rotate-12">
+                      <div className="absolute top-0 right-0 bg-secondary text-white text-[10px] font-black px-2 py-1 rounded-full shadow-md">
                         #{index + 2}
                       </div>
                     </div>
                     
                     <div className="pt-24 sm:pt-32 flex-1 flex flex-col text-center">
-                      <h3 className="font-black text-xl mb-2">{item.name}</h3>
+                      <h3 className="font-bold text-xl mb-2 group-hover:text-primary transition-colors duration-300">{item.name}</h3>
                       <div className="flex items-center justify-center gap-1 mb-4">
                         <span className="text-yellow-500 text-sm">{'★'.repeat(item.avgRating || 0)}{'☆'.repeat(5 - (item.avgRating || 0))}</span>
                       </div>
                       <div className="mt-auto pt-4 border-t border-border/50 flex justify-between items-center">
-                        <p className="text-primary font-black text-2xl">Rs. {item.price}</p>
-                        <div className="w-8 h-8 rounded-full bg-bg border border-border flex items-center justify-center group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all text-xl pb-1">+</div>
+                        <p className="text-primary font-bold text-2xl">Rs. {item.price}</p>
+                        <div className="w-8 h-8 rounded-full bg-bg border border-border flex items-center justify-center group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all duration-300 text-xl pb-1">+</div>
                       </div>
                     </div>
                   </Link>
