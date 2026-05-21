@@ -52,7 +52,7 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {deals.map((deal, i) => (
                 <Reveal key={deal._id} delay={i * 0.1}>
-                  <Link href={`/deals/${deal._id}`} className="block relative h-full bg-card rounded-[2rem] border border-border/50 p-[2px] group hover:-translate-y-2 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] shadow-2xl shadow-black/40">
+                  <Link href={`/deals/${deal._id}`} className="block relative h-full bg-card rounded-[2rem] border border-border/50 p-[2px] group hover:-translate-y-1 transition-transform duration-500 ease-in-out shadow-2xl shadow-black/40">
                     
                     {/* Animated Sweeping Shine */}
                     <div className="absolute inset-0 rounded-[2rem] overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-0">
@@ -70,7 +70,7 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
                         <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-accent text-white px-4 py-1.5 rounded-full text-xs font-black tracking-widest shadow-lg shadow-primary/30 uppercase transform group-hover:scale-105 transition-transform duration-500 origin-left border border-white/10">
                           <span className="animate-pulse">🔥</span> {deal.discount || 'Limited Time'}
                         </div>
-                        <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-md group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-all duration-500 group-hover:rotate-45 shadow-xl">
+                        <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-md group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-all duration-500 ease-in-out group-hover:translate-x-1 shadow-xl">
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
                         </div>
                       </div>
@@ -137,11 +137,11 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
               
               {/* Massive Hero Item */}
               {popularItems[0] && (
-                <Link href={`/menu/${popularItems[0]._id}`} className="block relative bg-gradient-to-br from-primary/10 via-bg to-secondary/10 border border-primary/20 rounded-[2.5rem] p-8 sm:p-12 mb-12 hover:shadow-2xl hover:border-primary/50 transition-all duration-500 overflow-hidden group">
+                <Link href={`/menu/${popularItems[0]._id}`} className="block relative bg-gradient-to-br from-primary/10 via-bg to-secondary/10 border border-primary/20 rounded-[2.5rem] p-8 sm:p-12 mb-12 hover:shadow-2xl hover:border-primary/50 transition-all duration-500 ease-in-out overflow-hidden group">
                   <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
                   
                   <div className="flex flex-col md:flex-row items-center gap-10 relative z-10">
-                    <div className="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 relative flex-shrink-0 group-hover:scale-105 group-hover:-rotate-3 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]">
+                    <div className="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 relative flex-shrink-0 group-hover:scale-[1.02] transition-transform duration-500 ease-in-out">
                       {popularItems[0].image ? (
                         <Image src={popularItems[0].image.replace('/upload/', '/upload/w_600,h_600,c_fill,g_auto,f_auto,q_auto/')} alt={popularItems[0].name} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover rounded-full shadow-2xl border-4 border-white/10" priority={false} loading="lazy" />
                       ) : (
@@ -172,29 +172,29 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
               {/* Secondary Popular Items (Floating Aesthetics) */}
               <div className="flex gap-6 overflow-x-auto pb-8 pt-4 px-2 snap-x snap-mandatory hide-scrollbar sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible sm:snap-none sm:pb-0">
                 {popularItems.slice(1).map((item, index) => (
-                  <Link key={item._id} href={`/menu/${item._id}`} className="min-w-[240px] sm:min-w-0 bg-card border border-border rounded-3xl p-6 snap-start hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2 hover:border-primary/30 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] flex-shrink-0 flex flex-col h-full group relative mt-8 sm:mt-12 overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                  <Link key={item._id} href={`/menu/${item._id}`} className="min-w-[240px] sm:min-w-0 bg-card border border-border rounded-3xl p-6 snap-start hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1 hover:border-primary/30 transition-all duration-500 ease-in-out flex-shrink-0 flex flex-col h-full group relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
                     
-                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-32 h-32 sm:w-40 sm:h-40 relative group-hover:-translate-y-4 group-hover:rotate-3 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] shadow-xl rounded-full z-10">
+                    <div className="w-32 h-32 sm:w-36 sm:h-36 mx-auto relative group-hover:-translate-y-1 transition-transform duration-500 ease-in-out shadow-xl rounded-full z-10 mb-6">
                       {item.image ? (
-                        <Image src={item.image.replace('/upload/', '/upload/w_400,h_400,c_fill,g_auto,f_auto,q_auto/')} alt={item.name} fill sizes="(max-width: 640px) 100vw, 25vw" className="object-cover rounded-full border-4 border-card" loading="lazy" />
+                        <Image src={item.image.replace('/upload/', '/upload/w_400,h_400,c_fill,g_auto,f_auto,q_auto/')} alt={item.name} fill sizes="(max-width: 640px) 100vw, 25vw" className="object-cover rounded-full border-4 border-bg" loading="lazy" />
                       ) : (
-                        <div className="w-full h-full bg-bg rounded-full flex items-center justify-center text-5xl border-4 border-card">{getCategoryEmoji(item.category)}</div>
+                        <div className="w-full h-full bg-bg rounded-full flex items-center justify-center text-5xl border-4 border-bg shadow-inner">{getCategoryEmoji(item.category)}</div>
                       )}
                       
-                      <div className="absolute top-0 right-0 bg-secondary text-white text-[10px] font-black px-2 py-1 rounded-full shadow-md group-hover:scale-110 transition-transform duration-300">
+                      <div className="absolute top-0 right-0 bg-secondary text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-lg group-hover:scale-110 transition-transform duration-300 border border-white/20">
                         #{index + 2}
                       </div>
                     </div>
                     
-                    <div className="pt-24 sm:pt-32 flex-1 flex flex-col text-center relative z-10">
-                      <h3 className="font-bold text-xl mb-2 group-hover:text-primary transition-colors duration-300">{item.name}</h3>
+                    <div className="flex-1 flex flex-col text-center relative z-10">
+                      <h3 className="font-bold text-lg sm:text-xl mb-1 group-hover:text-primary transition-colors duration-300">{item.name}</h3>
                       <div className="flex items-center justify-center gap-1 mb-4">
-                        <span className="text-yellow-500 text-sm">{'★'.repeat(item.avgRating || 0)}{'☆'.repeat(5 - (item.avgRating || 0))}</span>
+                        <span className="text-yellow-500 text-sm drop-shadow-sm">{'★'.repeat(item.avgRating || 0)}{'☆'.repeat(5 - (item.avgRating || 0))}</span>
                       </div>
                       <div className="mt-auto pt-4 border-t border-border/50 flex justify-between items-center group-hover:border-primary/30 transition-colors duration-500">
-                        <p className="text-primary font-bold text-2xl group-hover:scale-110 transition-transform duration-500 origin-left">Rs. {item.price}</p>
-                        <div className="w-10 h-10 rounded-full bg-bg border border-border flex items-center justify-center group-hover:bg-primary group-hover:text-white group-hover:border-transparent transition-all duration-500 text-xl shadow-sm group-hover:shadow-md group-hover:rotate-180">+</div>
+                        <p className="text-primary font-bold text-xl sm:text-2xl group-hover:scale-105 transition-transform duration-500 ease-in-out origin-left">Rs. {item.price}</p>
+                        <div className="w-10 h-10 rounded-full bg-bg border border-border flex items-center justify-center group-hover:bg-primary group-hover:text-white group-hover:border-transparent transition-all duration-500 ease-in-out text-xl shadow-sm group-hover:shadow-md">+</div>
                       </div>
                     </div>
                   </Link>

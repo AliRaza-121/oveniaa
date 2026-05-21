@@ -21,7 +21,7 @@ export default function HomeClient({ popularItems, categories, deals, stats }) {
           <div className="animate-blob2 absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/15 rounded-full blur-[100px]" />
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full relative z-10 flex flex-col lg:flex-row items-center pt-28 pb-12 lg:py-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full relative z-10 flex flex-col lg:flex-row items-center pt-16 pb-12 lg:pt-20 lg:pb-20">
           
           {/* Left Content */}
           <div className="w-full lg:flex-1 text-center lg:text-left pt-10 lg:pt-0 relative z-20 min-w-0">
@@ -33,7 +33,7 @@ export default function HomeClient({ popularItems, categories, deals, stats }) {
               HOT & FRESH • DELIVERING NOW 🛵
             </div>
 
-            <h1 className="animate-fade-in-up delay-100 text-5xl sm:text-7xl lg:text-8xl font-black font-display text-text leading-[0.9] tracking-tight uppercase flex flex-col items-center lg:items-start whitespace-nowrap">
+            <h1 className="animate-fade-in-up delay-100 text-5xl sm:text-6xl lg:text-[5.5rem] xl:text-7xl font-black font-display text-text leading-[0.95] tracking-tight uppercase flex flex-col items-center lg:items-start whitespace-nowrap">
               <span className="block mb-2">Food That</span>
               <span className="block text-stroke-primary drop-shadow-[0_0_15px_rgba(255,107,53,0.4)] mb-2">Speaks</span>
               <span className="block text-primary">For Itself</span>

@@ -153,14 +153,7 @@ export default function AdminOrders() {
         </ScrollableRow>
       </div>
       
-      <style jsx global>{`
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .animate-pulse-subtle { animation: pulse-subtle 2s infinite; }
-        @keyframes pulse-subtle { 0%, 100% { opacity: 1; } 50% { opacity: 0.85; } }
-      `}</style>
+
     </div>
   )
 }

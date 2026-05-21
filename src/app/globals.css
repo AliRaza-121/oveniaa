@@ -312,6 +312,20 @@ h3 {
   0% { left: -100%; }
   100% { left: 200%; }
 }
+
+/* ===== Utilities ===== */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.hide-scrollbar::-webkit-scrollbar { 
+  display: none; 
+}
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+.animate-pulse-subtle { animation: pulse-subtle 2s infinite; }
+@keyframes pulse-subtle { 0%, 100% { opacity: 1; } 50% { opacity: 0.85; } }
 .animate-sweep {
   animation: sweep 1.5s ease-in-out infinite;
 }

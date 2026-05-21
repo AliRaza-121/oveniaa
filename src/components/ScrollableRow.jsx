@@ -69,9 +69,7 @@ export default function ScrollableRow({ children, className = '', innerClassName
         </div>
       )}
       
-      <style jsx global>{`
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-      `}</style>
+
     </div>
   )
 }
