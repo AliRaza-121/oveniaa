@@ -80,7 +80,6 @@ export default function CartDrawer({ isOpen, setIsOpen }) {
                 </div>
               ))}
             </div>
-            </div>
             <div className="border-t border-border px-5 py-4 bg-bg/30">
               {/* Cross-selling Suggestion */}
               {cart.length > 0 && !cart.some(i => i.category === 'Drinks') && (
