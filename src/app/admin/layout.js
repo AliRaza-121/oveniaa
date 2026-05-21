@@ -10,8 +10,9 @@ const sidebarLinks = [
   { name: 'Dashboard', href: '/admin', icon: '📊' },
   { name: 'Menu Items', href: '/admin/menu', icon: '🍕' },
   { name: 'Categories', href: '/admin/categories', icon: '📂' },
+  { name: 'Permanent Deals', href: '/admin/permanent-deals', icon: '🎉' },
+  { name: 'Today\'s Specials', href: '/admin/deals', icon: '⚡' },
   { name: 'Orders', href: '/admin/orders', icon: '🛒' },
-  { name: 'Deals', href: '/admin/deals', icon: '⚡' },
   { name: 'Users', href: '/admin/users', icon: '👥' },
 ]
 
