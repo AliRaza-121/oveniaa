@@ -45,10 +45,10 @@ export default function Navbar() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className={`fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl transition-all duration-500 rounded-2xl
+        className={`fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-5xl transition-all duration-500 rounded-2xl
           ${scrolled ? 'bg-bg/90 backdrop-blur-xl shadow-2xl shadow-black/30' : 'bg-bg/80 backdrop-blur-md'}`}
       >
-        <div className="px-5 sm:px-6 h-16 flex items-center justify-between">
+        <div className="px-4 sm:px-6 h-16 flex items-center justify-between">
           
           <Link href="/" className="flex items-center gap-2 group">
             <motion.span whileHover={{ rotate: [0, -10, 10, 0] }} transition={{ duration: 0.5 }} className="text-2xl">🍕</motion.span>
