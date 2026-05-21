@@ -124,7 +124,7 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
                   </div>
                 </Link>
               )}
-              <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory sm:grid sm:grid-cols-4 sm:overflow-visible sm:snap-none sm:pb-0">
+              <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory hide-scrollbar sm:grid sm:grid-cols-4 sm:overflow-visible sm:snap-none sm:pb-0">
                 {popularItems.slice(1).map(item => (
                   <Link key={item._id} href={`/menu/${item._id}`} className="min-w-[200px] sm:min-w-0 bg-card border border-border rounded-2xl p-3 sm:p-4 snap-start hover:shadow-md hover:border-primary/30 transition-all flex-shrink-0 flex flex-col h-full">
                     <div className="w-full aspect-square bg-primary/10 rounded-xl flex items-center justify-center text-4xl mb-3 overflow-hidden relative">

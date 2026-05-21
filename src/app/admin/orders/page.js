@@ -59,7 +59,7 @@ export default function AdminOrders() {
   }
 
   return (
-    <div className="h-[calc(100vh-100px)] flex flex-col overflow-hidden">
+    <div className="h-[calc(100dvh-110px)] md:h-[calc(100vh-100px)] flex flex-col overflow-hidden">
       <div className="flex justify-between items-end mb-4 flex-shrink-0">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold flex items-center gap-2">Kitchen Display System <span className="bg-primary/20 text-primary text-xs px-2 py-0.5 rounded-full">KDS</span></h1>
@@ -72,7 +72,7 @@ export default function AdminOrders() {
         {KDS_COLUMNS.map(col => {
           const colOrders = baseOrders.filter(o => o.status === col)
           return (
-            <div key={col} className="min-w-[280px] w-[280px] bg-bg border border-border rounded-2xl flex flex-col h-full max-h-full snap-center shadow-lg">
+            <div key={col} className="min-w-[85vw] max-w-[85vw] sm:min-w-[280px] sm:max-w-[280px] w-full bg-bg border border-border rounded-2xl flex flex-col h-full max-h-full snap-center shadow-lg">
               <div className={`p-4 border-b border-border bg-card rounded-t-2xl flex items-center justify-between sticky top-0 z-10 border-t-4 ${colors[col].split(' ')[2]}`}>
                 <h3 className="font-bold capitalize flex items-center gap-2">
                   {col === 'pending' && '🔴'}
