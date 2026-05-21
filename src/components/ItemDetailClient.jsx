@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { useCart } from '@/context/CartContext'
 import { useAuth } from '@/context/AuthContext'
 import { useToast } from '@/context/ToastContext'
+import { getCategoryEmoji } from '@/lib/utils'
 
 export default function ItemDetailClient({ item, reviews: initialReviews }) {
   const [selectedSize, setSelectedSize] = useState(null)
@@ -102,7 +103,7 @@ export default function ItemDetailClient({ item, reviews: initialReviews }) {
     className="object-cover" 
   />
 ) : (
-  <span>{item.category === 'Burgers' ? '🍔' : item.category === 'Pizzas' ? '🍕' : item.category === 'Fries & Sides' ? '🍟' : '🥤'}</span>
+  <span>{getCategoryEmoji(item.category)}</span>
 )}
           </motion.div>
 

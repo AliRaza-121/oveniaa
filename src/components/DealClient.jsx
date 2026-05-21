@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useCart } from '@/context/CartContext'
 import { useToast } from '@/context/ToastContext'
+import { getCategoryEmoji } from '@/lib/utils'
 
 export default function DealClient({ deal }) {
   const { addToCart } = useCart()
@@ -67,7 +68,7 @@ export default function DealClient({ deal }) {
               {deal.items.map((item) => (
                 <div key={item._id} className="bg-card border border-border rounded-2xl p-4 flex items-center gap-4">
                   <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center text-2xl flex-shrink-0 relative overflow-hidden">
-                    {item.image ? <Image src={item.image.replace('/upload/', '/upload/w_150,h_150,c_fill,g_auto,f_auto,q_auto/')} alt={item.name} fill className="object-cover" /> : <span>{item.category === 'Burgers' ? '🍔' : item.category === 'Pizzas' ? '🍕' : item.category === 'Fries & Sides' ? '🍟' : '🥤'}</span>}
+                    {item.image ? <Image src={item.image.replace('/upload/', '/upload/w_150,h_150,c_fill,g_auto,f_auto,q_auto/')} alt={item.name} fill className="object-cover" /> : <span>{getCategoryEmoji(item.category)}</span>}
                   </div>
                   <div className="flex-1"><h3 className="font-semibold text-text">{item.name}</h3><p className="text-sm text-text-muted">{item.description?.slice(0, 60)}...</p></div>
                   <div className="text-right"><p className="font-bold text-primary">Rs. {item.price}</p></div>

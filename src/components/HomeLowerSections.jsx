@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { getCategoryEmoji } from '@/lib/utils'
 
 /* Lightweight Intersection Observer hook to replace framer-motion whileInView */
 function useReveal(ref) {
@@ -89,7 +90,7 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
           <div className="flex gap-2 overflow-x-auto scrollbar-hide sm:justify-center sm:gap-3">
             {categories.map(cat => (
               <Link key={cat._id} href={`/menu?category=${encodeURIComponent(cat.name)}`} className="flex items-center gap-1.5 bg-card border border-border rounded-full px-3.5 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold text-text-light hover:text-primary hover:border-primary whitespace-nowrap transition-all flex-shrink-0">
-                <span className="text-sm sm:text-lg">{cat.name === 'Burgers' ? '🍔' : cat.name === 'Pizzas' ? '🍕' : cat.name === 'Fries & Sides' ? '🍟' : '🥤'}</span>{cat.name}
+                <span className="text-sm sm:text-lg">{getCategoryEmoji(cat.name)}</span>{cat.name}
               </Link>
             ))}
           </div>
@@ -111,7 +112,7 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
                 <Link href={`/menu/${popularItems[0]._id}`} className="block bg-primary/10 rounded-3xl p-6 sm:p-8 mb-6 hover:bg-primary/20 transition-colors">
                   <div className="flex flex-col sm:flex-row items-center gap-6">
                     <div className="w-24 h-24 sm:w-32 sm:h-32 bg-card rounded-2xl flex items-center justify-center text-5xl flex-shrink-0 relative overflow-hidden">
-                      {popularItems[0].image ? <Image src={popularItems[0].image.replace('/upload/', '/upload/w_400,h_400,c_fill,g_auto,f_auto,q_auto/')} alt={popularItems[0].name} fill sizes="(max-width: 640px) 100vw, 33vw" className="object-cover" priority={false} loading="lazy" /> : <span>🍔</span>}
+                      {popularItems[0].image ? <Image src={popularItems[0].image.replace('/upload/', '/upload/w_400,h_400,c_fill,g_auto,f_auto,q_auto/')} alt={popularItems[0].name} fill sizes="(max-width: 640px) 100vw, 33vw" className="object-cover" priority={false} loading="lazy" /> : <span>{getCategoryEmoji(popularItems[0].category)}</span>}
                     </div>
                     <div className="text-center sm:text-left flex-1">
                       <span className="text-primary text-xs font-bold uppercase tracking-widest">Most Popular</span>
@@ -126,7 +127,7 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
                 {popularItems.slice(1).map(item => (
                   <Link key={item._id} href={`/menu/${item._id}`} className="min-w-[200px] sm:min-w-0 bg-card border border-border rounded-2xl p-3 sm:p-4 snap-start hover:shadow-md hover:border-primary/30 transition-all flex-shrink-0 flex flex-col h-full">
                     <div className="w-full aspect-square bg-primary/10 rounded-xl flex items-center justify-center text-4xl mb-3 overflow-hidden relative">
-                      {item.image ? <Image src={item.image.replace('/upload/', '/upload/w_500,h_500,c_fill,g_auto,f_auto,q_auto/')} alt={item.name} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 25vw, 20vw" className="object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" /> : <span>{item.category === 'Burgers' ? '🍔' : item.category === 'Pizzas' ? '🍕' : item.category === 'Fries & Sides' ? '🍟' : '🥤'}</span>}
+                      {item.image ? <Image src={item.image.replace('/upload/', '/upload/w_500,h_500,c_fill,g_auto,f_auto,q_auto/')} alt={item.name} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 25vw, 20vw" className="object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" /> : <span>{getCategoryEmoji(item.category)}</span>}
                     </div>
                     <h3 className="font-bold text-lg">{item.name}</h3>
                     <div className="flex items-center gap-1 mt-1"><span className="text-yellow-500 text-xs">{'★'.repeat(item.avgRating || 0)}{'☆'.repeat(5 - (item.avgRating || 0))}</span></div>

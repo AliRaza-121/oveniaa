@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useToast } from '@/context/ToastContext'
+import { getCategoryEmoji } from '@/lib/utils'
 
 const emptyForm = {
   name: '', price: '', category: '', description: '',
@@ -17,10 +18,6 @@ const SIZE_TEMPLATES = {
   'Squares (Small, Medium, Large)': ['Small', 'Medium', 'Large'],
   'Regular & Large (Pasta, Fries, Fried, Wings)': ['Regular', 'Large'],
   'Medium & Large (Starters)': ['Medium', 'Large'],
-}
-
-const categoryEmojis = {
-  'Burgers': '🍔', 'Pizzas': '🍕', 'Fries & Sides': '🍟', 'Drinks': '🥤', 'Wings': '🍗',
 }
 
 export default function AdminMenu() {
@@ -156,7 +153,7 @@ export default function AdminMenu() {
         <button onClick={() => setSelectedCat('All')} className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-xs font-semibold whitespace-nowrap transition-all ${selectedCat === 'All' ? 'bg-primary text-white' : 'bg-card text-text-light border border-border hover:border-primary'}`}>All ({items.length})</button>
         {categories.map(cat => (
           <button key={cat._id} onClick={() => setSelectedCat(cat.name)} className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1 sm:gap-1.5 ${selectedCat === cat.name ? 'bg-primary text-white' : 'bg-card text-text-light border border-border hover:border-primary'}`}>
-            <span>{categoryEmojis[cat.name] || '📦'}</span> {cat.name} <span className="text-[9px] sm:text-[10px] opacity-70">({items.filter(i => i.category === cat.name).length})</span>
+            <span>{getCategoryEmoji(cat.name)}</span> {cat.name} <span className="text-[9px] sm:text-[10px] opacity-70">({items.filter(i => i.category === cat.name).length})</span>
           </button>
         ))}
       </div>
@@ -174,7 +171,7 @@ export default function AdminMenu() {
           {filteredItems.map((item, i) => (
             <motion.div key={item._id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }} className="bg-card border border-border rounded-2xl overflow-hidden group hover:border-primary/30 hover:shadow-lg transition-all flex flex-col">
               <div className="relative w-full aspect-square bg-primary/5 flex items-center justify-center text-4xl sm:text-5xl overflow-hidden">
-                {item.image ? <img src={item.image.replace('/upload/', '/upload/w_500,h_500,c_fill,g_auto,f_auto,q_auto/')} alt={item.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" /> : <span>{categoryEmojis[item.category] || '🍔'}</span>}
+                {item.image ? <img src={item.image.replace('/upload/', '/upload/w_500,h_500,c_fill,g_auto,f_auto,q_auto/')} alt={item.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" /> : <span>{getCategoryEmoji(item.category)}</span>}
                 <div className="absolute top-2 sm:top-3 left-2 sm:left-3 flex gap-1 sm:gap-1.5 z-10">
                   {item.isPopular && <span className="bg-secondary text-bg-dark text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full">⭐ Popular</span>}
                 </div>
@@ -211,7 +208,7 @@ export default function AdminMenu() {
             <tbody>
               {filteredItems.map(item => (
                 <tr key={item._id} className="border-b border-border/50 hover:bg-bg/50">
-                  <td className="py-2 sm:py-3 px-3 sm:px-4"><div className="flex items-center gap-2"><div className="w-7 h-7 sm:w-8 sm:h-8 bg-primary/10 rounded-lg flex items-center justify-center text-xs sm:text-sm">{item.image ? <img src={item.image.replace('/upload/', '/upload/w_100,h_100,c_fill,g_auto,f_auto,q_auto/')} alt="" className="w-full h-full object-cover rounded-lg" /> : <span>{categoryEmojis[item.category] || '🍔'}</span>}</div><span className="text-xs sm:text-sm font-medium truncate max-w-[100px] sm:max-w-[150px]">{item.name}</span></div></td>
+                  <td className="py-2 sm:py-3 px-3 sm:px-4"><div className="flex items-center gap-2"><div className="w-7 h-7 sm:w-8 sm:h-8 bg-primary/10 rounded-lg flex items-center justify-center text-xs sm:text-sm">{item.image ? <img src={item.image.replace('/upload/', '/upload/w_100,h_100,c_fill,g_auto,f_auto,q_auto/')} alt="" className="w-full h-full object-cover rounded-lg" /> : <span>{getCategoryEmoji(item.category)}</span>}</div><span className="text-xs sm:text-sm font-medium truncate max-w-[100px] sm:max-w-[150px]">{item.name}</span></div></td>
                   <td className="py-2 sm:py-3 px-3 sm:px-4 hidden sm:table-cell text-xs sm:text-sm text-text-muted">{item.category}</td>
                   <td className="py-2 sm:py-3 px-3 sm:px-4 text-xs sm:text-sm font-bold text-primary">{item.sizes?.length > 0 ? `Rs. ${Math.min(...Object.values(item.sizePrices || {}))} - Rs. ${Math.max(...Object.values(item.sizePrices || {}))}` : `Rs. ${item.price}`}</td>
                   <td className="py-2 sm:py-3 px-3 sm:px-4 hidden lg:table-cell"><button onClick={() => toggleAvailable(item)} className={`text-[10px] sm:text-xs font-semibold px-2 py-1 rounded-full ${item.isAvailable ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>{item.isAvailable ? 'Yes' : 'No'}</button></td>

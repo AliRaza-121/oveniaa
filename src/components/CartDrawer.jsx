@@ -6,6 +6,7 @@ import { useCart } from '@/context/CartContext'
 import { useAuth } from '@/context/AuthContext'
 import { useToast } from '@/context/ToastContext'
 import { useRouter } from 'next/navigation'
+import { getCategoryEmoji } from '@/lib/utils'
 
 export default function CartDrawer({ isOpen, setIsOpen }) {
   const { cart, cartTotal, cartCount, removeFromCart, updateQuantity } = useCart()
@@ -53,7 +54,7 @@ export default function CartDrawer({ isOpen, setIsOpen }) {
                         className="object-cover" 
                       />
                     ) : (
-                      <span>{item.category === 'Burgers' ? '🍔' : item.category === 'Pizzas' ? '🍕' : item.category === 'Fries & Sides' ? '🍟' : '🥤'}</span>
+                      <span>{getCategoryEmoji(item.category)}</span>
                     )}
                   </div>
                   <div className="flex-1 min-w-0">

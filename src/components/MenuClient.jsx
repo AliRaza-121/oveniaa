@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { getCategoryEmoji } from '@/lib/utils'
 
 export default function MenuClient({ items, categories, activeCategory, searchTerm: initialSearch }) {
   const [category, setCategory] = useState(activeCategory)
@@ -62,7 +63,7 @@ export default function MenuClient({ items, categories, activeCategory, searchTe
           {Object.entries(grouped).map(([cat, catItems]) => (
             <div key={cat} className="w-full max-w-full">
               <button onClick={() => toggleCategory(cat)} className="w-full flex items-center gap-3 text-left mb-4">
-                <span className="text-xl">{cat === 'Burgers' ? '🍔' : cat === 'Pizzas' ? '🍕' : cat === 'Fries & Sides' ? '🍟' : '🥤'}</span>
+                <span className="text-xl">{getCategoryEmoji(cat)}</span>
                 <h2 className="text-xl font-bold">{cat}</h2>
                 <span className="text-sm text-text-muted">({catItems.length})</span>
                 <motion.svg animate={{ rotate: openCategories.includes(cat) ? 180 : 0 }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 ml-auto text-text-muted">
@@ -81,7 +82,7 @@ export default function MenuClient({ items, categories, activeCategory, searchTe
                               {item.image ? (
                                 <Image src={item.image.replace('/upload/', '/upload/w_600,h_600,c_fill,g_auto,f_auto,q_auto/')} alt={item.name} fill className="object-cover" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" priority={i < 4} />
                               ) : (
-                                <span>{cat === 'Burgers' ? '🍔' : cat === 'Pizzas' ? '🍕' : cat === 'Fries & Sides' ? '🍟' : '🥤'}</span>
+                                <span>{getCategoryEmoji(item.category)}</span>
                               )}
                             </div>
                             <div className="flex-1 min-w-0">

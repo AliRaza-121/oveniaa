@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { useCart } from '@/context/CartContext'
 import { useAuth } from '@/context/AuthContext'
 import CartDrawer from '@/components/CartDrawer'
+import { getCategoryEmoji } from '@/lib/utils'
 
 const navLinks = [
   { name: 'Home', href: '/' },
@@ -64,7 +65,7 @@ export default function Navbar() {
                     <div className="h-px bg-border mx-4 my-1" />
                     {categoriesList.map(cat => (
                       <Link key={cat._id} href={`/menu?category=${encodeURIComponent(cat.name)}`} className="flex items-center gap-2 px-5 py-2.5 text-sm text-text-light hover:text-primary hover:bg-bg transition-colors">
-                        {cat.name === 'Burgers' ? '🍔' : cat.name === 'Pizzas' ? '🍕' : cat.name === 'Fries & Sides' ? '🍟' : '🥤'} {cat.name}
+                        {getCategoryEmoji(cat.name)} {cat.name}
                       </Link>
                     ))}
                   </div>
