@@ -103,6 +103,12 @@ h3 {
 }
 .animate-blob1 { animation: blob1 18s linear infinite; }
 
+@keyframes heroZoom {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.05) translateY(-15px); }
+}
+.animate-hero-zoom { animation: heroZoom 10s ease-in-out infinite; }
+
 @keyframes blob2 {
   0%, 100% { transform: translate(0, 0) scale(1); }
   50% { transform: translate(-60px, 50px) scale(1.2); }

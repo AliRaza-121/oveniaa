@@ -37,6 +37,10 @@ export default function InstallPrompt() {
       let shown = false
       const show = () => {
         if (shown) return
+        
+        const dismissed = localStorage.getItem('oveniaa-install-dismissed-at')
+        if (dismissed && (Date.now() - parseInt(dismissed)) / (1000 * 60 * 60 * 24) < 3) return
+
         shown = true
         setShowPrompt(true)
         window.removeEventListener('scroll', onScroll)
@@ -58,15 +62,23 @@ export default function InstallPrompt() {
     // We store it on window in case it fires before React hydrates
     if (window.__pwaPromptEvent) {
       setDeferredPrompt(window.__pwaPromptEvent)
-      setTimeout(() => setShowPrompt(true), 1500)
+      
+      const dismissed = localStorage.getItem('oveniaa-install-dismissed-at')
+      if (!dismissed || (Date.now() - parseInt(dismissed)) / (1000 * 60 * 60 * 24) >= 3) {
+        setTimeout(() => setShowPrompt(true), 1500)
+      }
     }
 
     const handler = (e) => {
       e.preventDefault()
       window.__pwaPromptEvent = e
       setDeferredPrompt(e)
-      // Show after a short delay to not interrupt initial page experience
-      setTimeout(() => setShowPrompt(true), 1500)
+      
+      const dismissed = localStorage.getItem('oveniaa-install-dismissed-at')
+      if (!dismissed || (Date.now() - parseInt(dismissed)) / (1000 * 60 * 60 * 24) >= 3) {
+        // Show after a short delay to not interrupt initial page experience
+        setTimeout(() => setShowPrompt(true), 1500)
+      }
     }
     window.addEventListener('beforeinstallprompt', handler)
 

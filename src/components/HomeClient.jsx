@@ -68,7 +68,7 @@ export default function HomeClient({ popularItems, categories, deals, stats }) {
             <div className="absolute bottom-[10%] left-[20%] text-4xl animate-emoji4 opacity-80 -rotate-45">🥓</div>
             
             {/* Main Image */}
-            <div className="relative w-[110%] h-[110%] sm:w-full sm:h-full flex items-center justify-center animate-blob1 drop-shadow-[0_30px_30px_rgba(0,0,0,0.6)]">
+            <div className="relative w-[110%] h-[110%] sm:w-full sm:h-full flex items-center justify-center animate-hero-zoom drop-shadow-[0_30px_30px_rgba(0,0,0,0.6)]">
               <Image src="/hero_pizza.png" alt="Oveniaa Fresh Food" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-contain" priority />
             </div>
           </div>
