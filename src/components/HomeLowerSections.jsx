@@ -1,8 +1,36 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+
+/* Lightweight Intersection Observer hook to replace framer-motion whileInView */
+function useReveal(ref) {
+  useEffect(() => {
+    if (!ref.current) return
+    const el = ref.current
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { el.classList.add('revealed'); observer.unobserve(el) } },
+      { threshold: 0.15 }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [ref])
+}
+
+function Reveal({ children, className = '', delay = 0 }) {
+  const ref = useRef(null)
+  useReveal(ref)
+  return (
+    <div
+      ref={ref}
+      className={`reveal-on-scroll ${className}`}
+      style={delay ? { animationDelay: `${delay}s` } : undefined}
+    >
+      {children}
+    </div>
+  )
+}
 
 export default function HomeLowerSections({ popularItems, categories, deals }) {
   return (
@@ -11,22 +39,22 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
       {deals && deals.length > 0 && (
         <section className="py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
-              <motion.div animate={{ scale: [1, 1.05, 1] }} transition={{ repeat: Infinity, duration: 2 }} className="inline-flex items-center gap-2 bg-secondary/20 text-secondary text-xs font-bold px-4 py-1.5 rounded-full mb-4">
+            <Reveal className="text-center mb-12">
+              <div className="animate-pulse-scale inline-flex items-center gap-2 bg-secondary/20 text-secondary text-xs font-bold px-4 py-1.5 rounded-full mb-4">
                 <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-secondary" /></span>
                 LIMITED TIME OFFERS
-              </motion.div>
+              </div>
               <h2 className="text-3xl sm:text-5xl font-bold">Today's <span className="text-primary relative">Hottest<svg className="absolute -bottom-2 left-0 w-full h-3 text-secondary" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 25 0, 50 5 T 100 5" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" /></svg></span> Deals</h2>
-            </motion.div>
+            </Reveal>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {deals.map((deal, i) => (
-                <motion.div key={deal._id} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} whileHover={{ y: -6 }}>
-                  <Link href={`/deals/${deal._id}`} className={`block bg-gradient-to-br ${deal.backgroundColor || 'from-primary/20 to-secondary/10'} border border-border rounded-3xl p-6 hover:shadow-2xl transition-all group relative overflow-hidden h-full`}>
+                <Reveal key={deal._id} delay={i * 0.1}>
+                  <Link href={`/deals/${deal._id}`} className={`block bg-gradient-to-br ${deal.backgroundColor || 'from-primary/20 to-secondary/10'} border border-border rounded-3xl p-6 hover:shadow-2xl hover:-translate-y-1.5 transition-all group relative overflow-hidden h-full`}>
                     <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl" />
                     <div className="absolute top-5 right-5 z-10">
                       <div className="relative">
-                        <motion.div animate={{ rotate: [0, 5, -5, 0] }} transition={{ repeat: Infinity, duration: 3, delay: i * 0.5 }} className="bg-primary text-white text-xs font-black px-4 py-2 rounded-full shadow-lg">{deal.discount || 'DEAL'}</motion.div>
+                        <div className="animate-wiggle bg-primary text-white text-xs font-black px-4 py-2 rounded-full shadow-lg">{deal.discount || 'DEAL'}</div>
                         <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-3 h-3 bg-primary rotate-45" />
                       </div>
                     </div>
@@ -48,7 +76,7 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
                       </div>
                     </div>
                   </Link>
-                </motion.div>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -73,10 +101,12 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           {popularItems.length > 0 ? (
             <>
-              <motion.h2 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-5xl sm:text-7xl font-bold mb-8">
-                Popular{' '}
-                <span className="text-primary relative">Picks<svg className="absolute -bottom-2 left-0 w-full h-3 text-secondary" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 25 0, 50 5 T 100 5" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" /></svg></span>
-              </motion.h2>
+              <Reveal>
+                <h2 className="text-5xl sm:text-7xl font-bold mb-8">
+                  Popular{' '}
+                  <span className="text-primary relative">Picks<svg className="absolute -bottom-2 left-0 w-full h-3 text-secondary" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 25 0, 50 5 T 100 5" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" /></svg></span>
+                </h2>
+              </Reveal>
               {popularItems[0] && (
                 <Link href={`/menu/${popularItems[0]._id}`} className="block bg-primary/10 rounded-3xl p-6 sm:p-8 mb-6 hover:bg-primary/20 transition-colors">
                   <div className="flex flex-col sm:flex-row items-center gap-6">
