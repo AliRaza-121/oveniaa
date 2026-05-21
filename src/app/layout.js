@@ -1,4 +1,5 @@
 import { Inter, Outfit } from 'next/font/google'
+import Script from 'next/script'
 import { AuthProvider } from '@/context/AuthContext'
 import { CartProvider } from '@/context/CartContext'
 import { ToastProvider } from '@/context/ToastContext'
@@ -32,7 +33,7 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* Capture beforeinstallprompt early — before React hydrates */}
-        <script dangerouslySetInnerHTML={{ __html: `window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__pwaPromptEvent=e;});` }} />
+        <Script id="pwa-capture" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: `window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__pwaPromptEvent=e;});` }} />
       </head>
       <body className={`${inter.variable} ${outfit.variable} antialiased`} suppressHydrationWarning>
         <AuthProvider>
