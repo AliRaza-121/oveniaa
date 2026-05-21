@@ -7,15 +7,16 @@ import { useToast } from '@/context/ToastContext'
 const emptyForm = {
   name: '', price: '', category: '', description: '',
   isPopular: false, isAvailable: true,
-  sizes: '', sizePrices: {}, addOns: '', image: '',
+  sizePrices: {}, addOns: '', image: '',
 }
 
-const categorySizes = {
-  'Burgers': [],
-  'Pizzas': ['Small', 'Medium', 'Large', 'Extra Large'],
-  'Fries & Sides': ['Regular', 'Large'],
-  'Drinks': ['Small', 'Medium', 'Large'],
-  'Wings': ['6 pcs', '12 pcs', '18 pcs'],
+const SIZE_TEMPLATES = {
+  'Single Price (Burgers, Sandwiches, Rolls...)': [],
+  'Pizza (Small, Medium, Large, Family)': ['Small', 'Medium', 'Large', 'Family'],
+  'Pizza Creamy (Medium, Large, Family)': ['Medium', 'Large', 'Family'],
+  'Squares (Small, Medium, Large)': ['Small', 'Medium', 'Large'],
+  'Regular & Large (Pasta, Fries, Fried, Wings)': ['Regular', 'Large'],
+  'Medium & Large (Starters)': ['Medium', 'Large'],
 }
 
 const categoryEmojis = {
@@ -29,6 +30,7 @@ export default function AdminMenu() {
   const [showModal, setShowModal] = useState(false)
   const [editingId, setEditingId] = useState(null)
   const [form, setForm] = useState(emptyForm)
+  const [sizeTemplate, setSizeTemplate] = useState('Single Price (Burgers, Sandwiches, Rolls...)')
   const [uploading, setUploading] = useState(false)
   const [viewMode, setViewMode] = useState('grid')
   const [selectedCat, setSelectedCat] = useState('All')
@@ -39,29 +41,47 @@ export default function AdminMenu() {
 
   useEffect(() => { fetchItems(); fetchCategories() }, [])
 
-  const showBasePrice = !form.category || form.category === 'Burgers'
+  const showBasePrice = SIZE_TEMPLATES[sizeTemplate].length === 0
 
-  const handleCategoryChange = (cat) => {
-    const sizes = categorySizes[cat] || []
+  const handleTemplateChange = (template) => {
+    setSizeTemplate(template)
+    const sizes = SIZE_TEMPLATES[template] || []
     const sizePrices = {}
-    sizes.forEach(s => { sizePrices[s] = '' })
-    setForm({ ...form, category: cat, sizePrices })
+    sizes.forEach(s => { sizePrices[s] = form.sizePrices[s] || '' })
+    setForm({ ...form, sizePrices })
   }
 
-  const openAdd = () => { setForm(emptyForm); setEditingId(null); setShowModal(true) }
+  const openAdd = () => { 
+    setForm(emptyForm); 
+    setSizeTemplate('Single Price (Burgers, Sandwiches, Rolls...)');
+    setEditingId(null); 
+    setShowModal(true) 
+  }
 
   const openEdit = (item) => {
     const sizes = item.sizes || []
     const existingPrices = item.sizePrices || {}
     const sizePrices = {}
     sizes.forEach(s => { sizePrices[s] = existingPrices[s] || '' })
+    
+    // Auto-detect template
+    let template = 'Single Price (Burgers, Sandwiches, Rolls...)'
+    for (const [tpl, tplSizes] of Object.entries(SIZE_TEMPLATES)) {
+      if (tplSizes.length === sizes.length && tplSizes.every((v, i) => v === sizes[i])) {
+        template = tpl
+        break
+      }
+    }
+
     setForm({
       name: item.name, price: sizes.length === 0 ? item.price.toString() : '',
       category: item.category, description: item.description || '',
       isPopular: item.isPopular, isAvailable: item.isAvailable, sizePrices,
       addOns: item.addOns?.map(a => `${a.name}:${a.price}`).join(', ') || '', image: item.image || '',
     })
-    setEditingId(item._id); setShowModal(true)
+    setSizeTemplate(template)
+    setEditingId(item._id); 
+    setShowModal(true)
   }
 
   const handleImageUpload = async (e) => {
@@ -75,16 +95,26 @@ export default function AdminMenu() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!form.image && !editingId) { toast('Please upload an image', 'error'); return }
-    const sizes = categorySizes[form.category] || []
+    const sizes = SIZE_TEMPLATES[sizeTemplate] || []
     const hasSizePrices = sizes.length > 0
     const price = hasSizePrices ? 0 : Number(form.price)
     const cleanSizePrices = {}
     if (hasSizePrices) sizes.forEach(s => { cleanSizePrices[s] = Number(form.sizePrices[s]) || 0 })
+    
+    // Parse add-ons correctly with better error resistance
+    const parsedAddOns = form.addOns ? form.addOns.split(',').map(s => { 
+      const parts = s.split(':')
+      if (parts.length >= 2) {
+        return { name: parts[0].trim(), price: Number(parts[1]) || 0 }
+      }
+      return null
+    }).filter(a => a && a.name) : []
+
     const body = {
       name: form.name, price, category: form.category, description: form.description,
       isPopular: form.isPopular, isAvailable: form.isAvailable,
       sizes: hasSizePrices ? sizes : [], sizePrices: hasSizePrices ? cleanSizePrices : {},
-      addOns: form.addOns.split(',').map(s => { const [n, p] = s.split(':'); return { name: n?.trim(), price: Number(p) || 0 } }).filter(a => a.name),
+      addOns: parsedAddOns,
       image: form.image,
     }
     const url = editingId ? `/api/menu/${editingId}` : '/api/menu'
@@ -199,28 +229,59 @@ export default function AdminMenu() {
             <div className="border-b border-border px-5 sm:px-6 py-3 sm:py-4 flex justify-between"><h2 className="font-bold text-sm sm:text-base">{editingId ? 'Edit' : 'Add'} Item</h2><button onClick={() => setShowModal(false)} className="text-text-muted text-lg sm:text-xl">✕</button></div>
             <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-3 sm:space-y-4">
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                <input value={form.name} onChange={e => setForm({...form, name: e.target.value})} required placeholder="Name *" className="bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text focus:outline-none focus:border-primary" />
-                <select value={form.category} onChange={e => handleCategoryChange(e.target.value)} required className="bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text">
-                  <option value="">Category</option>
+                <input value={form.name} onChange={e => setForm({...form, name: e.target.value})} required placeholder="Flavor / Name (e.g. Tikka) *" className="bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text focus:outline-none focus:border-primary" />
+                <select value={form.category} onChange={e => setForm({...form, category: e.target.value})} required className="bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text focus:outline-none focus:border-primary">
+                  <option value="">Select Category *</option>
                   {categories.map(c => <option key={c._id} value={c.name}>{c.name}</option>)}
                 </select>
               </div>
-              {showBasePrice && <input type="number" value={form.price} onChange={e => setForm({...form, price: e.target.value})} required placeholder="Price *" className="w-full bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text focus:outline-none focus:border-primary" />}
-              {!showBasePrice && form.category && (
-                <div>
-                  <p className="text-xs sm:text-sm font-semibold mb-2">Size Prices</p>
+
+              <div>
+                <label className="block text-[10px] sm:text-xs font-semibold text-text mb-1">Pricing Template</label>
+                <select value={sizeTemplate} onChange={e => handleTemplateChange(e.target.value)} className="w-full bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text focus:outline-none focus:border-primary">
+                  {Object.keys(SIZE_TEMPLATES).map(tpl => <option key={tpl} value={tpl}>{tpl}</option>)}
+                </select>
+              </div>
+
+              {showBasePrice && (
+                <input type="number" value={form.price} onChange={e => setForm({...form, price: e.target.value})} required placeholder="Price *" className="w-full bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text focus:outline-none focus:border-primary" />
+              )}
+              
+              {!showBasePrice && (
+                <div className="bg-bg/50 p-3 rounded-xl border border-border">
+                  <p className="text-xs sm:text-sm font-semibold mb-3">Set Prices by Size</p>
                   <div className="grid grid-cols-2 gap-2 sm:gap-3">
-                    {Object.keys(form.sizePrices).map(size => (
-                      <div key={size}><label className="block text-[10px] sm:text-xs text-text-muted mb-1">{size}</label><input type="number" value={form.sizePrices[size]} onChange={e => setForm({...form, sizePrices: {...form.sizePrices, [size]: e.target.value}})} required placeholder="Rs." className="w-full bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text focus:outline-none focus:border-primary" /></div>
+                    {SIZE_TEMPLATES[sizeTemplate].map(size => (
+                      <div key={size}>
+                        <label className="block text-[10px] sm:text-xs text-text-muted mb-1">{size}</label>
+                        <input type="number" value={form.sizePrices[size] || ''} onChange={e => setForm({...form, sizePrices: {...form.sizePrices, [size]: e.target.value}})} required placeholder="Rs." className="w-full bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text focus:outline-none focus:border-primary" />
+                      </div>
                     ))}
                   </div>
                 </div>
               )}
-              <textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} placeholder="Description" rows={2} className="w-full bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text resize-none" />
-              <input value={form.addOns} onChange={e => setForm({...form, addOns: e.target.value})} placeholder="Add-ons: Cheese:50, Bacon:80" className="w-full bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text" />
-              <div><label className="block text-[10px] sm:text-xs text-text-muted mb-1">Image {!editingId && '*'}</label><input type="file" accept="image/*" onChange={handleImageUpload} className="w-full text-xs sm:text-sm" />{uploading && <p className="text-[10px] sm:text-xs text-primary mt-1">Uploading...</p>}{form.image && <img src={form.image.replace('/upload/', '/upload/w_150,h_150,c_fill,g_auto,f_auto,q_auto/')} alt="" className="h-12 sm:h-16 aspect-square object-cover mt-2 rounded-lg" />}</div>
-              <div className="flex gap-4"><label className="flex items-center gap-2"><input type="checkbox" checked={form.isPopular} onChange={e => setForm({...form, isPopular: e.target.checked})} /><span className="text-xs sm:text-sm">Popular</span></label><label className="flex items-center gap-2"><input type="checkbox" checked={form.isAvailable} onChange={e => setForm({...form, isAvailable: e.target.checked})} /><span className="text-xs sm:text-sm">Available</span></label></div>
-              <button type="submit" className="w-full bg-primary text-white py-2 sm:py-2.5 rounded-full font-semibold text-xs sm:text-sm">{editingId ? 'Update' : 'Create'}</button>
+
+              <textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} placeholder="Description (Optional)" rows={2} className="w-full bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text resize-none focus:outline-none focus:border-primary" />
+              
+              <div>
+                <label className="block text-[10px] sm:text-xs font-semibold text-text mb-1">Extras & Sauces (Optional)</label>
+                <textarea value={form.addOns} onChange={e => setForm({...form, addOns: e.target.value})} placeholder="e.g. Thousand Sauce:50, Ranch:50, Cheese:100" rows={2} className="w-full bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text resize-none focus:outline-none focus:border-primary" />
+                <p className="text-[10px] text-text-muted mt-1">Format: Name:Price separated by commas</p>
+              </div>
+
+              <div>
+                <label className="block text-[10px] sm:text-xs text-text-muted mb-1">Image {!editingId && '*'}</label>
+                <input type="file" accept="image/*" onChange={handleImageUpload} className="w-full text-xs sm:text-sm" />
+                {uploading && <p className="text-[10px] sm:text-xs text-primary mt-1">Uploading...</p>}
+                {form.image && <img src={form.image.replace('/upload/', '/upload/w_150,h_150,c_fill,g_auto,f_auto,q_auto/')} alt="" className="h-12 sm:h-16 aspect-square object-cover mt-2 rounded-lg" />}
+              </div>
+
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={form.isPopular} onChange={e => setForm({...form, isPopular: e.target.checked})} className="accent-primary" /><span className="text-xs sm:text-sm">Mark as Popular ⭐</span></label>
+                <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={form.isAvailable} onChange={e => setForm({...form, isAvailable: e.target.checked})} className="accent-primary" /><span className="text-xs sm:text-sm">In Stock (Available)</span></label>
+              </div>
+
+              <button type="submit" className="w-full bg-primary text-white py-2.5 sm:py-3 rounded-full font-semibold text-sm hover:bg-primary-dark transition-colors">{editingId ? 'Update Item' : 'Create Item'}</button>
             </form>
           </div>
         </div>

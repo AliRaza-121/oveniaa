@@ -3,9 +3,26 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useCart } from '@/context/CartContext'
+import { useAuth } from '@/context/AuthContext'
+import { useToast } from '@/context/ToastContext'
+import { useRouter } from 'next/navigation'
 
 export default function CartDrawer({ isOpen, setIsOpen }) {
   const { cart, cartTotal, cartCount, removeFromCart, updateQuantity } = useCart()
+  const { user } = useAuth()
+  const { toast } = useToast()
+  const router = useRouter()
+
+  const handleCheckout = () => {
+    if (!user) {
+      toast('Please login to place an order', 'error')
+      setIsOpen(false)
+      router.push('/login')
+      return
+    }
+    setIsOpen(false)
+    router.push('/checkout')
+  }
 
   return (
     <>
@@ -67,7 +84,14 @@ export default function CartDrawer({ isOpen, setIsOpen }) {
                   ⚠️ Drinks alone cannot be delivered. Please add a main item (Burger, Pizza, Wings, or Fries).
                 </div>
               )}
-              <Link href="/checkout" onClick={() => setIsOpen(false)} className="block w-full bg-primary text-white text-center py-3 rounded-full font-semibold hover:bg-primary-dark transition-colors">Checkout</Link>
+              {!user && (
+                <div className="bg-primary/10 border border-primary/20 rounded-xl p-3 mb-3 text-xs text-primary">
+                  🔒 You need to login before placing an order.
+                </div>
+              )}
+              <button onClick={handleCheckout} className="block w-full bg-primary text-white text-center py-3 rounded-full font-semibold hover:bg-primary-dark transition-colors">
+                {user ? 'Checkout' : 'Login to Checkout'}
+              </button>
               <button onClick={() => setIsOpen(false)} className="w-full text-center text-sm text-text-muted mt-3 hover:text-primary transition-colors">Continue Shopping</button>
             </div>
           </>

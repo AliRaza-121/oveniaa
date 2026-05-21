@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCart } from '@/context/CartContext'
@@ -10,7 +9,7 @@ import { useToast } from '@/context/ToastContext'
 
 export default function CheckoutClient() {
   const { cart, cartTotal, clearCart } = useCart()
-  const { user } = useAuth()
+  const { user, loading } = useAuth()
   const { toast } = useToast()
   const router = useRouter()
 
@@ -32,6 +31,7 @@ export default function CheckoutClient() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (!user) { toast('Please login to place an order', 'error'); router.push('/login'); return }
     if (cart.length === 0) { toast('Cart is empty', 'error'); return }
     if (!form.customerName || !form.phone) { toast('Name and phone required', 'error'); return }
     if (form.orderType === 'delivery' && !form.address) { toast('Address required for delivery', 'error'); return }
@@ -52,8 +52,38 @@ export default function CheckoutClient() {
       })
       const data = await res.json()
       if (data.success) { clearCart(); toast('Order placed! 🎉', 'success'); router.push('/orders') }
+      else if (res.status === 401) { toast(data.error || 'Please login to order', 'error'); router.push('/login') }
       else toast(data.error || 'Error', 'error')
     } catch { toast('Network error', 'error') } finally { setSubmitting(false) }
+  }
+
+  // Show loading spinner while auth state resolves
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center pt-20">
+        <div className="text-center">
+          <div className="w-10 h-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto"></div>
+          <p className="text-text-muted mt-4">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Gate: redirect unauthenticated users to login
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center pt-20">
+        <div className="text-center max-w-md mx-auto px-4">
+          <span className="text-5xl">🔒</span>
+          <h1 className="text-2xl font-bold mt-4">Login Required</h1>
+          <p className="text-text-muted mt-2">You need to be logged in to place an order. Your cart items will be saved.</p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
+            <Link href="/login" className="inline-block bg-primary text-white px-8 py-3 rounded-full font-semibold hover:bg-primary-dark transition-colors">Login</Link>
+            <Link href="/register" className="inline-block bg-card border border-border text-text px-8 py-3 rounded-full font-semibold hover:border-primary transition-colors">Create Account</Link>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   if (cart.length === 0) {

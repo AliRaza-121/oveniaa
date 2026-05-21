@@ -32,12 +32,19 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     await connectDB()
-    const body = await request.json()
     const cookieStore = await cookies()
     const token = cookieStore.get('token')?.value
-    let userId = null
-    if (token) { try { const d = jwt.verify(token, JWT_SECRET); userId = d.id } catch {} }
+    if (!token) return Response.json({ success: false, error: 'Please login to place an order' }, { status: 401 })
     
+    let userId
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET)
+      userId = decoded.id
+    } catch {
+      return Response.json({ success: false, error: 'Session expired. Please login again' }, { status: 401 })
+    }
+
+    const body = await request.json()
     const { items, total, customerName, email, phone, address, orderType, notes } = body
     const order = await Order.create({ items, total, customerName, email, phone, address, orderType, notes, user: userId })
     
