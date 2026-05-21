@@ -7,17 +7,7 @@ import { getCategoryEmoji } from '@/lib/utils'
 
 const emptyForm = {
   name: '', price: '', category: '', description: '',
-  isPopular: false, isAvailable: true,
-  sizePrices: {}, addOns: '', image: '',
-}
-
-const SIZE_TEMPLATES = {
-  'Single Price (Burgers, Sandwiches, Rolls...)': [],
-  'Pizza (Small, Medium, Large, Family)': ['Small', 'Medium', 'Large', 'Family'],
-  'Pizza Creamy (Medium, Large, Family)': ['Medium', 'Large', 'Family'],
-  'Squares (Small, Medium, Large)': ['Small', 'Medium', 'Large'],
-  'Regular & Large (Pasta, Fries, Fried, Wings)': ['Regular', 'Large'],
-  'Medium & Large (Starters)': ['Medium', 'Large'],
+  isPopular: false, isAvailable: true, image: '',
 }
 
 export default function AdminMenu() {
@@ -26,8 +16,12 @@ export default function AdminMenu() {
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [editingId, setEditingId] = useState(null)
+  
   const [form, setForm] = useState(emptyForm)
-  const [sizeTemplate, setSizeTemplate] = useState('Single Price (Burgers, Sandwiches, Rolls...)')
+  const [customSizes, setCustomSizes] = useState([])
+  const [customAddOns, setCustomAddOns] = useState([])
+  const [hasSizes, setHasSizes] = useState(false)
+
   const [uploading, setUploading] = useState(false)
   const [viewMode, setViewMode] = useState('grid')
   const [selectedCat, setSelectedCat] = useState('All')
@@ -38,19 +32,11 @@ export default function AdminMenu() {
 
   useEffect(() => { fetchItems(); fetchCategories() }, [])
 
-  const showBasePrice = SIZE_TEMPLATES[sizeTemplate].length === 0
-
-  const handleTemplateChange = (template) => {
-    setSizeTemplate(template)
-    const sizes = SIZE_TEMPLATES[template] || []
-    const sizePrices = {}
-    sizes.forEach(s => { sizePrices[s] = form.sizePrices[s] || '' })
-    setForm({ ...form, sizePrices })
-  }
-
   const openAdd = () => { 
     setForm(emptyForm); 
-    setSizeTemplate('Single Price (Burgers, Sandwiches, Rolls...)');
+    setCustomSizes([]);
+    setCustomAddOns([]);
+    setHasSizes(false);
     setEditingId(null); 
     setShowModal(true) 
   }
@@ -58,25 +44,16 @@ export default function AdminMenu() {
   const openEdit = (item) => {
     const sizes = item.sizes || []
     const existingPrices = item.sizePrices || {}
-    const sizePrices = {}
-    sizes.forEach(s => { sizePrices[s] = existingPrices[s] || '' })
     
-    // Auto-detect template
-    let template = 'Single Price (Burgers, Sandwiches, Rolls...)'
-    for (const [tpl, tplSizes] of Object.entries(SIZE_TEMPLATES)) {
-      if (tplSizes.length === sizes.length && tplSizes.every((v, i) => v === sizes[i])) {
-        template = tpl
-        break
-      }
-    }
+    setCustomSizes(sizes.map(s => ({ name: s, price: existingPrices[s] || '' })))
+    setHasSizes(sizes.length > 0)
+    setCustomAddOns(item.addOns || [])
 
     setForm({
       name: item.name, price: sizes.length === 0 ? item.price.toString() : '',
       category: item.category, description: item.description || '',
-      isPopular: item.isPopular, isAvailable: item.isAvailable, sizePrices,
-      addOns: item.addOns?.map(a => `${a.name}:${a.price}`).join(', ') || '', image: item.image || '',
+      isPopular: item.isPopular, isAvailable: item.isAvailable, image: item.image || '',
     })
-    setSizeTemplate(template)
     setEditingId(item._id); 
     setShowModal(true)
   }
@@ -92,28 +69,22 @@ export default function AdminMenu() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!form.image && !editingId) { toast('Please upload an image', 'error'); return }
-    const sizes = SIZE_TEMPLATES[sizeTemplate] || []
-    const hasSizePrices = sizes.length > 0
-    const price = hasSizePrices ? 0 : Number(form.price)
-    const cleanSizePrices = {}
-    if (hasSizePrices) sizes.forEach(s => { cleanSizePrices[s] = Number(form.sizePrices[s]) || 0 })
     
-    // Parse add-ons correctly with better error resistance
-    const parsedAddOns = form.addOns ? form.addOns.split(',').map(s => { 
-      const parts = s.split(':')
-      if (parts.length >= 2) {
-        return { name: parts[0].trim(), price: Number(parts[1]) || 0 }
-      }
-      return null
-    }).filter(a => a && a.name) : []
+    const sizes = hasSizes ? customSizes.map(s => s.name.trim()).filter(Boolean) : []
+    const price = hasSizes ? 0 : Number(form.price)
+    const sizePrices = {}
+    if (hasSizes) {
+      customSizes.forEach(s => { if (s.name.trim()) sizePrices[s.name.trim()] = Number(s.price) || 0 })
+    }
+    
+    const parsedAddOns = customAddOns.map(a => ({ name: a.name.trim(), price: Number(a.price) || 0 })).filter(a => a.name)
 
     const body = {
       name: form.name, price, category: form.category, description: form.description,
       isPopular: form.isPopular, isAvailable: form.isAvailable,
-      sizes: hasSizePrices ? sizes : [], sizePrices: hasSizePrices ? cleanSizePrices : {},
-      addOns: parsedAddOns,
-      image: form.image,
+      sizes, sizePrices, addOns: parsedAddOns, image: form.image,
     }
+    
     const url = editingId ? `/api/menu/${editingId}` : '/api/menu'
     const method = editingId ? 'PUT' : 'POST'
     const r = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); const d = await r.json()
@@ -211,7 +182,12 @@ export default function AdminMenu() {
                   <td className="py-2 sm:py-3 px-3 sm:px-4"><div className="flex items-center gap-2"><div className="w-7 h-7 sm:w-8 sm:h-8 bg-primary/10 rounded-lg flex items-center justify-center text-xs sm:text-sm">{item.image ? <img src={item.image.replace('/upload/', '/upload/w_100,h_100,c_fill,g_auto,f_auto,q_auto/')} alt="" className="w-full h-full object-cover rounded-lg" /> : <span>{getCategoryEmoji(item.category)}</span>}</div><span className="text-xs sm:text-sm font-medium truncate max-w-[100px] sm:max-w-[150px]">{item.name}</span></div></td>
                   <td className="py-2 sm:py-3 px-3 sm:px-4 hidden sm:table-cell text-xs sm:text-sm text-text-muted">{item.category}</td>
                   <td className="py-2 sm:py-3 px-3 sm:px-4 text-xs sm:text-sm font-bold text-primary">{item.sizes?.length > 0 ? `Rs. ${Math.min(...Object.values(item.sizePrices || {}))} - Rs. ${Math.max(...Object.values(item.sizePrices || {}))}` : `Rs. ${item.price}`}</td>
-                  <td className="py-2 sm:py-3 px-3 sm:px-4 hidden lg:table-cell"><button onClick={() => toggleAvailable(item)} className={`text-[10px] sm:text-xs font-semibold px-2 py-1 rounded-full ${item.isAvailable ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>{item.isAvailable ? 'Yes' : 'No'}</button></td>
+                  <td className="py-2 sm:py-3 px-3 sm:px-4 hidden lg:table-cell">
+                    {/* Inline Available Toggle in Table */}
+                    <button onClick={() => toggleAvailable(item)} className={`relative inline-flex h-4 w-7 items-center rounded-full transition-colors ${item.isAvailable ? 'bg-emerald-500' : 'bg-gray-500'}`}>
+                      <span className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${item.isAvailable ? 'translate-x-3.5' : 'translate-x-0.5'}`} />
+                    </button>
+                  </td>
                   <td className="py-2 sm:py-3 px-3 sm:px-4"><div className="flex gap-1.5 sm:gap-2"><button onClick={() => openEdit(item)} className="text-[10px] sm:text-xs text-primary hover:underline">Edit</button><button onClick={() => handleDelete(item._id, item.name)} className="text-[10px] sm:text-xs text-red-500 hover:underline">Del</button></div></td>
                 </tr>
               ))}
@@ -223,62 +199,87 @@ export default function AdminMenu() {
       {showModal && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setShowModal(false)}>
           <div className="bg-card rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-            <div className="border-b border-border px-5 sm:px-6 py-3 sm:py-4 flex justify-between"><h2 className="font-bold text-sm sm:text-base">{editingId ? 'Edit' : 'Add'} Item</h2><button onClick={() => setShowModal(false)} className="text-text-muted text-lg sm:text-xl">✕</button></div>
-            <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-3 sm:space-y-4">
+            <div className="border-b border-border px-5 sm:px-6 py-3 sm:py-4 flex justify-between sticky top-0 bg-card z-10"><h2 className="font-bold text-sm sm:text-base">{editingId ? 'Edit' : 'Add'} Item</h2><button onClick={() => setShowModal(false)} className="text-text-muted text-lg sm:text-xl">✕</button></div>
+            <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-5">
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                <input value={form.name} onChange={e => setForm({...form, name: e.target.value})} required placeholder="Flavor / Name (e.g. Tikka) *" className="bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text focus:outline-none focus:border-primary" />
-                <select value={form.category} onChange={e => setForm({...form, category: e.target.value})} required className="bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text focus:outline-none focus:border-primary">
-                  <option value="">Select Category *</option>
-                  {categories.map(c => <option key={c._id} value={c.name}>{c.name}</option>)}
-                </select>
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-semibold text-text mb-1">Item Name *</label>
+                  <input value={form.name} onChange={e => setForm({...form, name: e.target.value})} required placeholder="e.g. Mighty Burger" className="w-full bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text focus:outline-none focus:border-primary" />
+                </div>
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-semibold text-text mb-1">Category *</label>
+                  <select value={form.category} onChange={e => setForm({...form, category: e.target.value})} required className="w-full bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text focus:outline-none focus:border-primary">
+                    <option value="">Select Category</option>
+                    {categories.map(c => <option key={c._id} value={c.name}>{c.name}</option>)}
+                  </select>
+                </div>
               </div>
 
-              <div>
-                <label className="block text-[10px] sm:text-xs font-semibold text-text mb-1">Pricing Template</label>
-                <select value={sizeTemplate} onChange={e => handleTemplateChange(e.target.value)} className="w-full bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text focus:outline-none focus:border-primary">
-                  {Object.keys(SIZE_TEMPLATES).map(tpl => <option key={tpl} value={tpl}>{tpl}</option>)}
-                </select>
-              </div>
+              {/* Dynamic Pricing Logic */}
+              <div className="bg-bg/50 border border-border rounded-2xl p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <label className="block text-[10px] sm:text-xs font-semibold text-text">Pricing & Sizes</label>
+                  <label className="flex items-center gap-2 cursor-pointer text-xs">
+                    <input type="checkbox" checked={hasSizes} onChange={e => setHasSizes(e.target.checked)} className="accent-primary" />
+                    Has Multiple Sizes?
+                  </label>
+                </div>
 
-              {showBasePrice && (
-                <input type="number" value={form.price} onChange={e => setForm({...form, price: e.target.value})} required placeholder="Price *" className="w-full bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text focus:outline-none focus:border-primary" />
-              )}
-              
-              {!showBasePrice && (
-                <div className="bg-bg/50 p-3 rounded-xl border border-border">
-                  <p className="text-xs sm:text-sm font-semibold mb-3">Set Prices by Size</p>
-                  <div className="grid grid-cols-2 gap-2 sm:gap-3">
-                    {SIZE_TEMPLATES[sizeTemplate].map(size => (
-                      <div key={size}>
-                        <label className="block text-[10px] sm:text-xs text-text-muted mb-1">{size}</label>
-                        <input type="number" value={form.sizePrices[size] || ''} onChange={e => setForm({...form, sizePrices: {...form.sizePrices, [size]: e.target.value}})} required placeholder="Rs." className="w-full bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text focus:outline-none focus:border-primary" />
+                {!hasSizes ? (
+                  <div>
+                    <input type="number" value={form.price} onChange={e => setForm({...form, price: e.target.value})} required placeholder="Base Price (Rs.) *" className="w-full bg-card border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text focus:outline-none focus:border-primary" />
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {customSizes.map((size, idx) => (
+                      <div key={idx} className="flex gap-2">
+                        <input type="text" value={size.name} onChange={e => { const newSizes = [...customSizes]; newSizes[idx].name = e.target.value; setCustomSizes(newSizes) }} placeholder="Size (e.g. Large) *" required className="flex-1 bg-card border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text focus:outline-none focus:border-primary" />
+                        <input type="number" value={size.price} onChange={e => { const newSizes = [...customSizes]; newSizes[idx].price = e.target.value; setCustomSizes(newSizes) }} placeholder="Price *" required className="w-24 sm:w-32 bg-card border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text focus:outline-none focus:border-primary" />
+                        <button type="button" onClick={() => setCustomSizes(customSizes.filter((_, i) => i !== idx))} className="w-10 h-10 flex items-center justify-center bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-colors">✕</button>
                       </div>
                     ))}
+                    <button type="button" onClick={() => setCustomSizes([...customSizes, { name: '', price: '' }])} className="w-full py-2 border border-dashed border-border rounded-xl text-xs sm:text-sm text-text-muted hover:text-primary hover:border-primary transition-colors">+ Add Size Option</button>
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-[10px] sm:text-xs font-semibold text-text mb-1">Description</label>
+                <textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} placeholder="Describe the ingredients..." rows={2} className="w-full bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text resize-none focus:outline-none focus:border-primary" />
+              </div>
+              
+              {/* Dynamic Add-ons Logic */}
+              <div className="bg-bg/50 border border-border rounded-2xl p-4">
+                <label className="block text-[10px] sm:text-xs font-semibold text-text mb-3">Extras & Add-ons (Optional)</label>
+                <div className="space-y-3">
+                  {customAddOns.map((addon, idx) => (
+                    <div key={idx} className="flex gap-2">
+                      <input type="text" value={addon.name} onChange={e => { const newAddOns = [...customAddOns]; newAddOns[idx].name = e.target.value; setCustomAddOns(newAddOns) }} placeholder="Extra (e.g. Cheese)" required className="flex-1 bg-card border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text focus:outline-none focus:border-primary" />
+                      <input type="number" value={addon.price} onChange={e => { const newAddOns = [...customAddOns]; newAddOns[idx].price = e.target.value; setCustomAddOns(newAddOns) }} placeholder="Price" required className="w-24 sm:w-32 bg-card border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text focus:outline-none focus:border-primary" />
+                      <button type="button" onClick={() => setCustomAddOns(customAddOns.filter((_, i) => i !== idx))} className="w-10 h-10 flex items-center justify-center bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-colors">✕</button>
+                    </div>
+                  ))}
+                  <button type="button" onClick={() => setCustomAddOns([...customAddOns, { name: '', price: '' }])} className="w-full py-2 border border-dashed border-border rounded-xl text-xs sm:text-sm text-text-muted hover:text-primary hover:border-primary transition-colors">+ Add Extra Option</button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[10px] sm:text-xs font-semibold text-text mb-1">Image {!editingId && '*'}</label>
+                <div className="flex items-center gap-4">
+                  {form.image && <img src={form.image.replace('/upload/', '/upload/w_150,h_150,c_fill,g_auto,f_auto,q_auto/')} alt="" className="h-16 aspect-square object-cover rounded-xl border border-border" />}
+                  <div className="flex-1">
+                    <input type="file" accept="image/*" onChange={handleImageUpload} className="w-full text-xs sm:text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 cursor-pointer" />
+                    {uploading && <p className="text-[10px] sm:text-xs text-primary mt-2">Uploading image...</p>}
                   </div>
                 </div>
-              )}
-
-              <textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} placeholder="Description (Optional)" rows={2} className="w-full bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text resize-none focus:outline-none focus:border-primary" />
-              
-              <div>
-                <label className="block text-[10px] sm:text-xs font-semibold text-text mb-1">Extras & Sauces (Optional)</label>
-                <textarea value={form.addOns} onChange={e => setForm({...form, addOns: e.target.value})} placeholder="e.g. Thousand Sauce:50, Ranch:50, Cheese:100" rows={2} className="w-full bg-bg border border-border rounded-xl px-3 py-2 text-xs sm:text-sm text-text resize-none focus:outline-none focus:border-primary" />
-                <p className="text-[10px] text-text-muted mt-1">Format: Name:Price separated by commas</p>
               </div>
 
-              <div>
-                <label className="block text-[10px] sm:text-xs text-text-muted mb-1">Image {!editingId && '*'}</label>
-                <input type="file" accept="image/*" onChange={handleImageUpload} className="w-full text-xs sm:text-sm" />
-                {uploading && <p className="text-[10px] sm:text-xs text-primary mt-1">Uploading...</p>}
-                {form.image && <img src={form.image.replace('/upload/', '/upload/w_150,h_150,c_fill,g_auto,f_auto,q_auto/')} alt="" className="h-12 sm:h-16 aspect-square object-cover mt-2 rounded-lg" />}
+              <div className="flex gap-6 pt-2">
+                <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={form.isPopular} onChange={e => setForm({...form, isPopular: e.target.checked})} className="accent-primary w-4 h-4" /><span className="text-sm font-medium">Mark as Popular ⭐</span></label>
+                <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={form.isAvailable} onChange={e => setForm({...form, isAvailable: e.target.checked})} className="accent-primary w-4 h-4" /><span className="text-sm font-medium">In Stock</span></label>
               </div>
 
-              <div className="flex gap-4">
-                <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={form.isPopular} onChange={e => setForm({...form, isPopular: e.target.checked})} className="accent-primary" /><span className="text-xs sm:text-sm">Mark as Popular ⭐</span></label>
-                <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={form.isAvailable} onChange={e => setForm({...form, isAvailable: e.target.checked})} className="accent-primary" /><span className="text-xs sm:text-sm">In Stock (Available)</span></label>
-              </div>
-
-              <button type="submit" className="w-full bg-primary text-white py-2.5 sm:py-3 rounded-full font-semibold text-sm hover:bg-primary-dark transition-colors">{editingId ? 'Update Item' : 'Create Item'}</button>
+              <button type="submit" className="w-full bg-primary text-white py-3.5 rounded-full font-bold text-sm hover:bg-primary-dark transition-colors shadow-lg shadow-primary/30 mt-4">{editingId ? 'Update Menu Item' : 'Publish Item'}</button>
             </form>
           </div>
         </div>

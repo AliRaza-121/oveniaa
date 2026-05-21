@@ -3,6 +3,26 @@ import MenuItem from '@/models/MenuItem'
 import Review from '@/models/Review'
 import ItemDetailClient from '@/components/ItemDetailClient'
 
+export async function generateMetadata({ params }) {
+  const { id } = await params
+  try {
+    await connectDB()
+    const item = await MenuItem.findById(id).lean()
+    if (item) {
+      return {
+        title: `${item.name} - Oveniaa`,
+        description: item.description,
+        openGraph: {
+          title: `${item.name} - Oveniaa`,
+          description: item.description,
+          images: item.image ? [item.image] : [],
+        },
+      }
+    }
+  } catch {}
+  return { title: 'Item Not Found - Oveniaa' }
+}
+
 export default async function ItemDetail({ params }) {
   const { id } = await params
   let item = null

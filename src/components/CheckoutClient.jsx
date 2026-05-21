@@ -22,22 +22,50 @@ export default function CheckoutClient() {
     notes: '',
   })
   
+  const [storeOpen, setStoreOpen] = useState(true)
+  const [checkingStore, setCheckingStore] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/settings?key=storeOpen')
+      .then(r => r.json())
+      .then(d => {
+        if (d.success && d.value === false) setStoreOpen(false)
+        setCheckingStore(false)
+      })
+      .catch(() => setCheckingStore(false))
+  }, [])
+
   useEffect(() => {
     if (user) {
       setForm(f => ({ ...f, customerName: user.name || f.customerName, email: user.email || f.email }))
     }
   }, [user])
   const [submitting, setSubmitting] = useState(false)
+  const [errors, setErrors] = useState({})
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!user) { toast('Please login to place an order', 'error'); router.push('/login'); return }
     if (cart.length === 0) { toast('Cart is empty', 'error'); return }
-    if (!form.customerName || !form.phone) { toast('Name and phone required', 'error'); return }
-    if (form.orderType === 'delivery' && !form.address) { toast('Address required for delivery', 'error'); return }
+
+    const newErrors = {}
+    if (!form.customerName) newErrors.customerName = 'Name is required'
+    if (!form.phone || form.phone.length < 10) newErrors.phone = 'Valid phone number required'
+    if (form.orderType === 'delivery' && !form.address) newErrors.address = 'Address required for delivery'
 
     const hasOnlyDrinks = cart.every(i => i.category === 'Drinks')
-    if (form.orderType === 'delivery' && hasOnlyDrinks) { toast('Add a main item for delivery', 'error'); return }
+    if (form.orderType === 'delivery' && hasOnlyDrinks) { 
+      toast('Add a main item for delivery', 'error'); 
+      return 
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      // Remove generic toasts if we have specific inline errors
+      return
+    }
+    
+    setErrors({})
 
     setSubmitting(true)
     try {
@@ -57,13 +85,36 @@ export default function CheckoutClient() {
     } catch { toast('Network error', 'error') } finally { setSubmitting(false) }
   }
 
-  // Show loading spinner while auth state resolves
-  if (loading) {
+  // Show loading spinner while auth state or store state resolves
+  if (loading || checkingStore) {
+    return (
+      <div className="pt-24 pb-16 min-h-screen">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6">
+          <div className="h-8 bg-card rounded-md w-48 mb-8 animate-pulse" />
+          <div className="space-y-5">
+            {[1, 2, 3, 4, 5].map(i => (
+              <div key={i} className="animate-pulse">
+                <div className="h-4 bg-card rounded w-24 mb-2" />
+                <div className="h-12 bg-card border border-border rounded-xl w-full" />
+              </div>
+            ))}
+            <div className="h-40 bg-card rounded-2xl w-full animate-pulse mt-8" />
+            <div className="h-14 bg-card rounded-full w-full animate-pulse mt-4" />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Gate: Store Closed
+  if (!storeOpen) {
     return (
       <div className="min-h-screen flex items-center justify-center pt-20">
-        <div className="text-center">
-          <div className="w-10 h-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto"></div>
-          <p className="text-text-muted mt-4">Loading...</p>
+        <div className="text-center max-w-md mx-auto px-4">
+          <span className="text-5xl">🛑</span>
+          <h1 className="text-2xl font-bold mt-4">Store is currently closed</h1>
+          <p className="text-text-muted mt-2">We are not accepting orders at this moment. Please check back later!</p>
+          <Link href="/menu" className="inline-block mt-6 bg-primary text-white px-8 py-3 rounded-full font-semibold hover:bg-primary-dark transition-colors">Back to Menu</Link>
         </div>
       </div>
     )
@@ -112,10 +163,10 @@ export default function CheckoutClient() {
               ))}
             </div>
           </div>
-          <div><label className="block text-sm font-semibold mb-2">Name *</label><input type="text" value={form.customerName} onChange={e => setForm({...form, customerName: e.target.value})} required className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm text-text focus:outline-none focus:border-primary" /></div>
+          <div><label className="block text-sm font-semibold mb-2">Name *</label><input type="text" value={form.customerName} onChange={e => {setForm({...form, customerName: e.target.value}); setErrors({...errors, customerName: null})}} className={`w-full bg-card border rounded-xl px-4 py-3 text-sm text-text focus:outline-none transition-colors ${errors.customerName ? 'border-red-500 focus:border-red-500 bg-red-500/5' : 'border-border focus:border-primary'}`} />{errors.customerName && <p className="text-red-500 text-xs mt-1.5">{errors.customerName}</p>}</div>
           <div><label className="block text-sm font-semibold mb-2">Email</label><input type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} disabled={!!user} className={`w-full bg-card border border-border rounded-xl px-4 py-3 text-sm text-text focus:outline-none focus:border-primary ${user ? 'opacity-50' : ''}`} /></div>
-          <div><label className="block text-sm font-semibold mb-2">Phone *</label><input type="tel" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} required className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm text-text focus:outline-none focus:border-primary" /></div>
-          {form.orderType === 'delivery' && <div><label className="block text-sm font-semibold mb-2">Address *</label><input type="text" value={form.address} onChange={e => setForm({...form, address: e.target.value})} required className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm text-text focus:outline-none focus:border-primary" /></div>}
+          <div><label className="block text-sm font-semibold mb-2">Phone *</label><input type="tel" value={form.phone} onChange={e => {setForm({...form, phone: e.target.value}); setErrors({...errors, phone: null})}} className={`w-full bg-card border rounded-xl px-4 py-3 text-sm text-text focus:outline-none transition-colors ${errors.phone ? 'border-red-500 focus:border-red-500 bg-red-500/5' : 'border-border focus:border-primary'}`} />{errors.phone && <p className="text-red-500 text-xs mt-1.5">{errors.phone}</p>}</div>
+          {form.orderType === 'delivery' && <div><label className="block text-sm font-semibold mb-2">Address *</label><input type="text" value={form.address} onChange={e => {setForm({...form, address: e.target.value}); setErrors({...errors, address: null})}} className={`w-full bg-card border rounded-xl px-4 py-3 text-sm text-text focus:outline-none transition-colors ${errors.address ? 'border-red-500 focus:border-red-500 bg-red-500/5' : 'border-border focus:border-primary'}`} />{errors.address && <p className="text-red-500 text-xs mt-1.5">{errors.address}</p>}</div>}
           <div><label className="block text-sm font-semibold mb-2">Notes</label><textarea value={form.notes} onChange={e => setForm({...form, notes: e.target.value})} rows={2} className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm text-text focus:outline-none focus:border-primary resize-none" /></div>
           
           <div className="bg-card border border-border rounded-2xl p-5">

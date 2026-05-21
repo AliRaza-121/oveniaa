@@ -14,6 +14,7 @@ const sidebarLinks = [
   { name: 'Today\'s Specials', href: '/admin/deals', icon: '⚡' },
   { name: 'Orders', href: '/admin/orders', icon: '🛒' },
   { name: 'Users', href: '/admin/users', icon: '👥' },
+  { name: 'Settings', href: '/admin/settings', icon: '⚙️' },
 ]
 
 export default function AdminLayout({ children }) {

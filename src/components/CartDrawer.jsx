@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation'
 import { getCategoryEmoji } from '@/lib/utils'
 
 export default function CartDrawer({ isOpen, setIsOpen }) {
-  const { cart, cartTotal, cartCount, removeFromCart, updateQuantity } = useCart()
+  const { cart, cartTotal, cartCount, removeFromCart, updateQuantity, addToCart } = useCart()
   const { user } = useAuth()
   const { toast } = useToast()
   const router = useRouter()
@@ -27,18 +27,24 @@ export default function CartDrawer({ isOpen, setIsOpen }) {
 
   return (
     <>
-      <div className={`cart-backdrop ${isOpen ? 'cart-backdrop-open' : ''} fixed inset-0 z-[100] bg-black/50`} onClick={() => setIsOpen(false)} />
-      <div className={`cart-panel ${isOpen ? 'cart-panel-open' : ''} fixed right-0 top-0 bottom-0 z-[101] w-full sm:w-[420px] bg-card flex flex-col shadow-2xl`}>
+      <div className={`cart-backdrop ${isOpen ? 'cart-backdrop-open' : ''} fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm`} onClick={() => setIsOpen(false)} />
+      <div className={`cart-panel ${isOpen ? 'cart-panel-open' : ''} fixed right-0 top-0 bottom-0 z-[101] w-full sm:w-[420px] bg-card/90 backdrop-blur-2xl flex flex-col shadow-[0_0_40px_rgba(0,0,0,0.5)] border-l border-white/5`}>
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
           <h2 className="text-lg font-bold">Cart ({cartCount})</h2>
           <button onClick={() => setIsOpen(false)} aria-label="Close Cart" className="text-text-muted hover:text-text">✕</button>
         </div>
 
         {cart.length === 0 ? (
-          <div className="flex-1 flex flex-col items-center justify-center">
-            <span className="text-5xl">🛒</span>
-            <p className="text-text-muted mt-4">Your cart is empty</p>
-            <button onClick={() => setIsOpen(false)} className="text-primary font-medium mt-2 hover:underline">Continue Shopping</button>
+          <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
+            <div className="w-32 h-32 bg-primary/10 rounded-full flex items-center justify-center mb-6 relative">
+              <span className="text-6xl animate-scroll-bounce">🛒</span>
+              <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-card rounded-full flex items-center justify-center text-xl shadow-lg border border-border">✨</div>
+            </div>
+            <h3 className="text-xl font-bold mb-2">Your cart is feeling light</h3>
+            <p className="text-text-muted mb-8 max-w-[250px]">Explore our menu and add some hot & fresh food to your order!</p>
+            <button onClick={() => setIsOpen(false)} className="bg-primary text-white px-8 py-3.5 rounded-full font-semibold hover:bg-primary-dark transition-all hover:scale-105 shadow-xl shadow-primary/30">
+              Browse Menu
+            </button>
           </div>
         ) : (
           <>
@@ -74,7 +80,27 @@ export default function CartDrawer({ isOpen, setIsOpen }) {
                 </div>
               ))}
             </div>
-            <div className="border-t border-border px-5 py-4">
+            </div>
+            <div className="border-t border-border px-5 py-4 bg-bg/30">
+              {/* Cross-selling Suggestion */}
+              {cart.length > 0 && !cart.some(i => i.category === 'Drinks') && (
+                <div className="mb-4 bg-card border border-border rounded-2xl p-3 flex items-center gap-3 shadow-lg">
+                  <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">🥤</div>
+                  <div className="flex-1">
+                    <p className="text-sm font-bold text-text">Thirsty?</p>
+                    <p className="text-[10px] text-text-muted">Add a cold drink</p>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      addToCart({ _id: 'drink-add', name: 'Cold Drink 500ml', price: 150, category: 'Drinks', image: '', sizes: [], addOns: [] }, 'Regular', [], 1);
+                      toast('Drink added!', 'success');
+                    }}
+                    className="bg-primary/10 text-primary hover:bg-primary hover:text-white px-3 py-1.5 rounded-full text-xs font-bold transition-colors"
+                  >
+                    + Rs. 150
+                  </button>
+                </div>
+              )}
               <div className="flex justify-between items-center mb-3">
                 <span className="font-medium">Total</span>
                 <span className="text-xl font-bold text-primary">Rs. {cartTotal}</span>

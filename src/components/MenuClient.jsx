@@ -112,10 +112,16 @@ export default function MenuClient({ items, categories, activeCategory, searchTe
         </div>
 
         {(!items || items.length === 0) && (
-          <div className="text-center py-20">
-            <span className="text-5xl">🍽️</span>
-            <p className="text-text-muted mt-4">No items found</p>
-            <button onClick={() => { setCategory('All'); setSearch(''); router.push('/menu') }} className="text-primary font-medium mt-2 hover:underline">Clear filters</button>
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <div className="w-32 h-32 bg-primary/10 rounded-full flex items-center justify-center mb-6 relative">
+              <span className="text-6xl animate-scroll-bounce">🍽️</span>
+              <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-card rounded-full flex items-center justify-center text-xl shadow-lg border border-border">🔍</div>
+            </div>
+            <h3 className="text-xl font-bold mb-2">No items found</h3>
+            <p className="text-text-muted mb-8 max-w-[250px]">We couldn't find anything matching your search. Try adjusting your filters!</p>
+            <button onClick={() => { setCategory('All'); setSearch(''); router.push('/menu') }} className="bg-primary text-white px-8 py-3.5 rounded-full font-semibold hover:bg-primary-dark transition-all hover:scale-105 shadow-xl shadow-primary/30">
+              Clear Filters
+            </button>
           </div>
         )}
       </div>
