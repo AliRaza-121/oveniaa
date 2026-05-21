@@ -30,6 +30,10 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        {/* Capture beforeinstallprompt early — before React hydrates */}
+        <script dangerouslySetInnerHTML={{ __html: `window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__pwaPromptEvent=e;});` }} />
+      </head>
       <body className={`${inter.variable} ${playfair.variable} antialiased`}>
         <AuthProvider>
           <CartProvider>
