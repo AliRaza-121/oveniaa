@@ -74,16 +74,16 @@ export default function RegisterClient() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-10">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
-        <div className="text-center mb-8">
+    <div className="h-[100dvh] w-full flex items-center justify-center px-4 overflow-hidden">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md max-h-full overflow-y-auto no-scrollbar py-4">
+        <div className="text-center mb-6">
           <Link href="/" className="text-3xl font-bold text-primary">🍕 Oveniaa</Link>
         </div>
-        <div className="bg-card border border-border rounded-3xl p-8">
+        <div className="bg-card border border-border rounded-3xl p-6 sm:p-8">
           <h1 className="text-2xl font-bold text-center mb-2">
             {step === 'form' ? 'Create Account' : 'Check Your Email'}
           </h1>
-          <p className="text-text-muted text-sm text-center mb-6">
+          <p className="text-text-muted text-sm text-center mb-5">
             {step === 'form' ? 'Join Oveniaa today' : `We sent a code to ${email}`}
           </p>
 
@@ -143,7 +143,7 @@ export default function RegisterClient() {
             </form>
           )}
 
-          <p className="text-center text-sm text-text-muted mt-6">
+          <p className="text-center text-sm text-text-muted mt-5">
             Already have an account? <Link href="/login" className="text-primary font-semibold hover:underline">Sign in</Link>
           </p>
         </div>

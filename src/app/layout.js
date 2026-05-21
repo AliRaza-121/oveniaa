@@ -1,4 +1,4 @@
-import { Inter, Playfair_Display } from 'next/font/google'
+import { Inter, Outfit } from 'next/font/google'
 import { AuthProvider } from '@/context/AuthContext'
 import { CartProvider } from '@/context/CartContext'
 import { ToastProvider } from '@/context/ToastContext'
@@ -7,7 +7,7 @@ import InstallPrompt from '@/components/InstallPrompt'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
-const playfair = Playfair_Display({ subsets: ['latin'], weight: ['400', '500', '600', '700', '800', '900'], variable: '--font-display', display: 'swap' })
+const outfit = Outfit({ subsets: ['latin'], variable: '--font-display', display: 'swap' })
 
 export const metadata = {
   title: 'Oveniaa - Fresh Fast Food',
@@ -34,7 +34,7 @@ export default function RootLayout({ children }) {
         {/* Capture beforeinstallprompt early — before React hydrates */}
         <script dangerouslySetInnerHTML={{ __html: `window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__pwaPromptEvent=e;});` }} />
       </head>
-      <body className={`${inter.variable} ${playfair.variable} antialiased`}>
+      <body className={`${inter.variable} ${outfit.variable} antialiased`}>
         <AuthProvider>
           <CartProvider>
             <ToastProvider>

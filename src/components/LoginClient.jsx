@@ -51,14 +51,14 @@ export default function LoginClient() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 pt-16">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
-        <div className="text-center mb-8">
+    <div className="h-[100dvh] w-full flex items-center justify-center px-4 overflow-hidden">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md max-h-full overflow-y-auto no-scrollbar">
+        <div className="text-center mb-6">
           <Link href="/" className="text-3xl font-bold text-primary">🍕 Oveniaa</Link>
         </div>
-        <div className="bg-card border border-border rounded-3xl p-8">
+        <div className="bg-card border border-border rounded-3xl p-6 sm:p-8">
           <h1 className="text-2xl font-bold text-center mb-2">Welcome Back</h1>
-          <p className="text-text-muted text-sm text-center mb-6">Sign in to your account</p>
+          <p className="text-text-muted text-sm text-center mb-5">Sign in to your account</p>
 
           {error && <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl px-4 py-3 mb-4">{error}</div>}
 
@@ -101,7 +101,7 @@ export default function LoginClient() {
             </button>
           </form>
 
-          <p className="text-center text-sm text-text-muted mt-6">
+          <p className="text-center text-sm text-text-muted mt-5">
             Don&apos;t have an account? <Link href="/register" className="text-primary font-semibold hover:underline">Sign up</Link>
           </p>
         </div>

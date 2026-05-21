@@ -52,44 +52,57 @@ export default function Navbar() {
             <span className="text-xl sm:text-2xl font-bold text-primary font-display tracking-tight">Oveniaa</span>
           </Link>
 
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-1 bg-white/5 rounded-full p-1 border border-white/5">
             {navLinks.map(link => (
               link.name === 'Menu' ? (
-                <div key="Menu" className="relative" onMouseEnter={() => setMenuOpen(true)} onMouseLeave={() => setMenuOpen(false)}>
-                  <Link href="/menu" className={`relative px-4 py-2 text-sm font-semibold transition-colors duration-200 ${pathname === '/menu' ? 'text-white' : 'text-text-light hover:text-white'}`}>
-                    <span className="relative z-10">Menu ▾</span>
-                    {pathname === '/menu' && <span className="absolute inset-0 bg-primary rounded-full" />}
+                <div key="Menu" className="relative group" onMouseEnter={() => setMenuOpen(true)} onMouseLeave={() => setMenuOpen(false)}>
+                  <Link href="/menu" className={`relative flex items-center gap-1.5 px-5 py-2 rounded-full text-sm font-bold transition-all duration-500 overflow-hidden group/link ${pathname === '/menu' ? 'text-white shadow-lg' : 'text-text-light hover:text-white'}`}>
+                    <span className="relative z-10 flex items-center gap-1">
+                      Menu 
+                      <span className="text-[10px] opacity-60 group-hover/link:opacity-100 group-hover/link:rotate-180 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">▼</span>
+                    </span>
+                    {pathname === '/menu' ? (
+                      <span className="absolute inset-0 bg-primary rounded-full z-0" />
+                    ) : (
+                      <span className="absolute inset-0 bg-white/10 rounded-full scale-50 opacity-0 group-hover/link:scale-100 group-hover/link:opacity-100 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] z-0" />
+                    )}
                   </Link>
-                  <div className={`nav-dropdown ${menuOpen ? 'nav-dropdown-open' : ''} absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-card border border-border rounded-2xl shadow-2xl py-4 px-4 w-[600px] max-w-[90vw] z-50`}>
-                    <div className="flex justify-between items-center mb-3 px-2 border-b border-border pb-2">
-                      <span className="font-bold text-text text-sm uppercase tracking-wider">Categories</span>
-                      <Link href="/menu" className="text-xs font-semibold text-primary hover:underline bg-primary/10 px-3 py-1 rounded-full">View All Menu →</Link>
+                  <div className={`nav-dropdown ${menuOpen ? 'nav-dropdown-open' : ''} absolute top-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2 bg-card/95 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl shadow-black/50 py-5 px-5 w-[600px] max-w-[90vw] z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] origin-top`}>
+                    <div className="flex justify-between items-center mb-4 px-2 border-b border-border/50 pb-3">
+                      <span className="font-bold text-text-muted text-xs uppercase tracking-widest">Explore Categories</span>
+                      <Link href="/menu" className="text-xs font-bold text-primary hover:text-primary-dark transition-colors flex items-center gap-1 group/btn">
+                        View All Menu <span className="group-hover/btn:translate-x-1 transition-transform duration-300">→</span>
+                      </Link>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                       {categoriesList.map(cat => (
-                        <Link key={cat._id} href={`/menu?category=${encodeURIComponent(cat.name)}`} className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium text-text-light hover:text-primary hover:bg-bg transition-colors">
-                          <span className="text-lg bg-bg w-8 h-8 rounded-full flex items-center justify-center shadow-sm">{getCategoryEmoji(cat.name)}</span> 
-                          <span className="truncate">{cat.name}</span>
+                        <Link key={cat._id} href={`/menu?category=${encodeURIComponent(cat.name)}`} className="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-semibold text-text-light hover:text-white hover:bg-white/5 transition-all duration-300 group/cat">
+                          <span className="text-xl bg-bg w-10 h-10 rounded-xl flex items-center justify-center shadow-inner group-hover/cat:scale-110 group-hover/cat:rotate-6 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">{getCategoryEmoji(cat.name)}</span> 
+                          <span className="truncate group-hover/cat:translate-x-1 transition-transform duration-300">{cat.name}</span>
                         </Link>
                       ))}
                     </div>
                   </div>
                 </div>
               ) : (
-                <Link key={link.name} href={link.href} className={`relative px-4 py-2 text-sm font-semibold transition-colors duration-200 ${pathname === link.href ? 'text-white' : 'text-text-light hover:text-white'}`}>
+                <Link key={link.name} href={link.href} className={`relative px-5 py-2 rounded-full text-sm font-bold transition-all duration-500 overflow-hidden group/link ${pathname === link.href ? 'text-white shadow-lg' : 'text-text-light hover:text-white'}`}>
                   <span className="relative z-10">{link.name}</span>
-                  {pathname === link.href && <span className="absolute inset-0 bg-primary rounded-full" />}
+                  {pathname === link.href ? (
+                    <span className="absolute inset-0 bg-primary rounded-full z-0" />
+                  ) : (
+                    <span className="absolute inset-0 bg-white/10 rounded-full scale-50 opacity-0 group-hover/link:scale-100 group-hover/link:opacity-100 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] z-0" />
+                  )}
                 </Link>
               )
             ))}
           </div>
 
           <div className="flex items-center gap-3">
-            <button onClick={() => setCartOpen(true)} aria-label="Open cart" className="relative text-text-light hover:text-primary transition-colors p-2">
+            <button onClick={() => setCartOpen(true)} aria-label="Open cart" className="relative w-10 h-10 rounded-full flex items-center justify-center text-text-light hover:text-white hover:bg-white/10 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
               </svg>
-              {cartCount > 0 && <span className="absolute top-0 right-0 bg-primary text-white text-[10px] w-4.5 h-4.5 rounded-full flex items-center justify-center font-bold">{cartCount}</span>}
+              {cartCount > 0 && <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold shadow-lg">{cartCount}</span>}
             </button>
 
             {user ? (

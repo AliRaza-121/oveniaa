@@ -52,31 +52,54 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {deals.map((deal, i) => (
                 <Reveal key={deal._id} delay={i * 0.1}>
-                  <Link href={`/deals/${deal._id}`} className="block h-full bg-card border border-border rounded-3xl p-6 hover:shadow-xl hover:border-primary/30 transition-all duration-300 group">
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="bg-primary/10 text-primary text-xs font-bold px-3 py-1.5 rounded-full">
-                        {deal.discount || 'Special Deal'}
-                      </div>
-                      <div className="w-10 h-10 rounded-full bg-bg flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
-                      </div>
+                  <Link href={`/deals/${deal._id}`} className="block relative h-full bg-card rounded-[2rem] border border-border/50 p-[2px] group hover:-translate-y-2 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] shadow-2xl shadow-black/40">
+                    
+                    {/* Animated Sweeping Shine */}
+                    <div className="absolute inset-0 rounded-[2rem] overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-0">
+                      <div className="absolute top-0 -left-[100%] w-1/2 h-full bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-[-20deg] group-hover:animate-sweep" />
                     </div>
-                    
-                    <h3 className="text-2xl font-bold text-text mb-2 group-hover:text-primary transition-colors duration-300">{deal.title}</h3>
-                    {deal.description && <p className="text-text-muted text-sm mb-5 line-clamp-2">{deal.description}</p>}
-                    
-                    {deal.items?.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mb-5">
-                        {deal.items.slice(0, 3).map((item, j) => (
-                          <span key={j} className="text-[10px] bg-bg border border-border text-text px-2.5 py-1 rounded-full font-semibold">{item.name || 'Item'}</span>
-                        ))}
-                        {deal.items.length > 3 && <span className="text-[10px] bg-bg border border-border text-text px-2.5 py-1 rounded-full font-semibold">+{deal.items.length - 3}</span>}
+
+                    <div className="relative h-full bg-bg-dark rounded-[1.9rem] p-6 lg:p-8 flex flex-col z-10 overflow-hidden">
+                      
+                      {/* Decorative Background Blobs */}
+                      <div className="absolute -top-20 -right-20 w-48 h-48 bg-primary/20 blur-[60px] rounded-full group-hover:bg-primary/30 transition-colors duration-700 pointer-events-none" />
+                      <div className="absolute -bottom-20 -left-20 w-48 h-48 bg-secondary/10 blur-[60px] rounded-full group-hover:bg-secondary/20 transition-colors duration-700 pointer-events-none" />
+
+                      {/* Header / Discount Badge */}
+                      <div className="flex justify-between items-start mb-6 relative z-10">
+                        <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-accent text-white px-4 py-1.5 rounded-full text-xs font-black tracking-widest shadow-lg shadow-primary/30 uppercase transform group-hover:scale-105 transition-transform duration-500 origin-left border border-white/10">
+                          <span className="animate-pulse">🔥</span> {deal.discount || 'Limited Time'}
+                        </div>
+                        <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-md group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-all duration-500 group-hover:rotate-45 shadow-xl">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
+                        </div>
                       </div>
-                    )}
-                    
-                    <div className="mt-auto pt-4 border-t border-border/50">
-                      {deal.price > 0 && <span className="text-2xl font-black text-primary">Rs. {deal.price}</span>}
-                      {deal.originalPrice > 0 && <span className="text-sm text-text-muted line-through ml-2">Rs. {deal.originalPrice}</span>}
+                      
+                      <div className="relative z-10 mb-6">
+                        <h3 className="text-3xl font-black font-display text-text mb-3 leading-tight group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all duration-500">{deal.title}</h3>
+                        {deal.description && <p className="text-text-muted text-sm leading-relaxed line-clamp-2">{deal.description}</p>}
+                      </div>
+                      
+                      <div className="mt-auto relative z-10">
+                        {deal.items?.length > 0 && (
+                          <div className="flex flex-wrap gap-2 mb-6">
+                            {deal.items.slice(0, 3).map((item, j) => (
+                              <span key={j} className="text-[11px] bg-white/5 border border-white/10 text-text-light px-3 py-1.5 rounded-lg font-semibold">{item.name || 'Item'}</span>
+                            ))}
+                            {deal.items.length > 3 && <span className="text-[11px] bg-primary/10 text-primary px-3 py-1.5 rounded-lg font-bold shadow-inner">+{deal.items.length - 3}</span>}
+                          </div>
+                        )}
+                        
+                        <div className="flex items-end justify-between pt-5 border-t border-white/5 group-hover:border-primary/20 transition-colors duration-500">
+                          <div>
+                            <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest mb-1">Total Price</p>
+                            <div className="flex items-baseline gap-3">
+                              {deal.price > 0 && <span className="text-4xl font-black text-white drop-shadow-md group-hover:text-primary transition-colors duration-500">Rs. {deal.price}</span>}
+                              {deal.originalPrice > 0 && <span className="text-sm text-text-muted line-through font-semibold">Rs. {deal.originalPrice}</span>}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </Link>
                 </Reveal>
@@ -118,7 +141,7 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
                   <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
                   
                   <div className="flex flex-col md:flex-row items-center gap-10 relative z-10">
-                    <div className="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 relative flex-shrink-0 group-hover:scale-105 group-hover:-rotate-3 transition-transform duration-700">
+                    <div className="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 relative flex-shrink-0 group-hover:scale-105 group-hover:-rotate-3 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]">
                       {popularItems[0].image ? (
                         <Image src={popularItems[0].image.replace('/upload/', '/upload/w_600,h_600,c_fill,g_auto,f_auto,q_auto/')} alt={popularItems[0].name} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover rounded-full shadow-2xl border-4 border-white/10" priority={false} loading="lazy" />
                       ) : (
@@ -136,8 +159,10 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
                       <p className="text-text-muted text-base sm:text-lg mb-8 max-w-xl leading-relaxed mx-auto md:mx-0">{popularItems[0].description}</p>
                       
                       <div className="flex flex-col sm:flex-row items-center gap-6 justify-center md:justify-start">
-                        <p className="text-primary font-black text-4xl">Rs. {popularItems[0].price}</p>
-                        <div className="w-full sm:w-auto bg-text text-bg px-8 py-4 rounded-full font-bold text-center group-hover:bg-primary group-hover:text-white transition-colors shadow-lg">Order Now ➔</div>
+                        <p className="text-primary font-black text-4xl group-hover:scale-110 transition-transform duration-500 origin-left">Rs. {popularItems[0].price}</p>
+                        <div className="w-full sm:w-auto bg-text text-bg px-8 py-4 rounded-full font-bold text-center group-hover:bg-primary group-hover:text-white transition-all duration-500 shadow-lg group-hover:shadow-primary/30 flex items-center justify-center gap-2 group/btn">
+                          Order Now <span className="group-hover/btn:translate-x-1 transition-transform duration-300">➔</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -147,28 +172,29 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
               {/* Secondary Popular Items (Floating Aesthetics) */}
               <div className="flex gap-6 overflow-x-auto pb-8 pt-4 px-2 snap-x snap-mandatory hide-scrollbar sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible sm:snap-none sm:pb-0">
                 {popularItems.slice(1).map((item, index) => (
-                  <Link key={item._id} href={`/menu/${item._id}`} className="min-w-[240px] sm:min-w-0 bg-card border border-border rounded-3xl p-6 snap-start hover:shadow-lg hover:-translate-y-1 hover:border-primary/30 transition-all duration-300 flex-shrink-0 flex flex-col h-full group relative mt-8 sm:mt-12">
+                  <Link key={item._id} href={`/menu/${item._id}`} className="min-w-[240px] sm:min-w-0 bg-card border border-border rounded-3xl p-6 snap-start hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2 hover:border-primary/30 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] flex-shrink-0 flex flex-col h-full group relative mt-8 sm:mt-12 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                     
-                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-32 h-32 sm:w-40 sm:h-40 relative transition-transform duration-500 shadow-xl rounded-full">
+                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-32 h-32 sm:w-40 sm:h-40 relative group-hover:-translate-y-4 group-hover:rotate-3 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] shadow-xl rounded-full z-10">
                       {item.image ? (
                         <Image src={item.image.replace('/upload/', '/upload/w_400,h_400,c_fill,g_auto,f_auto,q_auto/')} alt={item.name} fill sizes="(max-width: 640px) 100vw, 25vw" className="object-cover rounded-full border-4 border-card" loading="lazy" />
                       ) : (
                         <div className="w-full h-full bg-bg rounded-full flex items-center justify-center text-5xl border-4 border-card">{getCategoryEmoji(item.category)}</div>
                       )}
                       
-                      <div className="absolute top-0 right-0 bg-secondary text-white text-[10px] font-black px-2 py-1 rounded-full shadow-md">
+                      <div className="absolute top-0 right-0 bg-secondary text-white text-[10px] font-black px-2 py-1 rounded-full shadow-md group-hover:scale-110 transition-transform duration-300">
                         #{index + 2}
                       </div>
                     </div>
                     
-                    <div className="pt-24 sm:pt-32 flex-1 flex flex-col text-center">
+                    <div className="pt-24 sm:pt-32 flex-1 flex flex-col text-center relative z-10">
                       <h3 className="font-bold text-xl mb-2 group-hover:text-primary transition-colors duration-300">{item.name}</h3>
                       <div className="flex items-center justify-center gap-1 mb-4">
                         <span className="text-yellow-500 text-sm">{'★'.repeat(item.avgRating || 0)}{'☆'.repeat(5 - (item.avgRating || 0))}</span>
                       </div>
-                      <div className="mt-auto pt-4 border-t border-border/50 flex justify-between items-center">
-                        <p className="text-primary font-bold text-2xl">Rs. {item.price}</p>
-                        <div className="w-8 h-8 rounded-full bg-bg border border-border flex items-center justify-center group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all duration-300 text-xl pb-1">+</div>
+                      <div className="mt-auto pt-4 border-t border-border/50 flex justify-between items-center group-hover:border-primary/30 transition-colors duration-500">
+                        <p className="text-primary font-bold text-2xl group-hover:scale-110 transition-transform duration-500 origin-left">Rs. {item.price}</p>
+                        <div className="w-10 h-10 rounded-full bg-bg border border-border flex items-center justify-center group-hover:bg-primary group-hover:text-white group-hover:border-transparent transition-all duration-500 text-xl shadow-sm group-hover:shadow-md group-hover:rotate-180">+</div>
                       </div>
                     </div>
                   </Link>
