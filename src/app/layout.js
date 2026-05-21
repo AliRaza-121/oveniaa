@@ -32,8 +32,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Capture beforeinstallprompt early — before React hydrates */}
-        <Script id="pwa-capture" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: `window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__pwaPromptEvent=e;});` }} />
       </head>
       <body className={`${inter.variable} ${outfit.variable} antialiased`} suppressHydrationWarning>
         <AuthProvider>
