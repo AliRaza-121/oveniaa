@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useCart } from '@/context/CartContext'
@@ -41,17 +40,14 @@ export default function Navbar() {
 
   return (
     <>
-      <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className={`fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-5xl transition-all duration-500 rounded-2xl overflow-visible
+      <nav
+        className={`animate-nav-enter fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-5xl transition-all duration-500 rounded-2xl overflow-visible
           ${scrolled ? 'bg-bg/90 backdrop-blur-xl shadow-2xl shadow-black/30' : 'bg-bg/80 backdrop-blur-md'}`}
       >
         <div className="px-5 sm:px-6 h-16 flex items-center justify-between">
           
           <Link href="/" className="flex items-center gap-2 group">
-            <motion.span whileHover={{ rotate: [0, -10, 10, 0] }} transition={{ duration: 0.5 }} className="text-2xl">🍕</motion.span>
+            <span className="logo-emoji text-2xl inline-block">🍕</span>
             <span className="text-xl sm:text-2xl font-bold text-primary font-display tracking-tight">Oveniaa</span>
           </Link>
 
@@ -61,26 +57,22 @@ export default function Navbar() {
                 <div key="Menu" className="relative" onMouseEnter={() => setMenuOpen(true)} onMouseLeave={() => setMenuOpen(false)}>
                   <Link href="/menu" className={`relative px-4 py-2 text-sm font-semibold transition-colors duration-200 ${pathname === '/menu' ? 'text-white' : 'text-text-light hover:text-white'}`}>
                     <span className="relative z-10">Menu ▾</span>
-                    {pathname === '/menu' && <motion.span layoutId="navPill" className="absolute inset-0 bg-primary rounded-full" transition={{ type: 'spring', stiffness: 400, damping: 30 }} />}
+                    {pathname === '/menu' && <span className="absolute inset-0 bg-primary rounded-full" />}
                   </Link>
-                  <AnimatePresence>
-                    {menuOpen && (
-                      <motion.div initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 10, scale: 0.95 }} transition={{ duration: 0.2 }} className="absolute top-full mt-2 left-0 bg-card border border-border rounded-2xl shadow-2xl py-2 min-w-[180px] z-50">
-                        <Link href="/menu" className="block px-5 py-2.5 text-sm font-medium text-text-light hover:text-primary hover:bg-bg transition-colors">View All</Link>
-                        <div className="h-px bg-border mx-4 my-1" />
-                        {categoriesList.map(cat => (
-                          <Link key={cat._id} href={`/menu?category=${encodeURIComponent(cat.name)}`} className="flex items-center gap-2 px-5 py-2.5 text-sm text-text-light hover:text-primary hover:bg-bg transition-colors">
-                            {cat.name === 'Burgers' ? '🍔' : cat.name === 'Pizzas' ? '🍕' : cat.name === 'Fries & Sides' ? '🍟' : '🥤'} {cat.name}
-                          </Link>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  <div className={`nav-dropdown ${menuOpen ? 'nav-dropdown-open' : ''} absolute top-full mt-2 left-0 bg-card border border-border rounded-2xl shadow-2xl py-2 min-w-[180px] z-50`}>
+                    <Link href="/menu" className="block px-5 py-2.5 text-sm font-medium text-text-light hover:text-primary hover:bg-bg transition-colors">View All</Link>
+                    <div className="h-px bg-border mx-4 my-1" />
+                    {categoriesList.map(cat => (
+                      <Link key={cat._id} href={`/menu?category=${encodeURIComponent(cat.name)}`} className="flex items-center gap-2 px-5 py-2.5 text-sm text-text-light hover:text-primary hover:bg-bg transition-colors">
+                        {cat.name === 'Burgers' ? '🍔' : cat.name === 'Pizzas' ? '🍕' : cat.name === 'Fries & Sides' ? '🍟' : '🥤'} {cat.name}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               ) : (
                 <Link key={link.name} href={link.href} className={`relative px-4 py-2 text-sm font-semibold transition-colors duration-200 ${pathname === link.href ? 'text-white' : 'text-text-light hover:text-white'}`}>
                   <span className="relative z-10">{link.name}</span>
-                  {pathname === link.href && <motion.span layoutId="navPill" className="absolute inset-0 bg-primary rounded-full" transition={{ type: 'spring', stiffness: 400, damping: 30 }} />}
+                  {pathname === link.href && <span className="absolute inset-0 bg-primary rounded-full" />}
                 </Link>
               )
             ))}
@@ -113,36 +105,30 @@ export default function Navbar() {
             </button>
           </div>
         </div>
-      </motion.nav>
+      </nav>
 
       {/* Mobile Menu */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setMobileOpen(false)} className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden" />
-            <motion.div initial={{ opacity: 0, y: -20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} transition={{ duration: 0.3 }} className="fixed top-20 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-sm bg-card rounded-2xl shadow-2xl lg:hidden overflow-hidden">
-              <div className="flex flex-col py-3">
-                {navLinks.map((link) => (
-                  <Link key={link.name} href={link.href} onClick={() => setMobileOpen(false)} className={`flex items-center gap-3 px-6 py-3.5 text-lg font-semibold transition-colors ${pathname === link.href ? 'text-primary bg-primary/5' : 'text-text-light hover:text-primary hover:bg-bg'}`}>
-                    <span>{link.name === 'Home' ? '🏠' : link.name === 'Menu' ? '🍕' : link.name === 'About' ? 'ℹ️' : '📞'}</span> {link.name}
-                  </Link>
-                ))}
-                <div className="border-t border-border mt-2 pt-2 px-6">
-                  {user ? (
-                    <div className="space-y-1">
-                      {user.role === 'admin' && <Link href="/admin" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 py-3 text-primary font-semibold"><span>📊</span> Admin</Link>}
-                      <Link href="/orders" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 py-3 text-text-light font-semibold"><span>📦</span> My Orders</Link>
-                      <button onClick={() => { logout(); setMobileOpen(false) }} className="flex items-center gap-3 py-3 text-red-500 font-semibold w-full"><span>🚪</span> Logout</button>
-                    </div>
-                  ) : (
-                    <Link href="/login" onClick={() => setMobileOpen(false)} className="flex items-center justify-center bg-primary text-white py-3 rounded-full font-semibold mt-2">Login</Link>
-                  )}
-                </div>
+      <div className={`mobile-overlay ${mobileOpen ? 'mobile-overlay-open' : ''} fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden`} onClick={() => setMobileOpen(false)} />
+      <div className={`mobile-panel ${mobileOpen ? 'mobile-panel-open' : ''} fixed top-20 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-sm bg-card rounded-2xl shadow-2xl lg:hidden overflow-hidden`}>
+        <div className="flex flex-col py-3">
+          {navLinks.map((link) => (
+            <Link key={link.name} href={link.href} onClick={() => setMobileOpen(false)} className={`flex items-center gap-3 px-6 py-3.5 text-lg font-semibold transition-colors ${pathname === link.href ? 'text-primary bg-primary/5' : 'text-text-light hover:text-primary hover:bg-bg'}`}>
+              <span>{link.name === 'Home' ? '🏠' : link.name === 'Menu' ? '🍕' : link.name === 'About' ? 'ℹ️' : '📞'}</span> {link.name}
+            </Link>
+          ))}
+          <div className="border-t border-border mt-2 pt-2 px-6">
+            {user ? (
+              <div className="space-y-1">
+                {user.role === 'admin' && <Link href="/admin" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 py-3 text-primary font-semibold"><span>📊</span> Admin</Link>}
+                <Link href="/orders" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 py-3 text-text-light font-semibold"><span>📦</span> My Orders</Link>
+                <button onClick={() => { logout(); setMobileOpen(false) }} className="flex items-center gap-3 py-3 text-red-500 font-semibold w-full"><span>🚪</span> Logout</button>
               </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+            ) : (
+              <Link href="/login" onClick={() => setMobileOpen(false)} className="flex items-center justify-center bg-primary text-white py-3 rounded-full font-semibold mt-2">Login</Link>
+            )}
+          </div>
+        </div>
+      </div>
 
       <CartDrawer isOpen={cartOpen} setIsOpen={setCartOpen} />
     </>
