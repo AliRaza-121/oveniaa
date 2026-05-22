@@ -120,7 +120,6 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
 
       {/* Featured + Popular Scroll - Premium Layout */}
       <section className="py-20 relative">
-        <div className="absolute top-1/2 left-0 w-full h-1/2 bg-gradient-to-t from-bg-dark to-transparent pointer-events-none -z-10" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           {popularItems.length > 0 ? (
             <>
