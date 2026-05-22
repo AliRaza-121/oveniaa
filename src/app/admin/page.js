@@ -155,7 +155,7 @@ export default function AdminDashboard() {
                       </div>
                     )}
                     
-                    <div className={`w-full max-w-[40px] rounded-t-lg transition-all duration-500 relative overflow-hidden cursor-pointer ${isSelected ? 'bg-primary shadow-[0_0_15px_rgba(var(--color-primary),0.3)]' : 'bg-primary/20 hover:bg-primary/40'}`} style={{ height: `${Math.max(height, 2)}%` }} onClick={() => setSelectedMonth(i)}>
+                    <div className={`w-full max-w-[40px] rounded-t-lg transition-all duration-500 relative overflow-hidden cursor-pointer ${isSelected ? 'bg-primary shadow-[0_0_15px_rgba(255,107,53,0.3)]' : 'bg-primary/20 hover:bg-primary/40'}`} style={{ height: `${Math.max(height, 2)}%` }} onClick={() => setSelectedMonth(i)}>
                       {isSelected && <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/20"></div>}
                     </div>
                     <span className={`text-[10px] sm:text-xs mt-3 ${isSelected ? 'text-primary font-bold' : 'text-text-muted'}`}>{m}</span>

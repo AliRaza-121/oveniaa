@@ -8,7 +8,15 @@ if (!cached) cached = global.mongoose = { conn: null, promise: null }
 
 async function connectDB() {
   if (cached.conn) return cached.conn
-  if (!cached.promise) cached.promise = mongoose.connect(MONGODB_URI, { bufferCommands: false }).then(m => m)
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(MONGODB_URI, {
+      bufferCommands: false,
+      serverSelectionTimeoutMS: 5000 // 5 seconds timeout instead of hanging indefinitely
+    }).then(m => m).catch(err => {
+      cached.promise = null
+      throw err
+    })
+  }
   cached.conn = await cached.promise
   return cached.conn
 }

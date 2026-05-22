@@ -5,6 +5,8 @@ import Review from '@/models/Review'
 import Deal from '@/models/Deal'
 import HomeClient from '@/components/HomeClient'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
   title: 'Oveniaa - Hot & Fresh Food Delivery in Faisalabad',
   description: 'Order the best pizzas, burgers, fries, and deals in Faisalabad. Fast delivery in 30 minutes. Hot, fresh, and delicious!',

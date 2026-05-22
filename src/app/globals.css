@@ -2,16 +2,16 @@
 
 @theme {
   --color-primary: #FF6B35;
-  --color-primary-dark: #E55A2B;
+  --color-primary-dark: #E0531F;
   --color-secondary: #F59E0B;
-  --color-accent: #F97316;
-  --color-bg: #1A1A1A;
-  --color-bg-dark: #111111;
+  --color-accent: #FF8552;
+  --color-bg: #0D0D0D;
+  --color-bg-dark: #070707;
   --color-text: #F5F5F5;
   --color-text-light: #D1D5DB;
   --color-text-muted: #9CA3AF;
-  --color-card: #252525;
-  --color-border: #2A2A2A;
+  --color-card: #161616;
+  --color-border: #222222;
   --font-sans: 'Inter', sans-serif;
   --font-display: 'Outfit', sans-serif;
 }

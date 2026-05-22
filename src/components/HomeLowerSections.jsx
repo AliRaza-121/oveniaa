@@ -137,7 +137,7 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
               
               {/* Massive Hero Item */}
               {popularItems[0] && (
-                <Link href={`/menu/${popularItems[0]._id}`} className="block relative bg-gradient-to-br from-primary/10 via-bg to-secondary/10 border border-primary/20 rounded-[2.5rem] p-8 sm:p-12 mb-12 hover:shadow-2xl hover:border-primary/50 transition-all duration-500 ease-in-out overflow-hidden group">
+                <Link href={`/menu/${popularItems[0]._id}`} className="block relative bg-bg-dark border border-primary/20 rounded-[2.5rem] p-8 sm:p-12 mb-12 hover:shadow-2xl hover:border-primary/50 transition-all duration-500 ease-in-out overflow-hidden group">
                   <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
                   
                   <div className="flex flex-col md:flex-row items-center gap-10 relative z-10">
@@ -218,7 +218,7 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
         <div className="absolute inset-0 bg-primary/5 -skew-y-3 transform origin-bottom-left" />
         
         <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
-          <div className="bg-card border border-border rounded-[2.5rem] p-8 sm:p-12 lg:p-16 shadow-2xl flex flex-col lg:flex-row gap-12 items-center">
+          <div className="bg-bg-dark border border-border rounded-[2.5rem] p-8 sm:p-12 lg:p-16 shadow-2xl flex flex-col lg:flex-row gap-12 items-center">
             
             <div className="w-full lg:flex-1 text-center lg:text-left">
               <span className="inline-block bg-primary/10 text-primary font-black px-4 py-1.5 rounded-full text-xs tracking-widest uppercase mb-4">Visit Us</span>
