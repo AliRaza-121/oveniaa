@@ -61,10 +61,6 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
 
                     <div className="relative h-full bg-bg-dark rounded-[1.9rem] p-6 lg:p-8 flex flex-col z-10 overflow-hidden">
                       
-                      {/* Decorative Background Blobs */}
-                      <div className="absolute -top-20 -right-20 w-48 h-48 bg-primary/20 blur-[60px] rounded-full group-hover:bg-primary/30 transition-colors duration-700 pointer-events-none" />
-                      <div className="absolute -bottom-20 -left-20 w-48 h-48 bg-secondary/10 blur-[60px] rounded-full group-hover:bg-secondary/20 transition-colors duration-700 pointer-events-none" />
-
                       {/* Header / Discount Badge */}
                       <div className="flex justify-between items-start mb-6 relative z-10">
                         <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-accent text-white px-4 py-1.5 rounded-full text-xs font-black tracking-widest shadow-lg shadow-primary/30 uppercase transform group-hover:scale-105 transition-transform duration-500 origin-left border border-white/10">
@@ -138,7 +134,6 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
               {/* Massive Hero Item */}
               {popularItems[0] && (
                 <Link href={`/menu/${popularItems[0]._id}`} className="block relative bg-bg-dark border border-primary/20 rounded-[2.5rem] p-8 sm:p-12 mb-12 hover:shadow-2xl hover:border-primary/50 transition-all duration-500 ease-in-out overflow-hidden group">
-                  <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
                   
                   <div className="flex flex-col md:flex-row items-center gap-10 relative z-10">
                     <div className="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 relative flex-shrink-0 group-hover:scale-[1.02] transition-transform duration-500 ease-in-out">
@@ -215,7 +210,6 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
 
       {/* Find Us - Modern Contact Card Layout */}
       <section className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-primary/5 -skew-y-3 transform origin-bottom-left" />
         
         <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
           <div className="bg-bg-dark border border-border rounded-[2.5rem] p-8 sm:p-12 lg:p-16 shadow-2xl flex flex-col lg:flex-row gap-12 items-center">
