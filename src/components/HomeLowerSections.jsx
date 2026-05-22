@@ -212,7 +212,7 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
       <section className="py-24 relative overflow-hidden">
         
         <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
-          <div className="bg-bg border border-border rounded-[2.5rem] p-8 sm:p-12 lg:p-16 shadow-2xl flex flex-col lg:flex-row gap-12 items-center">
+          <div className="bg-bg-dark border border-border rounded-[2.5rem] p-8 sm:p-12 lg:p-16 shadow-2xl flex flex-col lg:flex-row gap-12 items-center">
             
             <div className="w-full lg:flex-1 text-center lg:text-left">
               <span className="inline-block bg-primary/10 text-primary font-black px-4 py-1.5 rounded-full text-xs tracking-widest uppercase mb-4">Visit Us</span>
