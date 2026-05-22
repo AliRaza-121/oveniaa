@@ -14,12 +14,7 @@ export default function HomeClient({ popularItems, categories, deals, stats }) {
       <section className="relative min-h-[95vh] flex items-center overflow-hidden bg-bg">
         {/* Noise Texture */}
         <div className="absolute inset-0 bg-noise pointer-events-none z-0" />
-        
-        {/* Lighting Blobs */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-          <div className="animate-blob1 absolute top-0 right-0 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px]" />
-          <div className="animate-blob2 absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/15 rounded-full blur-[100px]" />
-        </div>
+
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full relative z-10 flex flex-col lg:flex-row items-center pt-16 pb-12 lg:pt-20 lg:pb-20">
           
