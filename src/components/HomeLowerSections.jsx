@@ -212,7 +212,7 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
       <section className="py-24 relative overflow-hidden">
         
         <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
-          <div className="bg-bg-dark border border-border rounded-[2.5rem] p-8 sm:p-12 lg:p-16 shadow-2xl flex flex-col lg:flex-row gap-12 items-center">
+          <div className="bg-card border border-border rounded-[2.5rem] p-8 sm:p-12 lg:p-16 shadow-2xl flex flex-col lg:flex-row gap-12 items-center">
             
             <div className="w-full lg:flex-1 text-center lg:text-left">
               <span className="inline-block bg-primary/10 text-primary font-black px-4 py-1.5 rounded-full text-xs tracking-widest uppercase mb-4">Visit Us</span>
@@ -220,7 +220,7 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
               
               <div className="space-y-6 text-left max-w-md mx-auto lg:mx-0">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-card border border-border rounded-2xl flex items-center justify-center text-xl shadow-sm shrink-0">📍</div>
+                  <div className="w-12 h-12 bg-bg border border-border rounded-2xl flex items-center justify-center text-xl shadow-sm shrink-0">📍</div>
                   <div>
                     <p className="font-black text-text text-lg mb-1">Location</p>
                     <p className="text-text-muted">{storeConfig.contact.address.line1}<br/>{storeConfig.contact.address.line2}</p>
@@ -228,7 +228,7 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
                 </div>
                 
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-card border border-border rounded-2xl flex items-center justify-center text-xl shadow-sm shrink-0">🕐</div>
+                  <div className="w-12 h-12 bg-bg border border-border rounded-2xl flex items-center justify-center text-xl shadow-sm shrink-0">🕐</div>
                   <div>
                     <p className="font-black text-text text-lg mb-1">Hours</p>
                     <p className="text-text-muted">{storeConfig.hours.days}<br/>{storeConfig.hours.time}</p>
@@ -237,7 +237,7 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
                 </div>
                 
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-card border border-border rounded-2xl flex items-center justify-center text-xl shadow-sm shrink-0">📞</div>
+                  <div className="w-12 h-12 bg-bg border border-border rounded-2xl flex items-center justify-center text-xl shadow-sm shrink-0">📞</div>
                   <div>
                     <p className="font-black text-text text-lg mb-1">Contact</p>
                     <a href={`tel:${storeConfig.contact.phone.replace(/\s+/g, '')}`} className="block text-text-muted hover:text-primary transition-colors">{storeConfig.contact.phone}</a>
@@ -248,7 +248,7 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
             </div>
             
             <div className="flex flex-col gap-4 w-full lg:w-72 shrink-0">
-              <div className="bg-card border border-border rounded-3xl p-6 text-center shadow-sm">
+              <div className="bg-bg border border-border rounded-3xl p-6 text-center shadow-sm">
                 <div className="text-4xl mb-3">⭐</div>
                 <p className="font-black text-xl">4.8 / 5.0</p>
                 <p className="text-xs text-text-muted mt-1">Based on Customer Reviews</p>
