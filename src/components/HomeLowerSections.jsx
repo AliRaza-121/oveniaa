@@ -59,7 +59,7 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
                       <div className="absolute top-0 -left-[100%] w-1/2 h-full bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-[-20deg] group-hover:animate-sweep" />
                     </div>
 
-                    <div className="relative h-full bg-bg-dark rounded-[1.9rem] p-6 lg:p-8 flex flex-col z-10 overflow-hidden">
+                    <div className="relative h-full bg-card rounded-[1.9rem] p-6 lg:p-8 flex flex-col z-10 overflow-hidden">
                       
                       {/* Header / Discount Badge */}
                       <div className="flex justify-between items-start mb-6 relative z-10">
@@ -133,7 +133,7 @@ export default function HomeLowerSections({ popularItems, categories, deals }) {
               
               {/* Massive Hero Item */}
               {popularItems[0] && (
-                <Link href={`/menu/${popularItems[0]._id}`} className="block relative bg-bg-dark border border-primary/20 rounded-[2.5rem] p-8 sm:p-12 mb-12 hover:shadow-2xl hover:border-primary/50 transition-all duration-500 ease-in-out overflow-hidden group">
+                <Link href={`/menu/${popularItems[0]._id}`} className="block relative bg-card border border-primary/20 rounded-[2.5rem] p-8 sm:p-12 mb-12 hover:shadow-2xl hover:border-primary/50 transition-all duration-500 ease-in-out overflow-hidden group">
                   
                   <div className="flex flex-col md:flex-row items-center gap-10 relative z-10">
                     <div className="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 relative flex-shrink-0 group-hover:scale-[1.02] transition-transform duration-500 ease-in-out">
